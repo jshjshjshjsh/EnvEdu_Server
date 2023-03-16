@@ -5,12 +5,6 @@ files:
     destination: /home/ubuntu/EnvEdu_Server
     overwrite: yes
 
-permissions:
-  - object: /home/ubuntu/EnvEdu_Server
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
-
 hooks:
   ApplicationStart:
     - location: /scripts/deploy.sh
