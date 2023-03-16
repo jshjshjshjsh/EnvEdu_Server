@@ -59,7 +59,8 @@ jobs:
 
         #프로젝트 jar파일로 압축
       - name: Make Jar File
-        run: mv target/$PROJECT_NAME.jar target/$PROJECT_NAME-$GITHUB_SHA.jar
+        run: |
+          mv target/demo-0.0.1-SNAPSHOT.jar target/$PROJECT_NAME-$GITHUB_SHA.jar
         shell: bash
 
         #aws 접근 id, key
