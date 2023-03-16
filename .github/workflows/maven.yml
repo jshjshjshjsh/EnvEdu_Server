@@ -35,8 +35,6 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - name: Print runner IP address
-        run: echo ${{ runner.ip }}"
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -53,6 +51,9 @@ jobs:
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
         shell: bash
+
+      - name: Print runner IP address
+          run: echo ${{ runner.ip }}"
 
         #빌드 시작
       - name: Build with Maven
