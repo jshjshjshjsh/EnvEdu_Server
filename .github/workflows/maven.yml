@@ -36,8 +36,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Print runner IP address
-          run:
-            echo "Runner IP address: ${{ runner.ip }}"
+        run: echo ${{ runner.ip }}"
       - name: Checkout
         uses: actions/checkout@v2
 
