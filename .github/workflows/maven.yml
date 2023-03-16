@@ -43,7 +43,6 @@ jobs:
         with:
           java-version: 11
 
-        run: |
       - name: make application.yml
           cd ./src/main
           mkdir resources
