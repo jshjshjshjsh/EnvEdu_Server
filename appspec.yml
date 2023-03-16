@@ -6,7 +6,7 @@ files:
     overwrite: yes
 
 permissions:
-  - object: /
+  - object: /home/ubuntu/EnvEdu_Server
     pattern: "**"
     owner: ubuntu
     group: ubuntu
