@@ -35,6 +35,9 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
+      - name: Print runner IP address
+          run:
+            echo "Runner IP address: ${{ runner.ip }}"
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -43,8 +46,8 @@ jobs:
         with:
           java-version: 11
 
-      - name: make application.yml
         run: |
+      - name: make application.yml
           cd ./src/main
           mkdir resources
           cd ./resources
