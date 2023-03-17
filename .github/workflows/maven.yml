@@ -49,12 +49,14 @@ jobs:
 
       - name: Clean temp directory
         run: |
+          ls
           rm -rf *
           ls
           cp -r $GITHUB_WORKSPACE $GITHUB_WORKSPACE-N
 
       - name: make application.yml
         run: |
+          ls $GITHUB_WORKSPACE-N
           mkdir ./$GITHUB_WORKSPACE-N/src/main/resources
           touch ./$GITHUB_WORKSPACE-N/src/main/resources/application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./$GITHUB_WORKSPACE-N/src/main/resources/application.yml
