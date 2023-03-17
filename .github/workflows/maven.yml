@@ -39,7 +39,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: ls
-        run: ls
+        run: |
+          pwd
+          ls
+          cd ..
+          pwd
+          ls
+          cd 
 
       - name: Clean temp directory
         run: |
