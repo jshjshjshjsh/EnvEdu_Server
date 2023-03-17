@@ -45,7 +45,7 @@ jobs:
           cd ..
           pwd
           ls
-          cd 
+          cd EnvEdu_Server
 
       - name: Clean temp directory
         run: |
