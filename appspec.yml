@@ -3,6 +3,7 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/EnvEdu_Server
+    runas: ubuntu
     overwrite: yes
 
 permissions:
