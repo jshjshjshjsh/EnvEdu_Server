@@ -38,6 +38,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: ls
+        run: ls
+
+      - name: Clean temp directory
+        run: |
+          rm -rf *
+          cp -r $GITHUB_WORKSPACE .   
+
       - name: make application.yml
         run: |
           mkdir ./src/main/resources
