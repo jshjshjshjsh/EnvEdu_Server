@@ -50,13 +50,14 @@ jobs:
       - name: Clean temp directory
         run: |
           rm -rf *
-          cp -r $GITHUB_WORKSPACE .   
+          mkdir ./$GITHUB_WORKSPACE-N
+          cp -r $GITHUB_WORKSPACE ./$GITHUB_WORKSPACE-N
 
       - name: make application.yml
         run: |
-          mkdir ./src/main/resources
-          touch ./src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          mkdir ./$GITHUB_WORKSPACE-N/src/main/resources
+          touch ./$GITHUB_WORKSPACE-N/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > ./$GITHUB_WORKSPACE-N/src/main/resources/application.yml
         shell: bash
 
       - name: archive project
