@@ -50,7 +50,8 @@ jobs:
       - name: Clean temp directory
         run: |
           rm -rf *
-          cp -r $GITHUB_WORKSPACE ./$GITHUB_WORKSPACE-N
+          ls
+          cp -r $GITHUB_WORKSPACE $GITHUB_WORKSPACE-N
 
       - name: make application.yml
         run: |
