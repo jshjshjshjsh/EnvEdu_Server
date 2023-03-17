@@ -40,7 +40,7 @@ jobs:
 
       - name: make application.yml
         run: |
-          ls -al
+          chmod 755 appspec.yml
           cd src/main
           mkdir resources
           cd resources
