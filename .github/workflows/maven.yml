@@ -49,7 +49,10 @@ jobs:
         shell: bash
 
       - name: archive project
-        run: tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
+        run: |
+          pwd
+          ls
+          tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
 
         #aws 접근 id, key
       - name: Configure AWS credentials
