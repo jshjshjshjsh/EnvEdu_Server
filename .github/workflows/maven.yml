@@ -38,10 +38,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Java JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
+      - name: Clean temp directory
+        run: |
+          rm -rf *
+          cp -r $GITHUB_WORKSPACE .
 
       - name: make application.yml
         run: |
@@ -50,18 +50,11 @@ jobs:
           cd ./resources
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          cd ../../..
         shell: bash
 
-        #빌드 시작
-      - name: Build with Maven
-        run: mvn package
-        shell: bash
-
-        #프로젝트 jar파일로 압축
-      - name: Make Jar File
-        run: |
-          mv target/demo-0.0.1-SNAPSHOT.jar target/$PROJECT_NAME-$GITHUB_SHA.jar
-        shell: bash
+      - name: archive project
+        run: tar cvfz ./$PROJECT_NAME
 
         #aws 접근 id, key
       - name: Configure AWS credentials
@@ -73,8 +66,12 @@ jobs:
 
         # s3에 압축한 jar파일 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./target/$PROJECT_NAME-$GITHUB_SHA.jar s3://$BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA.jar
+        run: aws s3 cp --region ap-northeast-2 ./$PROJECT_NAME.tar.gz s3://$BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/
 
         # s3에 업로드한 파일 code Deploy에서 배포 요청
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA.jar
+        run: aws deploy create-deployment 
+          --application-name $CODE_DEPLOY_APP_NAME 
+          --deployment-config-name CodeDeployDefault.OneAtATime 
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME 
+          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/$PROJECT_NAME.tar.gz
