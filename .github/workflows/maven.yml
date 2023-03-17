@@ -52,8 +52,8 @@ jobs:
           cd ..
           pwd
           ls
-          tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
-          chmod 755 $PROJECT_NAME.tar.gz
+          zip $PROJECT_NAME.zip $PROJECT_NAME
+          chmod 755 $PROJECT_NAME.zip
 
         #aws 접근 id, key
       - name: Configure AWS credentials
@@ -67,7 +67,7 @@ jobs:
       - name: Upload to S3
         run: |
           cd ..
-          aws s3 cp --region ap-northeast-2 $PROJECT_NAME.tar.gz s3://$BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/
+          aws s3 cp --region ap-northeast-2 $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/
 
         # s3에 업로드한 파일 code Deploy에서 배포 요청
       - name: Code Deploy
@@ -75,4 +75,4 @@ jobs:
           --application-name $CODE_DEPLOY_APP_NAME 
           --deployment-config-name CodeDeployDefault.OneAtATime 
           --deployment-group-name $DEPLOYMENT_GROUP_NAME 
-          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/$PROJECT_NAME.tar.gz
+          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME-$GITHUB_SHA/$PROJECT_NAME.zip
