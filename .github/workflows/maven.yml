@@ -45,7 +45,7 @@ jobs:
           cd resources
           touch application.yml
           echo "${{ secrets.APPLICATION_YML }}" > application.yml
-          cd ../../..
+          cd ../../../..
         shell: bash
 
       - name: archive project
