@@ -53,6 +53,7 @@ jobs:
           pwd
           ls
           tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
+          ls -al
 
         #aws 접근 id, key
       - name: Configure AWS credentials
