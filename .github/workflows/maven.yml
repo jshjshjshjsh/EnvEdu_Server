@@ -38,32 +38,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: ls
-        run: |
-          echo $GITHUB_WORKSPACE
-          pwd
-          ls
-          cd ..
-          pwd
-          ls
-          cd EnvEdu_Server
-
-      - name: Clean temp directory
-        run: |
-          rm -rf *
-          cp -r $GITHUB_WORKSPACE ../$GITHUB_WORKSPACE-N
-
       - name: make application.yml
         run: |
-          cd ../$GITHUB_WORKSPACE-N/src/main
+          cd src/main
           mkdir resources
+          cd resources
           touch application.yml
           echo "${{ secrets.APPLICATION_YML }}" > application.yml
           cd ../../..
         shell: bash
 
       - name: archive project
-        run: tar cvfz ./$PROJECT_NAME
+        run: tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
 
         #aws 접근 id, key
       - name: Configure AWS credentials
