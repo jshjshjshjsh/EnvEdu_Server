@@ -40,6 +40,7 @@ jobs:
 
       - name: ls
         run: |
+          echo $GITHUB_WORKSPACE
           pwd
           ls
           cd ..
