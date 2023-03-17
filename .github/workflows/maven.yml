@@ -46,10 +46,12 @@ jobs:
           touch application.yml
           echo "${{ secrets.APPLICATION_YML }}" > application.yml
           cd ../../../..
+          pwd
         shell: bash
 
       - name: archive project
         run: |
+          cd ..
           pwd
           ls
           tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
