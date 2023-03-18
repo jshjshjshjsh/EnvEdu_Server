@@ -3,19 +3,20 @@
 REPOSITORY=/home/ubuntu/EnvEdu_Server
 cd $REPOSITORY
 
-APP_NAME=EnvEduServer_CodeDeploy
-JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep 'SNAPSHOT.jar' | tail -n 1)
-JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
+mvn package -DskipTests
 
-CURRENT_PID=$(pgrep -f $APP_NAME)
+JAR_NAME=demo-0.0.1-SNAPSHOT.jar
+JAR_PATH=$REPOSITORY/target/$JAR_NAME
+
+CURRENT_PID=$(pgrep -f $JAR_NAME)
 
 if [ -z $CURRENT_PID ]
 then
   echo "> 종료할것 없음."
 else
   echo "> kill -9 $CURRENT_PID"
-  kill -15 $CURRENT_PID
   sleep 5
+  kill -15 $CURRENT_PID
 fi
 
 echo "> $JAR_PATH 배포"
