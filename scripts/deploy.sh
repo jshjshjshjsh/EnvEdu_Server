@@ -19,7 +19,5 @@ else
   kill -15 $CURRENT_PID
 fi
 
-echo "> $JAR_PATH 실행"
-java -jar $JAR_PATH
-# echo "> $JAR_PATH 배포"
-# nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
+echo "> $JAR_PATH 배포"
+nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
