@@ -13,3 +13,7 @@
 
 ## 아키택처
 <img src="https://user-images.githubusercontent.com/38274661/223520137-5e090463-7ad0-4018-abb5-d6202fc75fd8.jpg" width="500" height="500"/>
+
+## API 명세
+* <a href="https://jsh-1.gitbook.io/envedupnu/">API 명세서</a>
+<img width="334" alt="API명세서 예시" src="https://user-images.githubusercontent.com/127467152/228255116-0dd37879-957b-4c1f-b6e0-05da50630bca.png">
