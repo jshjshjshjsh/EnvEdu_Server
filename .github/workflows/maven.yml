@@ -39,13 +39,10 @@ jobs:
       - name: make application.yml
         run: |
           chmod 755 appspec.yml
-          cd src/main
-          mkdir resources
-          cd resources
+          cd src/main/resources
           touch application.yml
           echo "${{ secrets.APPLICATION_YML }}" > application.yml
-          touch logback-spring.xml
-          echo "${{ secrets.LOGBACK_SPRING_XML }}" > logback-spring.xml
+
         shell: bash
 
       - name: archive project
