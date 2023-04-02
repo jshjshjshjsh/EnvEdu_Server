@@ -45,7 +45,7 @@ jobs:
           touch application.yml
           echo "${{ secrets.APPLICATION_YML }}" > application.yml
           touch logback-spring.xml
-          echo "${{ secrets.LOGBACK_SPRING_XML }} > logback-spring.xml
+          echo "${{ secrets.LOGBACK_SPRING_XML }}" > logback-spring.xml
         shell: bash
 
       - name: archive project
