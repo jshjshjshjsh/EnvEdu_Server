@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -19,18 +20,21 @@ import java.sql.Timestamp;
 public class UserDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(length = 20, nullable = false, unique = true)
-    private String userDeviceMAC;
+    private String mac;
 
-    @Column(length = 10)
+    @Column(length = 20, nullable = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
     private User user;
 
     @CreationTimestamp
-    @JsonIgnore
-    private Timestamp date;
+    private Timestamp createdDate;
+
+    @UpdateTimestamp
+    private Timestamp updatedDate;
 }
