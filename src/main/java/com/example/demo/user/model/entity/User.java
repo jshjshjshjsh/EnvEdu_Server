@@ -7,6 +7,7 @@ import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.model.enumerate.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -66,6 +67,9 @@ public abstract class User {
 
     @CreationTimestamp
     private Timestamp createdTime;
+
+    @UpdateTimestamp
+    private Timestamp updatedTime;
 
     public void setUsername(String username)
     {
