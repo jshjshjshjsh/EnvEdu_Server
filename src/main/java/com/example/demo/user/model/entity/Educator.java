@@ -22,7 +22,7 @@ public class Educator extends User{
     @OneToMany(mappedBy = "educator", fetch = FetchType.LAZY)
     private List<Student_Educator> educator_students;
 
-    @Column(length = 3)
+    @Column(length = 3, nullable = false)
     @Enumerated(EnumType.STRING)
     private IsAuthorized isAuthorized;
 
