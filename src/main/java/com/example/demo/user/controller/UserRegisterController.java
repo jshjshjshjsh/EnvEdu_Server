@@ -1,62 +1,46 @@
 package com.example.demo.user.controller;
 
 import com.example.demo.DTO.ResponseDTO;
-import com.example.demo.redis.entity.RegisterAuthNum;
-import com.example.demo.DTO.AddMACDTO;
-import com.example.demo.DTO.RegisterDTO;
-import com.example.demo.user.model.entity.Educator;
-import com.example.demo.user.model.entity.Student;
-import com.example.demo.user.model.enumerate.IsActive;
-import com.example.demo.user.model.enumerate.IsAuthorized;
-import com.example.demo.user.model.enumerate.Role;
+import com.example.demo.exceptions.CustomMailException;
+import com.example.demo.exceptions.DuplicateAttributeException;
+import com.example.demo.user.dto.EmailDTO;
+import com.example.demo.user.dto.RegisterDTO;
 import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.Random;
 
 
 @RequiredArgsConstructor
 @RestController
 public class UserRegisterController {
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 일반 user, student 관련 api
     */
-    @PostMapping("/register")
-    private ResponseDTO<Object> register(@Valid @RequestBody RegisterDTO registerDTO)
-    {
-        if(userService.checkDuplicateUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail()))
-        {
-            throw new IllegalArgumentException();
-        }
-        Random random = new Random();
-        String randomAuthNum = String.format("%04d", random.nextInt(10000));
+    @PostMapping("/auth")
+    private ResponseEntity<?> sendAuthNum(@Valid @RequestBody EmailDTO emailDTO) {
+        userService.sendAuthNum(emailDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        Student student = Student.studentBuilder()
-                .username(registerDTO.getUsername())
-                .password(bCryptPasswordEncoder.encode(registerDTO.getPassword()))
-                .email(registerDTO.getEmail())
-                .role(Role.ROLE_STUDENT)
-                .isActive(IsActive.YES)
-                .build();
+    @GetMapping("/auth")
+    private ResponseEntity<?> checkAuthNum(@RequestParam(value = "email") String email,
+                                           @RequestParam(value = "authNum") String authNum) {
+        userService.checkAuthNum(email, authNum);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        RegisterAuthNum registerAuthNum = RegisterAuthNum.builder()
-                .email(student.getEmail())
-                .registerAuthNum(randomAuthNum)
-                .build();
-        userService.addUser(student,registerAuthNum);
-
-        return new ResponseDTO<>(HttpStatus.OK.value(),null);
+    @PostMapping("/user")
+    private ResponseEntity<?> register(@Valid @RequestBody RegisterDTO registerDTO) {
+        userService.addUser(registerDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -65,7 +49,7 @@ public class UserRegisterController {
     @PostMapping("/register/educator")
     private ResponseDTO<Object> registerEducator(@Valid @RequestBody RegisterDTO registerDTO)
     {
-        if(userService.checkDuplicateUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail()))
+        /*if(userService.checkDuplicateUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail()))
         {
             throw new IllegalArgumentException();
         }
@@ -77,14 +61,14 @@ public class UserRegisterController {
                 .password(bCryptPasswordEncoder.encode(registerDTO.getPassword()))
                 .email(registerDTO.getEmail())
                 .role(Role.ROLE_EDUCATOR)
-                .isActive(IsActive.NO)
+                .state(State.INACTIVE)
                 .isAuthorized(IsAuthorized.NO)
                 .build();
         RegisterAuthNum registerAuthNum = RegisterAuthNum.builder()
                 .email(educator.getEmail())
                 .registerAuthNum(randomAuthNum)
                 .build();
-        userService.addUser(educator,registerAuthNum);
+        userService.addUser(educator,registerAuthNum);*/
 
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
     }
@@ -107,14 +91,14 @@ public class UserRegisterController {
     @PostMapping("/register/resend")
     private ResponseDTO<Object> resendAuthNum(@RequestBody Map<String,String> map)
     {
-        Random random = new Random();
+        /*Random random = new Random();
         String randomAuthNum = String.format("%04d", random.nextInt(10000));
 
         RegisterAuthNum registerAuthNum = RegisterAuthNum.builder()
                 .email(map.get("email"))
                 .registerAuthNum(randomAuthNum)
                 .build();
-        userService.resendAuthNum(registerAuthNum);
+        userService.resendAuthNum(registerAuthNum);*/
 
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
     }
@@ -124,20 +108,26 @@ public class UserRegisterController {
      */
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private void methodArgumentNotValidExceptionHandler(HttpServletResponse response)
+    private ResponseEntity<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e)
     {
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private void illegalArgumentExceptionHandler(HttpServletResponse response)
+    private ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException e)
     {
-        response.setStatus(HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(MailException.class)
-    private void mailSendExceptionHandler(HttpServletResponse response)
+
+    @ExceptionHandler(CustomMailException.class)
+    private ResponseEntity<?> customMailExceptionHandler(CustomMailException e)
     {
-       response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DuplicateAttributeException.class)
+    private ResponseEntity<?> duplicateAttributeExceptionHandler(DuplicateAttributeException e) {
+        return new ResponseEntity<>("중복되는 " + e.getAttribute() + "(이)가 있습니다", HttpStatus.BAD_REQUEST);
     }
 
     /**
