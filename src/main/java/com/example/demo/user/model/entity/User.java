@@ -55,7 +55,7 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false, length = 7)
+    @Column(nullable = false, length = 8)
     @Enumerated(EnumType.STRING)
     private State state;
 
