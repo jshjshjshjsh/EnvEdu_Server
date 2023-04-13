@@ -12,6 +12,8 @@ import java.util.List;
 
 @Entity
 public class Educator extends User{
+    public Educator() {}
+
     @Builder(builderMethodName = "educatorBuilder")
     public Educator(String username, String password, String email, Date birthday, Role role, Gender gender, State state, IsAuthorized isAuthorized)
     {
