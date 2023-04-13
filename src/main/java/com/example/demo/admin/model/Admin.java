@@ -1,5 +1,6 @@
 package com.example.demo.admin.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,12 +21,17 @@ public class Admin {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(nullable = false, length = 40, unique = true)
-    private String email;
-
     @CreationTimestamp
     private Timestamp createdTime;
 
     @UpdateTimestamp
     private Timestamp updatedTime;
+
+    public Admin() {}
+
+    @Builder(builderMethodName = "adminBuilder")
+    public Admin(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
