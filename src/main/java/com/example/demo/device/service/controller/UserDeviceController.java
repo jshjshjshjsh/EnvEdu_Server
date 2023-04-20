@@ -1,4 +1,4 @@
-package com.example.demo.device.controller;
+package com.example.demo.device.service.controller;
 
 import com.example.demo.DTO.AddMACDTO;
 import com.example.demo.DTO.MacListDTO;
@@ -27,7 +27,7 @@ public class UserDeviceController {
     private ResponseDTO<Object> addDevice(@Valid @RequestBody AddMACDTO addMACDTO)
     {
         UserDevice userDevice = UserDevice.builder()
-                .userDeviceMAC(addMACDTO.getMAC())
+                .mac(addMACDTO.getMAC())
                 .user(userService.getUser(addMACDTO.getUsername()))
                 .build();
         userDeviceService.addDevice(userDevice);
