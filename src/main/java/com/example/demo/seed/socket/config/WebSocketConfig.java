@@ -43,7 +43,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     {
                         if(authHeader == null)
                         {
-                            if(!userDeviceRepository.existsByUserDeviceMAC(MAC))
+                            if(!userDeviceRepository.existsByMac(MAC))
                             {
                                 throw new IllegalArgumentException("등록되지 않은 MAC");
                             }
