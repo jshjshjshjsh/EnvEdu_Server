@@ -9,7 +9,7 @@ import com.example.demo.security.principal.PrincipalDetails;
 import com.example.demo.token.model.RefreshToken;
 import com.example.demo.token.repository.RefreshTokenRepository;
 import com.example.demo.user.model.entity.User;
-import com.example.demo.user.model.enumerate.IsActive;
+import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Enumeration;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
@@ -51,7 +50,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             String username = JWT.require(Algorithm.HMAC512(Properties.KEY)).build().verify(accessToken.replace(Properties.PREFIX, ""))
                     .getClaim(Properties.CLAIM_USERNAME).asString();
 
-            User user = userRepository.findByUsernameAndIsActive(username, IsActive.YES).orElseThrow(()-> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
+            User user = userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(()-> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
 
             if(user == null)
             {
@@ -93,7 +92,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 return;
             }
 
-            User user = userRepository.findByUsernameAndIsActive(JwtUtil.getClaim(request,Properties.CLAIM_USERNAME), IsActive.YES).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByUsernameAndState(JwtUtil.getClaim(request,Properties.CLAIM_USERNAME), State.ACTIVE).orElseThrow(IllegalArgumentException::new);
 
             //RefreshToken storedToken = refreshTokenRepository.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
 
