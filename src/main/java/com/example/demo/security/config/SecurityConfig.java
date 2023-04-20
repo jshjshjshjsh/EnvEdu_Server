@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .and()
                 .logout().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers("/login","/register/**","/logout","/device/**","/client/socket/**","/test/**").permitAll()
+                        .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**").permitAll()
                         .mvcMatchers("/user/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
