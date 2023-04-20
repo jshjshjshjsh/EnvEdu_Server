@@ -3,7 +3,7 @@ package com.example.demo.security.config;
 import com.example.demo.security.jwt.JwtUtil;
 import com.example.demo.security.jwt.Properties;
 import com.example.demo.security.principal.PrincipalDetails;
-import com.example.demo.DTO.LoginDTO;
+import com.example.demo.user.dto.LoginDTO;
 import com.example.demo.token.model.RefreshToken;
 import com.example.demo.token.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
