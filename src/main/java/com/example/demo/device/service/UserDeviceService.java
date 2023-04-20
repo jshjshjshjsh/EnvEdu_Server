@@ -3,11 +3,8 @@ package com.example.demo.device.service;
 import com.example.demo.DTO.MacListDTO;
 import com.example.demo.device.model.UserDevice;
 import com.example.demo.device.repository.UserDeviceRepository;
-import com.example.demo.user.model.entity.Educator;
-import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.User;
-import com.example.demo.user.model.enumerate.IsActive;
-import com.example.demo.user.model.enumerate.Role;
+import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,46 +28,46 @@ public class UserDeviceService {
     @Transactional
     public void registerDevice(String username, String deviceMAC)
     {
-        UserDevice userDevice = userDeviceRepository.findByUserDeviceMAC(deviceMAC).orElseThrow(IllegalArgumentException::new);
-        userDevice.setUser(userRepository.findByUsernameAndIsActive(username, IsActive.YES).orElseThrow(IllegalArgumentException::new));
+        UserDevice userDevice = userDeviceRepository.findByMac(deviceMAC).orElseThrow(IllegalArgumentException::new);
+        userDevice.setUser(userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(IllegalArgumentException::new));
     }
     @Transactional(readOnly = true)
     public List<MacListDTO> getDeviceList(String username)
     {
-        User user = userRepository.findByUsernameAndIsActive(username, IsActive.YES).orElseThrow(()->{throw new IllegalArgumentException();});
+        User user = userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(()->{throw new IllegalArgumentException();});
         Map<String,List<String>> map = new HashMap<>();
         List<MacListDTO> list = new ArrayList<>();
 
-        if(!user.getRole().equals(Role.ROLE_STUDENT))
-        {
-            Educator educator = (Educator) user;
-            MacListDTO macListDTO = new MacListDTO(educator.getUsername(), new ArrayList<>());
-            educator.getUserDevice().forEach((elem)->{
-                macListDTO.getMacList().add(elem.getUserDeviceMAC());
-            });
-            list.add(macListDTO);
-
-            List<UserDevice> deviceList = userDeviceRepository.findAllByUserIn(new ArrayList<>(educator.getStudents()));
-            deviceList.forEach((elem)->{
-                map.put(elem.getUser().getUsername(), new ArrayList<>());
-            });
-            deviceList.forEach((elem)-> {
-                map.get(elem.getUser().getUsername()).add(elem.getUserDeviceMAC());
-            });
-            map.forEach((name, elem)->{
-                MacListDTO macListDTO1 = new MacListDTO(name, elem);
-                list.add(macListDTO1);
-            });
-        }
-        else
-        {
-            MacListDTO macListDTO = new MacListDTO(user.getUsername(), new ArrayList<>());
-            List<UserDevice> deviceList = userDeviceRepository.findAllByUser(user);
-            deviceList.forEach((elem)->{
-                macListDTO.getMacList().add(elem.getUserDeviceMAC());
-            });
-            list.add(macListDTO);
-        }
+//        if(!user.getRole().equals(Role.ROLE_STUDENT))
+//        {
+//            Educator educator = (Educator) user;
+//            MacListDTO macListDTO = new MacListDTO(educator.getUsername(), new ArrayList<>());
+//            educator.getDevices().forEach((elem)->{
+//                macListDTO.getMacList().add(elem.getMac());
+//            });
+//            list.add(macListDTO);
+//
+//            List<UserDevice> deviceList = userDeviceRepository.findAllByUserIn(new ArrayList<>(educator.getStudents()));
+//            deviceList.forEach((elem)->{
+//                map.put(elem.getUser().getUsername(), new ArrayList<>());
+//            });
+//            deviceList.forEach((elem)-> {
+//                map.get(elem.getUser().getUsername()).add(elem.getUserDeviceMAC());
+//            });
+//            map.forEach((name, elem)->{
+//                MacListDTO macListDTO1 = new MacListDTO(name, elem);
+//                list.add(macListDTO1);
+//            });
+//        }
+//        else
+//        {
+//            MacListDTO macListDTO = new MacListDTO(user.getUsername(), new ArrayList<>());
+//            List<UserDevice> deviceList = userDeviceRepository.findAllByUser(user);
+//            deviceList.forEach((elem)->{
+//                macListDTO.getMacList().add(elem.getUserDeviceMAC());
+//            });
+//            list.add(macListDTO);
+//        }
 
         return list;
     }
