@@ -25,6 +25,6 @@ public class JwtUtil {
 
     @PostConstruct
     private void init() {
-        this.jwtKey = key;
+        jwtKey = key;
     }
 }
