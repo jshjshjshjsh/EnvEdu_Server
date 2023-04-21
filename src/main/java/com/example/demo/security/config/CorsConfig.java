@@ -1,5 +1,6 @@
 package com.example.demo.security.config;
 
+import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.security.jwt.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +18,8 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.addExposedHeader(Properties.HEADER_STRING);
-        config.addExposedHeader(Properties.REFRESH);
+        config.addExposedHeader(JwtUtil.headerString);
+        //config.addExposedHeader(Properties.REFRESH);
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
