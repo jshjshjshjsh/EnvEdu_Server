@@ -31,8 +31,6 @@ public class AdminService {
 
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
         return ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
-                .secure(true)
-                .sameSite("None")
                 .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
                 .path("/")
                 .build();
