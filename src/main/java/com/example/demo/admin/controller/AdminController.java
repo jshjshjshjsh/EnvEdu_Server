@@ -2,6 +2,9 @@ package com.example.demo.admin.controller;
 
 import com.example.demo.admin.DTO.AdminLoginDTO;
 import com.example.demo.admin.service.AdminService;
+import com.example.demo.jwt.model.JwtAccessToken;
+import com.example.demo.jwt.model.JwtRefreshToken;
+import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,9 @@ public class AdminController {
     @PostMapping("/login/admin")
     private ResponseEntity<?> loginAdmin(@RequestBody AdminLoginDTO adminLoginDTO, HttpServletResponse response) {
         response.setHeader("Set-Cookie", adminService.loginAdmin(adminLoginDTO).toString());
+        response.setHeader(JwtUtil.headerString, JwtUtil.tokenType + JwtUtil.convertJwtToString(JwtAccessToken.generateJwtAccessToken(
+                adminService.findAdminByUsername(adminLoginDTO.getUsername())
+        )));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -29,7 +35,7 @@ public class AdminController {
     private ResponseEntity<?> logoutAdmin(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie : cookies) {
-            if(cookie.getName().equals("access_token") || cookie.getName().equals("refresh_token")) {
+            if(cookie.getName().equals(JwtRefreshToken.tokenName) || cookie.getName().equals(JwtAccessToken.tokenName)) {
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
             }

@@ -4,12 +4,15 @@ import com.example.demo.admin.DTO.AdminLoginDTO;
 import com.example.demo.admin.cipher.AdminCipher;
 import com.example.demo.admin.model.Admin;
 import com.example.demo.admin.repository.AdminRepository;
+import com.example.demo.cookie.util.CookieUtil;
 import com.example.demo.jwt.model.JwtAccessToken;
+import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 
@@ -23,21 +26,20 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
 
+    @Transactional(readOnly = true)
     public ResponseCookie loginAdmin(AdminLoginDTO adminLoginDTO) {
         Admin admin = adminRepository.findByUsername(adminLoginDTO.getUsername()).orElseThrow(()->new IllegalArgumentException("로그인 정보가 일치하지 않습니다"));
         if(!adminCipher.encrypt(adminLoginDTO.getPassword()).equals(admin.getPassword())) {
             throw new IllegalArgumentException("로그인 정보가 일치하지 않습니다");
         }
 
-        JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
+        JwtRefreshToken jwtRefreshToken = JwtRefreshToken.generateJwtRefreshToken(admin);
 
-        return ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
-                .domain(domain)
-                .sameSite("Strict")
-                .secure(true)
-                .httpOnly(true)
-                .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
-                .path("/")
-                .build();
+        return CookieUtil.generateCookieForRefreshToken(jwtRefreshToken);
+    }
+
+    @Transactional(readOnly = true)
+    public Admin findAdminByUsername(String username) {
+        return adminRepository.findByUsername(username).orElseThrow(()->new IllegalArgumentException("해당 어드민이 존재하지 않습니다"));
     }
 }
