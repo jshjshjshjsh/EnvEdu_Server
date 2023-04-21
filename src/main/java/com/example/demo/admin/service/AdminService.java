@@ -34,7 +34,7 @@ public class AdminService {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
-                .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
+                .maxAge(Duration.ofSeconds(1000000))
                 .path("/")
                 .build();
 
