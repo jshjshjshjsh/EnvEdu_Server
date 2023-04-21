@@ -30,7 +30,8 @@ public class AdminService {
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
         Cookie cookie = new Cookie("access_token", JwtUtil.convertJwtToString(jwtAccessToken));
         cookie.setHttpOnly(true);
-        cookie.setDomain(domain);
+        cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setMaxAge(JwtAccessToken.validTimeInSec);
 
         return cookie;
