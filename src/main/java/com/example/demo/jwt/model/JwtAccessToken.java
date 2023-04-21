@@ -6,6 +6,8 @@ import com.example.demo.user.model.entity.User;
 import java.util.Date;
 
 public class JwtAccessToken extends JwtToken {
+    public final static String tokenName = "access_token";
+
     public final static int validTimeInSec = 180;
 
     private JwtAccessToken(User user) {

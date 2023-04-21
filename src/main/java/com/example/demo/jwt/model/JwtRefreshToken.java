@@ -6,6 +6,8 @@ import com.example.demo.user.model.entity.User;
 import java.util.Date;
 
 public class JwtRefreshToken extends JwtToken {
+    public final static String tokenName = "refresh_token";
+
     public final static int validTimeInSec = 86400;
 
     private JwtRefreshToken(User user) {
