@@ -12,7 +12,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-//import javax.servlet.http.Cookie;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,9 @@ public class AdminService {
 
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
         ResponseCookie cookie = ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
-                .httpOnly(false)
+                .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
+                .sameSite("Strict")
                 .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
                 .path("/")
                 .build();
