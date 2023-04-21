@@ -6,7 +6,7 @@ import com.example.demo.user.model.entity.User;
 import java.util.Date;
 
 public class JwtAccessToken extends JwtToken {
-    public final static int validTimeInSec = 1800;
+    public final static int validTimeInSec = 180;
 
     private JwtAccessToken(User user) {
         super("access", new Date(System.currentTimeMillis() + validTimeInSec * 1000L), user);
