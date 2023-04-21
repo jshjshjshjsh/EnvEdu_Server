@@ -16,8 +16,7 @@ public class JwtUtil {
     private String key;
 
     public static String convertJwtToString(JwtToken jwtToken) {
-        return "Bearer " +
-                JWT.create()
+        return JWT.create()
                         .withSubject(jwtToken.getSubject())
                         .withExpiresAt(jwtToken.getExpiresAt())
                         .withClaim("user_info", jwtToken.getClaims())
