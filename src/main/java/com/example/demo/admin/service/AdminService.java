@@ -8,7 +8,6 @@ import com.example.demo.jwt.model.JwtAccessToken;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class AdminService {
 
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
         ResponseCookie cookie = ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
-                .httpOnly(true)
+                //.httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
                 .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
