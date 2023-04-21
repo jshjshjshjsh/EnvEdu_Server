@@ -30,11 +30,12 @@ public class AdminService {
         }
 
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
-        ResponseCookie cookie = ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
+        return ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
+                .secure(true)
+                .httpOnly(true)
+                .sameSite("Strict")
                 .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
                 .path("/")
                 .build();
-
-        return cookie;
     }
 }
