@@ -12,6 +12,10 @@ import javax.annotation.PostConstruct;
 public class JwtUtil {
     public static String jwtKey;
 
+    public static final String headerString = "Authorization";
+
+    public static final String tokenType = "Bearer ";
+
     @Value("${spring.jwt.key}")
     private String key;
 
