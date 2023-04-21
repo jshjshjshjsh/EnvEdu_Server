@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import java.time.Duration;
 
 @Service
@@ -30,7 +31,13 @@ public class AdminService {
         }
 
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(admin);
+        Cookie cookie = new Cookie("test", "Test");
+
         return ResponseCookie.from("access_token", JwtUtil.convertJwtToString(jwtAccessToken))
+                .domain(domain)
+                .sameSite("Strict")
+                .secure(true)
+                .httpOnly(true)
                 .maxAge(Duration.ofSeconds(JwtAccessToken.validTimeInSec))
                 .path("/")
                 .build();
