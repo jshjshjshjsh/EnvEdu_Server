@@ -21,7 +21,7 @@ public class AdminController {
 
     @PostMapping("/login/admin")
     private ResponseEntity<?> loginAdmin(@RequestBody AdminLoginDTO adminLoginDTO, HttpServletResponse response) {
-        response.addCookie(adminService.loginAdmin(adminLoginDTO));
+        response.setHeader("Set-Cookie", adminService.loginAdmin(adminLoginDTO).toString());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
