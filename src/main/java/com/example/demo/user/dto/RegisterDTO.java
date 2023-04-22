@@ -28,5 +28,14 @@ public class RegisterDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
+    public RegisterDTO() {}
 
+    public RegisterDTO(String username, String password, String email, Gender gender, Role role, Date birthday) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.gender = gender;
+        this.role = role;
+        this.birthday = birthday;
+    }
 }
