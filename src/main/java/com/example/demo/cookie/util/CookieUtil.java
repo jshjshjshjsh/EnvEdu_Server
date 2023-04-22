@@ -7,6 +7,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Component
@@ -22,7 +24,7 @@ public class CookieUtil {
     }
 
     public static ResponseCookie generateCookieForRefreshToken(JwtRefreshToken refreshToken) {
-        return ResponseCookie.from(JwtRefreshToken.tokenName, JwtUtil.convertJwtToString(refreshToken))
+        return ResponseCookie.from(JwtRefreshToken.tokenName, URLEncoder.encode(JwtUtil.convertJwtToString(refreshToken), StandardCharsets.UTF_8))
                 .domain(seedDomain)
                 .secure(true)
                 .httpOnly(true)
