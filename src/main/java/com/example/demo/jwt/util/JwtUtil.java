@@ -16,14 +16,16 @@ public class JwtUtil {
 
     public static final String tokenType = "Bearer ";
 
+    public static final String claimName = "user_info";
+
     @Value("${spring.jwt.key}")
     private String key;
 
     public static String convertJwtToString(JwtToken jwtToken) {
-        return JWT.create()
+        return tokenType + JWT.create()
                         .withSubject(jwtToken.getSubject())
                         .withExpiresAt(jwtToken.getExpiresAt())
-                        .withClaim("user_info", jwtToken.getClaims())
+                        .withClaim(claimName, jwtToken.getClaims())
                         .sign(Algorithm.HMAC512(jwtKey));
     }
 
