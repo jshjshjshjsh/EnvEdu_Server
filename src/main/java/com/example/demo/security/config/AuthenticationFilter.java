@@ -46,7 +46,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             }
             catch (BadCredentialsException | UsernameNotFoundException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
             }
         }
         return null;
