@@ -63,6 +63,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         ResponseCookie cookie = CookieUtil.generateCookieForRefreshToken(jwtRefreshToken);
 
         response.setHeader("Set-Cookie", cookie.toString());
-        response.setHeader(JwtUtil.headerString, JwtUtil.tokenType + jwtAccessTokenString);
+        response.setHeader(JwtUtil.headerString, jwtAccessTokenString);
     }
 }
