@@ -1,7 +1,7 @@
 package com.example.demo.mail.service;
 
 import com.example.demo.exceptions.CustomMailException;
-import com.example.demo.user.dto.EmailDTO;
+import com.example.demo.user.dto.request.EmailDTO;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.mail.MailException;
