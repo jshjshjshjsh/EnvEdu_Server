@@ -1,6 +1,6 @@
 package com.example.demo.user.model.enumerate;
 
-import com.example.demo.user.dto.RegisterDTO;
+import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.model.entity.Educator;
 import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.User;
