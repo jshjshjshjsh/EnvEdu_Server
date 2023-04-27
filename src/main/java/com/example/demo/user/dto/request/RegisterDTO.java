@@ -1,4 +1,4 @@
-package com.example.demo.user.dto;
+package com.example.demo.user.dto.request;
 
 import com.example.demo.user.model.enumerate.Gender;
 import com.example.demo.user.model.enumerate.Role;
