@@ -1,6 +1,6 @@
 package com.example.demo.user.controller;
 
-import com.example.demo.user.dto.RegisterDTO;
+import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.model.enumerate.Gender;
 import com.example.demo.user.model.enumerate.Role;
 import com.example.demo.user.service.UserService;
