@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static com.example.demo.security.config.AuthenticationFilterApply.authenticationFilterApply;
-import static com.example.demo.security.config.AuthorizationFilterApply.authorizationFilterApply;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +23,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     private final CorsConfig corsConfig;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final UserRepository userRepository;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
@@ -35,9 +32,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-                .apply(authenticationFilterApply(refreshTokenRepository))
+                .apply(authenticationFilterApply())
                 .and()
-                .apply(authorizationFilterApply(refreshTokenRepository, userRepository))
+                .apply(AuthorizationFilterApply.getInstance())
                 .and()
                 .logout().disable()
                 .authorizeHttpRequests(authorize -> authorize
