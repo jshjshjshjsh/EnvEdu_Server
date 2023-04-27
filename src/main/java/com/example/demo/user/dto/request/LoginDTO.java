@@ -1,4 +1,4 @@
-package com.example.demo.user.dto;
+package com.example.demo.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
