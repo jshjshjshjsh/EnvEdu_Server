@@ -33,4 +33,15 @@ public class CookieUtil {
                 .maxAge(Duration.ofSeconds(JwtRefreshToken.validTimeInSec))
                 .build();
     }
+
+    public static ResponseCookie generateLogoutCookie() {
+        return ResponseCookie.from(JwtRefreshToken.tokenName, "")
+                .domain(seedDomain)
+                .secure(true)
+                .httpOnly(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(Duration.ofSeconds(0))
+                .build();
+    }
 }
