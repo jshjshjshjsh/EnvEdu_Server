@@ -1,10 +1,13 @@
 package com.example.demo.user.controller;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.example.demo.DTO.ResponseDTO;
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
-import com.example.demo.user.dto.EmailDTO;
-import com.example.demo.user.dto.RegisterDTO;
+import com.example.demo.jwt.util.JwtUtil;
+import com.example.demo.user.dto.request.EmailDTO;
+import com.example.demo.user.dto.request.RegisterDTO;
+import com.example.demo.user.dto.request.StudentAddDTO;
 import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -73,10 +77,12 @@ public class UserRegisterController {
         return new ResponseDTO<>(HttpStatus.OK.value(),null);
     }
 
-    @PostMapping("/educator/student/add")
-    private void registerStudent(@RequestBody Map<String,String> mp)
-    {
-        userService.addStudent(mp.get("username"), mp.get("student"));
+    @PostMapping("/educator/student")
+    private ResponseEntity<?> registerStudent(HttpServletRequest request, @RequestBody StudentAddDTO studentAddDTO) {
+        Map<String, Object> user_info = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        String username = user_info.get(JwtUtil.claimUsername).toString();
+        userService.addStudent(username, studentAddDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
