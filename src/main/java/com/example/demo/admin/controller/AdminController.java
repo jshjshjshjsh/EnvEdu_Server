@@ -25,7 +25,7 @@ public class AdminController {
     @PostMapping("/login/admin")
     private ResponseEntity<?> loginAdmin(@RequestBody AdminLoginDTO adminLoginDTO, HttpServletResponse response) {
         response.setHeader("Set-Cookie", adminService.loginAdmin(adminLoginDTO).toString());
-        response.setHeader(JwtUtil.headerString, JwtUtil.tokenType + JwtUtil.convertJwtToString(JwtAccessToken.generateJwtAccessToken(
+        response.setHeader(JwtUtil.headerString, JwtUtil.convertJwtToString(JwtAccessToken.generateJwtAccessToken(
                 adminService.findAdminByUsername(adminLoginDTO.getUsername())
         )));
         return new ResponseEntity<>(HttpStatus.OK);
