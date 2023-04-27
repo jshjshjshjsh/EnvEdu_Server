@@ -1,6 +1,7 @@
 package com.example.demo.jwt.model;
 
 import com.example.demo.admin.model.Admin;
+import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.security.principal.PrincipalDetails;
 import com.example.demo.user.model.entity.User;
 
@@ -19,8 +20,8 @@ public abstract class JwtToken {
         this.subject = subject;
         this.expiresAt = expiresAt;
         Map<String, String> claims = new HashMap<>();
-        claims.put("username", user.getUsername());
-        claims.put("role", user.getRole().toString());
+        claims.put(JwtUtil.claimUsername, user.getUsername());
+        claims.put(JwtUtil.claimUserRole, user.getRole().toString());
         this.claims = claims;
     }
 
@@ -28,8 +29,8 @@ public abstract class JwtToken {
         this.subject = subject;
         this.expiresAt = expiresAt;
         Map<String, String> claims = new HashMap<>();
-        claims.put("username", principalDetails.getUsername());
-        claims.put("role", principalDetails.getRole());
+        claims.put(JwtUtil.claimUsername, principalDetails.getUsername());
+        claims.put(JwtUtil.claimUserRole, principalDetails.getRole());
         this.claims = claims;
     }
 
@@ -37,8 +38,8 @@ public abstract class JwtToken {
         this.subject = subject;
         this.expiresAt = expiresAt;
         Map<String, String> claims = new HashMap<>();
-        claims.put("username", admin.getUsername());
-        claims.put("role", "ROLE_ADMIN");
+        claims.put(JwtUtil.claimUsername, admin.getUsername());
+        claims.put(JwtUtil.claimUserRole, "ROLE_ADMIN");
         this.claims = claims;
     }
 
