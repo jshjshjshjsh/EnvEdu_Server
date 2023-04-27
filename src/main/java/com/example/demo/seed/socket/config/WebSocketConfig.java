@@ -28,40 +28,40 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
-                if(StompCommand.CONNECT.equals(accessor.getCommand()))
-                {
-                    String authHeader = accessor.getFirstNativeHeader(Properties.HEADER_STRING);
-                    String MAC = accessor.getFirstNativeHeader("MAC");
-
-                    if(authHeader == null && MAC == null)
-                    {
-                        throw new IllegalArgumentException("권한이 없음");
-                    }
-                    else
-                    {
-                        if(authHeader == null)
-                        {
-                            if(!userDeviceRepository.existsByMac(MAC))
-                            {
-                                throw new IllegalArgumentException("등록되지 않은 MAC");
-                            }
-                        }
-                        else if(MAC == null)
-                        {
-                            if(!refreshTokenRepository.existsByRefreshToken(Objects.requireNonNull(accessor.getFirstNativeHeader(Properties.HEADER_STRING))))
-                            {
-                                throw new IllegalArgumentException("토큰이 없음");
-                            }
-                            if(JwtUtil.isTokenExpired(authHeader))
-                            {
-                                refreshTokenRepository.deleteByRefreshToken(authHeader);
-                                throw new IllegalArgumentException("토큰이 만료됨");
-                            }
-                        }
-                    }
-                }
+//                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+//
+//                if(StompCommand.CONNECT.equals(accessor.getCommand()))
+//                {
+//                    String authHeader = accessor.getFirstNativeHeader(Properties.HEADER_STRING);
+//                    String MAC = accessor.getFirstNativeHeader("MAC");
+//
+//                    if(authHeader == null && MAC == null)
+//                    {
+//                        throw new IllegalArgumentException("권한이 없음");
+//                    }
+//                    else
+//                    {
+//                        if(authHeader == null)
+//                        {
+//                            if(!userDeviceRepository.existsByMac(MAC))
+//                            {
+//                                throw new IllegalArgumentException("등록되지 않은 MAC");
+//                            }
+//                        }
+//                        else if(MAC == null)
+//                        {
+//                            if(!refreshTokenRepository.existsByRefreshToken(Objects.requireNonNull(accessor.getFirstNativeHeader(Properties.HEADER_STRING))))
+//                            {
+//                                throw new IllegalArgumentException("토큰이 없음");
+//                            }
+//                            if(JwtUtil.isTokenExpired(authHeader))
+//                            {
+//                                refreshTokenRepository.deleteByRefreshToken(authHeader);
+//                                throw new IllegalArgumentException("토큰이 만료됨");
+//                            }
+//                        }
+//                    }
+//                }
                 return message;
             }
         });
@@ -69,8 +69,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/device").setAllowedOriginPatterns("*").withSockJS();
-        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor(userDeviceRepository)).withSockJS();
+        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor(userDeviceRepository)).withSockJS();
     }
 
     @Override
