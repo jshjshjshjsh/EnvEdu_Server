@@ -11,6 +11,6 @@ public interface UserDeviceRepository extends JpaRepository<UserDevice, Long> {
     Optional<UserDevice> findByMac(String userDeviceMAC);
     boolean existsByMac(String userDeviceMAC);
     List<UserDevice> findAllByUser(User user);
-
     List<UserDevice> findAllByUserIn(List<User> list);
+    void deleteByMac(String userDeviceMAC);
 }
