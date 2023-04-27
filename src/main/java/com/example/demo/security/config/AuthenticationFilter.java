@@ -5,7 +5,7 @@ import com.example.demo.jwt.model.JwtAccessToken;
 import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.security.principal.PrincipalDetails;
-import com.example.demo.user.dto.LoginDTO;
+import com.example.demo.user.dto.request.LoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
