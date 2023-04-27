@@ -9,22 +9,13 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 
 
 public class AuthorizationFilterApply extends AbstractHttpConfigurer<AuthorizationFilterApply, HttpSecurity> {
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final UserRepository userRepository;
-
-    public AuthorizationFilterApply(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository)
-    {
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.userRepository = userRepository;
-    }
     @Override
     public void configure(HttpSecurity http) throws Exception {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        http.addFilterAfter(new AuthorizationFilter(authenticationManager, refreshTokenRepository, userRepository), FilterSecurityInterceptor.class);
+        http.addFilterAfter(new AuthorizationFilter(authenticationManager), FilterSecurityInterceptor.class);
     }
 
-    public static AuthorizationFilterApply authorizationFilterApply(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository)
-    {
-        return new AuthorizationFilterApply(refreshTokenRepository, userRepository);
+    public static AuthorizationFilterApply getInstance() {
+        return new AuthorizationFilterApply();
     }
 }
