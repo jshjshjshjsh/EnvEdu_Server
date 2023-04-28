@@ -44,7 +44,9 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
                     userDeviceRepository.findByMac(macAddress).orElseThrow(()->new IllegalArgumentException("허용되지 않은 기기"));
                     return true;
                 }
+                log.warn("null macAddressBytes");
             }
+            log.warn("null networkInterface");
             return false;
         } catch (JWTVerificationException e) {
             log.warn("not authorized");
