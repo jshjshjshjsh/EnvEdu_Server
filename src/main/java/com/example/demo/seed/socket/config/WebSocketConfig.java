@@ -5,6 +5,7 @@ import com.example.demo.security.jwt.JwtUtil;
 import com.example.demo.security.jwt.Properties;
 import com.example.demo.token.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
+@Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserDeviceRepository userDeviceRepository;
@@ -62,6 +64,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //                        }
 //                    }
 //                }
+                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+                if(StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+                    log.info("subscribe");
+                }
                 return message;
             }
         });
