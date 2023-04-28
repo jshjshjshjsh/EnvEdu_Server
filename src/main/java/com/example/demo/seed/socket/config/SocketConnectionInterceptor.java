@@ -7,6 +7,7 @@ import com.example.demo.device.repository.UserDeviceRepository;
 import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Slf4j
 public class SocketConnectionInterceptor implements HandshakeInterceptor {
     private final UserDeviceRepository userDeviceRepository;
 
@@ -38,14 +40,17 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
                 byte[] macAddressBytes = networkInterface.getHardwareAddress();
                 if (macAddressBytes != null) {
                     String macAddress = Arrays.toString(macAddressBytes);
+                    log.info("mac address: " + macAddress);
                     userDeviceRepository.findByMac(macAddress).orElseThrow(()->new IllegalArgumentException("허용되지 않은 기기"));
                     return true;
                 }
             }
             return false;
         } catch (JWTVerificationException e) {
+            log.warn("not authorized");
             return false;
         }
+        log.info("socket handshake completed");
         return true;
     }
 
