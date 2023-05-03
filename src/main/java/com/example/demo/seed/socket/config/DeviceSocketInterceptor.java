@@ -22,12 +22,13 @@ public class DeviceSocketInterceptor implements HandshakeInterceptor {
             String MAC = Objects.requireNonNull(request.getHeaders().get("mac")).toString();
             boolean exists =  userDeviceRepository.existsByMac(MAC);
             if(exists) {
-                log.info("connected from " + MAC);
+                log.info("device connection established from " + MAC);
                 return true;
             }
             log.warn("device connection attempt from disallowed address " + MAC);
             return false;
         } catch (NullPointerException e) {
+            log.warn("required header missing");
             return false;
         }
     }
