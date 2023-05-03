@@ -17,11 +17,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 
-@RequiredArgsConstructor
 @Slf4j
 public class SocketConnectionInterceptor implements HandshakeInterceptor {
-    private final UserDeviceRepository userDeviceRepository;
-
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         try {
