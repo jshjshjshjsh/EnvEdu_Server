@@ -20,6 +20,8 @@ public class DeviceSocketInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         try {
             String MAC = Objects.requireNonNull(request.getHeaders().get("mac")).toString();
+            MAC = MAC.replace("[", "");
+            MAC = MAC.replace("]", "");
             boolean exists =  userDeviceRepository.existsByMac(MAC);
             if(exists) {
                 log.info("device connection established from " + MAC);
