@@ -34,26 +34,13 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
             String refreshToken = URLDecoder.decode(Objects.requireNonNull(request.getHeaders().get("cookie")).get(0), StandardCharsets.UTF_8);
             JWT.require(JwtUtil.getAlgorithm()).build().verify(refreshToken.replace(JwtRefreshToken.tokenName + "=" + JwtUtil.tokenType, ""));
         } catch (NullPointerException e) {
-//            InetAddress ipAddress = request.getRemoteAddress().getAddress();
-//            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ipAddress);
-//            if (networkInterface != null) {
-//                byte[] macAddressBytes = networkInterface.getHardwareAddress();
-//                if (macAddressBytes != null) {
-//                    String macAddress = Arrays.toString(macAddressBytes);
-//                    log.info("mac address: " + macAddress);
-//                    userDeviceRepository.findByMac(macAddress).orElseThrow(()->new IllegalArgumentException("허용되지 않은 기기"));
-//                    return true;
-//                }
-//                log.warn("null macAddressBytes");
-//            }
-//            log.warn("null networkInterface");
-//            return false;
-            return true;
+            log.warn("required header missing");
+            return false;
         } catch (JWTVerificationException e) {
-            log.warn("not authorized");
+            log.warn("invalid token");
             return false;
         }
-        log.info("socket handshake completed");
+        log.info("connection established");
         return true;
     }
 
