@@ -1,51 +1,75 @@
 package com.example.demo.user.model.entity;
 
 import com.example.demo.device.model.UserDevice;
-import com.example.demo.user.model.enumerate.IsActive;
+import com.example.demo.location.model.Location;
+import com.example.demo.user.model.enumerate.Gender;
+import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.model.enumerate.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.regex.Pattern;
 
 @Entity
 @Getter
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User {
+    protected User() {}
+
+    protected User(String username, String password, String email, Date birthday, Role role, Gender gender, State state) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.birthday = birthday;
+        this.role = role;
+        this.gender = gender;
+        this.state = state;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, unique = true)
     private String username;
 
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 40, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
+    private Date birthday;
+
+    @Column(nullable = false, length = 13)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserDevice> userDevice;
-
-    @Column(nullable = false, length = 3)
+    @Column(nullable = false, length = 6)
     @Enumerated(EnumType.STRING)
-    private IsActive isActive;
+    private Gender gender;
+
+    @Column(nullable = false, length = 8)
+    @Enumerated(EnumType.STRING)
+    private State state;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Location> locations;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserDevice> devices;
 
     @CreationTimestamp
-    @JsonIgnore
-    private Timestamp date;
+    private Timestamp createdTime;
+
+    @UpdateTimestamp
+    private Timestamp updatedTime;
 
     public void setUsername(String username)
     {
@@ -86,19 +110,8 @@ public class User {
         }
     }
 
-    public void setUserDeviceMAC(List<UserDevice> userDevice)
+    public void setState(State state)
     {
-        /*if(!Pattern.matches
-                ("^[\\da-zA-Z][\\da-zA-Z]-[\\da-zA-Z][\\da-zA-Z]-[\\da-zA-Z][\\da-zA-Z]-[\\da-zA-Z][\\da-zA-Z]-[\\da-zA-Z][\\da-zA-Z]-[\\da-zA-Z][\\da-zA-Z]$",
-                        userDeviceMAC))
-        {
-            throw new IllegalArgumentException();
-        }*/
-        this.userDevice = userDevice;
-    }
-
-    public void setIsActive(IsActive isActive)
-    {
-        this.isActive = isActive;
+        this.state = state;
     }
 }

@@ -1,77 +1,78 @@
 package com.example.demo.device.service;
 
-import com.example.demo.DTO.MacListDTO;
+import com.example.demo.DTO.AddMACDTO;
+import com.example.demo.device.dto.request.DeviceUpdateDTO;
+import com.example.demo.device.dto.response.DeviceListDTO;
+import com.example.demo.device.dto.response.RelatedUserDeviceListDTO;
 import com.example.demo.device.model.UserDevice;
 import com.example.demo.device.repository.UserDeviceRepository;
 import com.example.demo.user.model.entity.Educator;
-import com.example.demo.user.model.entity.Student;
+import com.example.demo.user.model.entity.Student_Educator;
 import com.example.demo.user.model.entity.User;
-import com.example.demo.user.model.enumerate.IsActive;
-import com.example.demo.user.model.enumerate.Role;
+import com.example.demo.user.model.enumerate.State;
+import com.example.demo.user.repository.Student_EducatorRepository;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class UserDeviceService {
     private final UserDeviceRepository userDeviceRepository;
+
     private final UserRepository userRepository;
+
+    private final Student_EducatorRepository student_educatorRepository;
+
     @Transactional
-    public void addDevice(UserDevice userDevice)
-    {
-        userDeviceRepository.save(userDevice);
+    public void addDevice(AddMACDTO addMACDTO) {
+        userDeviceRepository.save(UserDevice.of(addMACDTO));
     }
-    @Transactional
-    public void registerDevice(String username, String deviceMAC)
-    {
-        UserDevice userDevice = userDeviceRepository.findByUserDeviceMAC(deviceMAC).orElseThrow(IllegalArgumentException::new);
-        userDevice.setUser(userRepository.findByUsernameAndIsActive(username, IsActive.YES).orElseThrow(IllegalArgumentException::new));
-    }
+
     @Transactional(readOnly = true)
-    public List<MacListDTO> getDeviceList(String username)
-    {
-        User user = userRepository.findByUsernameAndIsActive(username, IsActive.YES).orElseThrow(()->{throw new IllegalArgumentException();});
-        Map<String,List<String>> map = new HashMap<>();
-        List<MacListDTO> list = new ArrayList<>();
+    public DeviceListDTO getAllDevices() {
+        List<UserDevice> devices = userDeviceRepository.findAll();
+        return new DeviceListDTO(devices);
+    }
 
-        if(!user.getRole().equals(Role.ROLE_STUDENT))
-        {
-            Educator educator = (Educator) user;
-            MacListDTO macListDTO = new MacListDTO(educator.getUsername(), new ArrayList<>());
-            educator.getUserDevice().forEach((elem)->{
-                macListDTO.getMacList().add(elem.getUserDeviceMAC());
-            });
-            list.add(macListDTO);
+    @Transactional
+    public void updateDevice(DeviceUpdateDTO deviceUpdateDTO) {
+        boolean reset = deviceUpdateDTO.isReset();
+        UserDevice userDevice = userDeviceRepository.findByMac(deviceUpdateDTO.getMac()).orElseThrow(()->new IllegalArgumentException("해당 기기가 존재하지 않습니다"));
 
-            List<UserDevice> deviceList = userDeviceRepository.findAllByUserIn(new ArrayList<>(educator.getStudents()));
-            deviceList.forEach((elem)->{
-                map.put(elem.getUser().getUsername(), new ArrayList<>());
-            });
-            deviceList.forEach((elem)-> {
-                map.get(elem.getUser().getUsername()).add(elem.getUserDeviceMAC());
-            });
-            map.forEach((name, elem)->{
-                MacListDTO macListDTO1 = new MacListDTO(name, elem);
-                list.add(macListDTO1);
-            });
+        if(reset) {
+            userDevice.updateUser(null);
+            userDevice.updateName(null);
         }
-        else
-        {
-            MacListDTO macListDTO = new MacListDTO(user.getUsername(), new ArrayList<>());
-            List<UserDevice> deviceList = userDeviceRepository.findAllByUser(user);
-            deviceList.forEach((elem)->{
-                macListDTO.getMacList().add(elem.getUserDeviceMAC());
-            });
-            list.add(macListDTO);
+        if(!reset) {
+            User user = userRepository.findByUsernameAndState(deviceUpdateDTO.getUsername(), State.ACTIVE).orElseThrow(()->new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
+            userDevice.updateUser(user);
+            userDevice.updateName(deviceUpdateDTO.getDeviceName());
+        }
+    }
+
+    @Transactional
+    public void deleteDevice(String mac) {
+        userDeviceRepository.deleteByMac(mac);
+    }
+
+    @Transactional(readOnly = true)
+    public RelatedUserDeviceListDTO getDeviceList(String username) {
+        User user = userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
+        List<User> allRelatedUsers = new ArrayList<>();
+        allRelatedUsers.add(user);
+
+        if(user instanceof Educator) {
+            List<Student_Educator> relatedUsers = student_educatorRepository.findAllByEducator((Educator) user);
+            for (Student_Educator student_educator : relatedUsers) {
+                allRelatedUsers.add(student_educator.getStudent());
+            }
         }
 
-        return list;
+        List<UserDevice> allDevices = userDeviceRepository.findAllByUserIn(allRelatedUsers);
+        return new RelatedUserDeviceListDTO(allDevices);
     }
 }
