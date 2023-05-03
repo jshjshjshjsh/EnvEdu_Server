@@ -17,9 +17,8 @@ public class MessageController {
     private final SimpMessagingTemplate template;
 
     @MessageMapping("/device")
-    private void fromESP2Client(@Payload Seed seed)
-    {
-        seed.setDateString(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString());
+    private void fromESP2Client(@Payload Seed seed) {
+        //seed.setDateString(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString());
         template.convertAndSend("/topic/user/" + seed.getMac(),seed);
     }
 }

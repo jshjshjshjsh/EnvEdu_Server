@@ -38,18 +38,18 @@ public class SeedController {
     @PostMapping("/user/save")
     private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data)
     {
-        List<Seed> list = new ArrayList<>();
-        data.getData().forEach((elem)->{
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                Seed seed = objectMapper.readValue(elem, Seed.class);
-                seed.setDate(LocalDateTime.parse(seed.getDateString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-                list.add(seed);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        });
-        seedService.saveData(list);
+//        List<Seed> list = new ArrayList<>();
+//        data.getData().forEach((elem)->{
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            try {
+//                Seed seed = objectMapper.readValue(elem, Seed.class);
+//                seed.setDate(LocalDateTime.parse(seed.getDateString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+//                list.add(seed);
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        seedService.saveData(list);
         return new ResponseDTO<>(HttpStatus.OK.value(), null);
     }
 

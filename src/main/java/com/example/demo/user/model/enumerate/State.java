@@ -1,5 +1,5 @@
 package com.example.demo.user.model.enumerate;
 
-public enum IsActive {
-    YES, NO
+public enum State {
+    ACTIVE, INACTIVE, DELETED
 }

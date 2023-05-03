@@ -6,21 +6,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 public class AuthenticationFilterApply extends AbstractHttpConfigurer<AuthenticationFilterApply, HttpSecurity> {
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    public AuthenticationFilterApply(RefreshTokenRepository refreshTokenRepository)
-    {
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
-
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        http.addFilter(new AuthenticationFilter(authenticationManager, refreshTokenRepository));
+        http.addFilter(new AuthenticationFilter(authenticationManager));
     }
 
-    public static AuthenticationFilterApply authenticationFilterApply(RefreshTokenRepository refreshTokenRepository)
+    public static AuthenticationFilterApply authenticationFilterApply()
     {
-        return new AuthenticationFilterApply(refreshTokenRepository);
+        return new AuthenticationFilterApply();
     }
 }

@@ -1,18 +1,14 @@
 package com.example.demo.seed.model;
 
 import com.example.demo.seed.misc.Misc;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +16,10 @@ import java.time.LocalDateTime;
 public class Seed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+
+    @Column(nullable = false, length = 20)
+    private String username;
 
     @Column(nullable = false, length = 20)
     private String mac;
@@ -65,12 +64,12 @@ public class Seed {
     @Builder.Default
     private float pre = Misc.SeedDefaultValue;
 
-    private LocalDateTime date;
+    private LocalDateTime measuredDate;
 
     @Transient
     private String dateString;
 
     @Nullable
-    @Column(length = 10)
+    @Column(length = 50)
     private String location;
 }

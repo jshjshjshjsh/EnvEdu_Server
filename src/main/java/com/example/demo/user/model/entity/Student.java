@@ -1,40 +1,33 @@
 package com.example.demo.user.model.entity;
 
 import com.example.demo.device.model.UserDevice;
-import com.example.demo.user.model.enumerate.IsActive;
+import com.example.demo.user.model.enumerate.Gender;
+import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.model.enumerate.Role;
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Getter
-@NoArgsConstructor
 public class Student extends User{
+    public Student() {}
+
     @Builder(builderMethodName = "studentBuilder")
-    public Student(int id, String username, String password, String email, List<UserDevice> userDevice, Role role, IsActive isActive, Timestamp date, Educator educator)
+    public Student(String username, String password, String email, Date birthday, Role role, Gender gender, State state)
     {
-        super(id, username, password, email, role, userDevice, isActive, date);
-        this.educator = educator;
-    }
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Educator educator;
-
-    public void setEducator(Educator educator)
-    {
-        this.educator = educator;
+        super(username, password, email, birthday, role, gender, state);
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "username='" + super.getUsername() + '\'' +
-                ", password='" + super.getPassword() + '\'' +
-                ", educator=" + educator +
-                '}';
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private List<Student_Educator> student_educators;
+
+    public List<Student_Educator> getStudent_educators() {
+        return student_educators;
     }
 }

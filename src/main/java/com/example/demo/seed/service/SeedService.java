@@ -23,16 +23,16 @@ public class SeedService {
 
         if(username.equals(""))
         {
-            return seedRepository.findAllByDateBetween(start, end);
+            return seedRepository.findAllByMeasuredDateBetween(start, end);
         }
         else
         {
 
             List<String> MacList = new ArrayList<>();
-            userRepository.findByUsername(username).orElseThrow(()-> {throw new IllegalArgumentException();}).getUserDevice().forEach(elem -> {
-                MacList.add(elem.getUserDeviceMAC());
+            userRepository.findByUsername(username).orElseThrow(()-> {throw new IllegalArgumentException();}).getDevices().forEach(elem -> {
+                MacList.add(elem.getMac());
             });
-            return seedRepository.findAllByDateBetweenAndMacIn(start, end, MacList);
+            return seedRepository.findAllByMeasuredDateBetweenAndMacIn(start, end, MacList);
         }
     }
 

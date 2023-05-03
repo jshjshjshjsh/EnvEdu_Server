@@ -1,31 +1,42 @@
 package com.example.demo.user.model.entity;
 
-import com.example.demo.device.model.UserDevice;
-import com.example.demo.user.model.enumerate.IsActive;
+import com.example.demo.user.model.enumerate.Gender;
+import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.model.enumerate.IsAuthorized;
 import com.example.demo.user.model.enumerate.Role;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class Educator extends User{
+    public Educator() {}
+
     @Builder(builderMethodName = "educatorBuilder")
-    public Educator(int id, String username, String password, String email, List<UserDevice> userDevice, Role role, IsActive isActive, Timestamp date, List<Student> students, IsAuthorized isAuthorized)
+    public Educator(String username, String password, String email, Date birthday, Role role, Gender gender, State state, IsAuthorized isAuthorized)
     {
-        super(id, username, password, email, role, userDevice, isActive, date);
-        this.students = students;
+        super(username, password, email, birthday, role, gender, state);
         this.isAuthorized = isAuthorized;
     }
-    @OneToMany(mappedBy = "educator", fetch = FetchType.LAZY)
-    private List<Student> students;
 
-    @Column(length = 3)
+    @OneToMany(mappedBy = "educator", fetch = FetchType.LAZY)
+    private List<Student_Educator> educator_students;
+
+    @Column(length = 3, nullable = false)
     @Enumerated(EnumType.STRING)
     private IsAuthorized isAuthorized;
+
+    public List<Student_Educator> getEducator_students() {
+        return educator_students;
+    }
+
+    public IsAuthorized getIsAuthorized() {
+        return isAuthorized;
+    }
+
+    public void updateAuthorization(IsAuthorized isAuthorized) {
+        this.isAuthorized = isAuthorized;
+    }
 }
