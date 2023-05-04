@@ -28,7 +28,7 @@ public class UserDeviceController {
     private final UserService userService;
 
     @PostMapping("/admin/device")
-    private ResponseEntity<?> addDevice(@Valid @RequestBody AddMACDTO addMACDTO) {
+    private ResponseEntity<?> addDevice(@RequestBody AddMACDTO addMACDTO) {
         userDeviceService.addDevice(addMACDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

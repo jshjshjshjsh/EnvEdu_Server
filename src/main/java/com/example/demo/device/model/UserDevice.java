@@ -19,7 +19,7 @@ public class UserDevice {
     @Column(length = 20, nullable = false, unique = true)
     private String mac;
 
-    @Column(length = 20, nullable = true)
+    @Column(length = 20)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,9 +44,9 @@ public class UserDevice {
         this.updatedDate = updatedDate;
     }
 
-    public static UserDevice of(AddMACDTO addMACDTO) {
+    public static UserDevice of(String mac) {
         return UserDevice.builder()
-                .mac(addMACDTO.getMac())
+                .mac(mac)
                 .build();
     }
 
