@@ -64,10 +64,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //                        }
 //                    }
 //                }
-                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-                if(StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-                    log.info("subscribe");
-                }
+//                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+//                if(StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+//                    log.info("subscribe");
+//                }
                 return message;
             }
         });
@@ -75,8 +75,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor(userDeviceRepository)).withSockJS();
-        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor(userDeviceRepository)).withSockJS();
+        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new DeviceSocketInterceptor(userDeviceRepository)).withSockJS();
+        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor()).withSockJS();
     }
 
     @Override
