@@ -29,7 +29,12 @@ public class UserDeviceService {
 
     @Transactional
     public void addDevice(AddMACDTO addMACDTO) {
-        userDeviceRepository.save(UserDevice.of(addMACDTO));
+        List<UserDevice> devices = new ArrayList<>();
+        for(String mac : addMACDTO.getMacs()) {
+            UserDevice device = UserDevice.of(mac);
+            devices.add(device);
+        }
+        userDeviceRepository.saveAll(devices);
     }
 
     @Transactional(readOnly = true)
