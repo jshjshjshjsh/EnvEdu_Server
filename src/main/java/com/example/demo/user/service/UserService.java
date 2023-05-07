@@ -1,12 +1,10 @@
 package com.example.demo.user.service;
 
-import com.example.demo.device.repository.UserDeviceRepository;
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
 import com.example.demo.mail.service.MailService;
 import com.example.demo.redis.entity.AuthNum;
 import com.example.demo.redis.repo.AuthNumRepository;
-import com.example.demo.token.repository.RefreshTokenRepository;
 import com.example.demo.user.dto.request.EmailDTO;
 import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.dto.request.StudentAddDTO;

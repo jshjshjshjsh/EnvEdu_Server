@@ -1,7 +1,5 @@
 package com.example.demo.security.config;
 
-import com.example.demo.token.repository.RefreshTokenRepository;
-import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
