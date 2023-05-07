@@ -1,7 +1,6 @@
 package com.example.demo.user.controller;
 
 import com.example.demo.cookie.util.CookieUtil;
-import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @RestController
 public class UserLogoutController {
-    private final UserService userService;
     @PostMapping("/logout")
     private ResponseEntity<?> logoutHandler(HttpServletResponse response)
     {

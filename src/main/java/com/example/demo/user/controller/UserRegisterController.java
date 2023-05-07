@@ -1,7 +1,5 @@
 package com.example.demo.user.controller;
 
-import com.auth0.jwt.interfaces.Claim;
-import com.example.demo.DTO.ResponseDTO;
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
 import com.example.demo.jwt.util.JwtUtil;
@@ -47,36 +45,6 @@ public class UserRegisterController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     * educator 관련 api
-    */
-    @PostMapping("/register/educator")
-    private ResponseDTO<Object> registerEducator(@Valid @RequestBody RegisterDTO registerDTO)
-    {
-        /*if(userService.checkDuplicateUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail()))
-        {
-            throw new IllegalArgumentException();
-        }
-        Random random = new Random();
-        String randomAuthNum = String.format("%04d", random.nextInt(10000));
-
-        Educator educator = Educator.educatorBuilder()
-                .username(registerDTO.getUsername())
-                .password(bCryptPasswordEncoder.encode(registerDTO.getPassword()))
-                .email(registerDTO.getEmail())
-                .role(Role.ROLE_EDUCATOR)
-                .state(State.INACTIVE)
-                .isAuthorized(IsAuthorized.NO)
-                .build();
-        RegisterAuthNum registerAuthNum = RegisterAuthNum.builder()
-                .email(educator.getEmail())
-                .registerAuthNum(randomAuthNum)
-                .build();
-        userService.addUser(educator,registerAuthNum);*/
-
-        return new ResponseDTO<>(HttpStatus.OK.value(),null);
-    }
-
     @PostMapping("/educator/student")
     private ResponseEntity<?> registerStudent(HttpServletRequest request, @RequestBody StudentAddDTO studentAddDTO) {
         Map<String, Object> user_info = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
@@ -85,29 +53,6 @@ public class UserRegisterController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /**
-     * 공용 api
-    */
-    @PatchMapping("/register/auth")
-    private ResponseDTO<Object> confirmAuthentication(@RequestBody Map<String,String> map)
-    {
-        userService.confirmAuthentication(map.get("username"),map.get("email"),map.get("authNum"));
-        return new ResponseDTO<>(HttpStatus.OK.value(), null);
-    }
-    @PostMapping("/register/resend")
-    private ResponseDTO<Object> resendAuthNum(@RequestBody Map<String,String> map)
-    {
-        /*Random random = new Random();
-        String randomAuthNum = String.format("%04d", random.nextInt(10000));
-
-        RegisterAuthNum registerAuthNum = RegisterAuthNum.builder()
-                .email(map.get("email"))
-                .registerAuthNum(randomAuthNum)
-                .build();
-        userService.resendAuthNum(registerAuthNum);*/
-
-        return new ResponseDTO<>(HttpStatus.OK.value(),null);
-    }
 
     /**
      * 예외처리
@@ -134,20 +79,5 @@ public class UserRegisterController {
     @ExceptionHandler(DuplicateAttributeException.class)
     private ResponseEntity<?> duplicateAttributeExceptionHandler(DuplicateAttributeException e) {
         return new ResponseEntity<>("중복되는 " + e.getAttribute() + "(이)가 있습니다", HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * CustomHandshakeHandler
-     */
-    @PostMapping("/test/authup")
-    private void makeAdmin(@RequestBody Map<String,String> mp)
-    {
-        userService.test_makeAdmin(mp.get("username"));
-    }
-
-    @GetMapping("/user/test")
-    private String userTest()
-    {
-        return "userTest";
     }
 }
