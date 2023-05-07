@@ -1,6 +1,5 @@
 package com.example.demo.device.model;
 
-import com.example.demo.DTO.AddMACDTO;
 import com.example.demo.user.model.entity.User;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
