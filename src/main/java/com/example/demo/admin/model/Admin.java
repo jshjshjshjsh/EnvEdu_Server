@@ -2,11 +2,8 @@ package com.example.demo.admin.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -20,12 +17,6 @@ public class Admin {
 
     @Column(nullable = false, length = 100)
     private String password;
-
-    @CreationTimestamp
-    private Timestamp createdTime;
-
-    @UpdateTimestamp
-    private Timestamp updatedTime;
 
     public Admin() {}
 
