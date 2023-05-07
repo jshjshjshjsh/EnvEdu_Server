@@ -1,6 +1,6 @@
 package com.example.demo.device.service;
 
-import com.example.demo.DTO.AddMACDTO;
+import com.example.demo.device.dto.request.AddMACDTO;
 import com.example.demo.device.dto.request.DeviceUpdateDTO;
 import com.example.demo.device.dto.response.DeviceListDTO;
 import com.example.demo.device.dto.response.RelatedUserDeviceListDTO;
