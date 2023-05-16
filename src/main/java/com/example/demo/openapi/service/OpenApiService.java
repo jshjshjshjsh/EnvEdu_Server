@@ -49,7 +49,7 @@ public class OpenApiService {
 
         for (Iterator<JsonNode> it = result.elements(); it.hasNext(); ) {
             JsonNode node = it.next();
-            oceanQualityDTOS.add(mapper.treeToValue(node, OceanQualityDTO.class).setupStationName());
+            oceanQualityDTOS.add(mapper.treeToValue(node, OceanQualityDTO.class).setupStation());
         }
         System.out.println("oceanQualityDTOS = " + oceanQualityDTOS);
 

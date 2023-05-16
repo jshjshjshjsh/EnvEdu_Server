@@ -22,7 +22,7 @@ public class OpenApiController {
     private final OpenApiService openApiService;
 
     @GetMapping("/air-quality")
-    public ArrayList<AirQualityDTO> getAirQuality(@RequestParam("location") String location) {
+    public ArrayList<AirQualityDTO> getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location) {
 
         OpenApiRequest apiGet = new OpenApiRequest();
         ResponseEntity<String> response = null;
