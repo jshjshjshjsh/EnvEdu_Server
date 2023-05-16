@@ -1,6 +1,6 @@
 package com.example.demo.openapi.module;
 
-import com.example.demo.openapi.model.OpenApiParam;
+import com.example.demo.openapi.dto.OpenApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

@@ -1,4 +1,4 @@
-package com.example.demo.openapi.model;
+package com.example.demo.openapi.dto;
 
 import lombok.Getter;
 

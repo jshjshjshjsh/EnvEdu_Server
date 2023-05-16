@@ -1,7 +1,7 @@
 package com.example.demo.openapi.service;
 
-import com.example.demo.openapi.model.AirQualityDTO;
-import com.example.demo.openapi.model.OceanQualityDTO;
+import com.example.demo.openapi.dto.AirQualityDTO;
+import com.example.demo.openapi.dto.OceanQualityDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

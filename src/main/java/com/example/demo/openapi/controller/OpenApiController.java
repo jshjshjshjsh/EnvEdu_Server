@@ -1,8 +1,8 @@
 package com.example.demo.openapi.controller;
 
-import com.example.demo.openapi.model.AirQualityDTO;
-import com.example.demo.openapi.model.OceanQualityDTO;
-import com.example.demo.openapi.model.OpenApiParam;
+import com.example.demo.openapi.dto.AirQualityDTO;
+import com.example.demo.openapi.dto.OceanQualityDTO;
+import com.example.demo.openapi.dto.OpenApiParam;
 import com.example.demo.openapi.module.OpenApiRequest;
 import com.example.demo.openapi.service.OpenApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
