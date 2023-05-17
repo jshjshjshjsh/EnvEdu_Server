@@ -4,7 +4,7 @@ import com.example.demo.cookie.util.CookieUtil;
 import com.example.demo.jwt.model.JwtAccessToken;
 import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
-import com.example.demo.security.principal.PrincipalDetails;
+import com.example.demo.security.principal.AuthenticationFilterPrincipalDetails;
 import com.example.demo.user.dto.request.LoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        AuthenticationFilterPrincipalDetails principalDetails = (AuthenticationFilterPrincipalDetails) authResult.getPrincipal();
 
         JwtRefreshToken jwtRefreshToken = JwtRefreshToken.generateJwtRefreshToken(principalDetails);
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(principalDetails);
