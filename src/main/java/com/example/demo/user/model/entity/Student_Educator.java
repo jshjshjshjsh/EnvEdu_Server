@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"educatorId", "studentId"}))
 public class Student_Educator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
