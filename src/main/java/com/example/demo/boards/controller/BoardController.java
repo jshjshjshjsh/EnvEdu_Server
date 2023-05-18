@@ -11,7 +11,6 @@ public class BoardController {
 
     @PostMapping("/board")
     public Boolean createBoard(BoardDTO boardDTO){
-        System.out.println("boardDTO.toString() = " + boardDTO.toString());
 
         return true;
     }

@@ -7,67 +7,57 @@ import com.example.demo.openapi.module.OpenApiRequest;
 import com.example.demo.openapi.service.OpenApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class OpenApiController {
-
+    @Value("${spring.open-api.gonggong-data}")
+    private String serviceKey;
     private final OpenApiService openApiService;
 
     @GetMapping("/air-quality")
-    public ArrayList<AirQualityDTO> getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location) {
+    public ResponseEntity<?> getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location) throws UnsupportedEncodingException, JsonProcessingException {
 
-        OpenApiRequest apiGet = new OpenApiRequest();
-        ResponseEntity<String> response = null;
-        try {
-            response = apiGet.call(new OpenApiParam.OpenApiParamBuilder()
-                    .setDomain("https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?")
-                    .setKey("serviceKey", "returnType", "numOfRows", "pageNo", "sidoName", "ver")
-                    .setValue("e8+m6IjXLkLni3n0tRD3uZP2n99kpV78As6yiB5vAVBZoQUqcuRkDgxqDINHF4dkThE9WmZHNiXs258Egat3Hw==",
-                            "json", "100", "1", location, "1.0")
-                    .build());
+        String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "sidoName", "ver"};
+        String[] value = {serviceKey, "json", "100", "1", location, "1.0"};
 
-            return openApiService.convertToAirQuality(response);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        AirQualityDTO airQualityDTO = new AirQualityDTO();
+        return new ResponseEntity<>(airQualityDTO.convertToAirQuality(openApiService.callApi("https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?", key, value)), HttpStatus.OK);
     }
+
     @GetMapping("/ocean-quality")
-    public ArrayList<OceanQualityDTO> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "") String months) {
-        System.out.println("months = " + months);
+    public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "") String months) throws UnsupportedEncodingException, JsonProcessingException {
+        String[] key = {"ServiceKey", "pageNo", "numOfRows", "resultType", "ptNoList", "wmyrList", "wmodList"};
+        String[] value = {serviceKey, "1", "50", "JSON", "", wmyrList, months};
 
-        OpenApiRequest apiGet = new OpenApiRequest();
-        ResponseEntity<String> response = null;
-        try {
-            response = apiGet.call(new OpenApiParam.OpenApiParamBuilder()
-                    .setDomain("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?")
-                    .setKey("ServiceKey", "pageNo", "numOfRows", "resultType", "ptNoList", "wmyrList", "wmodList")
-                    .setValue("e8+m6IjXLkLni3n0tRD3uZP2n99kpV78As6yiB5vAVBZoQUqcuRkDgxqDINHF4dkThE9WmZHNiXs258Egat3Hw==",
-                            "1", "50", "JSON", "", wmyrList, months)
-                    .build());
+        OceanQualityDTO oceanQualityDTO = new OceanQualityDTO();
+        return new ResponseEntity<>(oceanQualityDTO.convertToOceanQuality(openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value)), HttpStatus.OK);
 
-            return openApiService.convertToOceanQuality(response);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @ExceptionHandler(UnsupportedEncodingException.class)
-    private void unsupportedEncodingExceptionHandler(HttpServletResponse response)
+    private ResponseEntity<?> unsupportedEncodingExceptionHandler(UnsupportedEncodingException e)
     {
-        response.setStatus(HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JsonProcessingException.class)
-    private void jsonProcessingExceptionHandler(HttpServletResponse response)
+    private ResponseEntity<?> jsonProcessingExceptionHandler(JsonProcessingException e)
     {
-        response.setStatus(HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
