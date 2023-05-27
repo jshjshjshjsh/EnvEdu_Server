@@ -6,6 +6,7 @@ import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.user.dto.request.EmailDTO;
 import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.dto.request.StudentAddDTO;
+import com.example.demo.user.dto.response.Student_EducatorDTO;
 import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,12 +48,17 @@ public class UserRegisterController {
 
     @PostMapping("/educator/student")
     private ResponseEntity<?> registerStudent(HttpServletRequest request, @RequestBody StudentAddDTO studentAddDTO) {
-        Map<String, Object> user_info = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        String username = user_info.get(JwtUtil.claimUsername).toString();
-        userService.addStudent(username, studentAddDTO);
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        userService.addStudent(userInfo, studentAddDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/educator/student_educator")
+    private ResponseEntity<Student_EducatorDTO> getEducatingStudents(HttpServletRequest request) {
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        Student_EducatorDTO result = userService.getEducatingStudents(userInfo);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     /**
      * 예외처리

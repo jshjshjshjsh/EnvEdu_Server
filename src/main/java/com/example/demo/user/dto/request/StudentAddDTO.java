@@ -6,6 +6,11 @@ import java.util.List;
 
 @Getter
 public class StudentAddDTO {
+    public StudentAddDTO() {}
+
+    public StudentAddDTO(List<String> studentUsernames) {
+        this.studentUsernames = studentUsernames;
+    }
     private List<String> studentUsernames;
 
     @Override

@@ -2,12 +2,14 @@ package com.example.demo.user.service;
 
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
+import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.mail.service.MailService;
 import com.example.demo.redis.entity.AuthNum;
 import com.example.demo.redis.repo.AuthNumRepository;
 import com.example.demo.user.dto.request.EmailDTO;
 import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.dto.request.StudentAddDTO;
+import com.example.demo.user.dto.response.Student_EducatorDTO;
 import com.example.demo.user.model.entity.Educator;
 import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.Student_Educator;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -72,12 +75,31 @@ public class UserService {
     }
 
     @Transactional
-    public void addStudent(String educatorUsername, StudentAddDTO studentAddDTO) {
+    public void addStudent(Map<String, Object> userInfo, StudentAddDTO studentAddDTO) {
+        String educatorUsername = userInfo.get(JwtUtil.claimUsername).toString();
+
         Educator educator = educatorRepository.findByUsername(educatorUsername).orElseThrow(()->new IllegalArgumentException("해당 교사가 존재하지 않습니다"));
         List<Student> students = studentRepository.findAllByUsernameIn(studentAddDTO.getStudentUsernames());
-        List<Student_Educator> student_educators = students.stream()
-                        .map(student->Student_Educator.of(student, educator))
-                        .collect(Collectors.toList());
-        student_educatorRepository.saveAll(student_educators);
+
+        Map<String, List<Student>> studentsAlreadyExist = student_educatorRepository.findAllByEducator(educator).stream()
+                .map(Student_Educator::getStudent)
+                .collect(Collectors.groupingBy(User::getUsername));
+
+        List<Student_Educator> elemToAdd = students.stream()
+                .filter(student -> !studentsAlreadyExist.containsKey(student.getUsername()))
+                .map(student -> Student_Educator.of(student, educator))
+                .collect(Collectors.toList());
+
+        student_educatorRepository.saveAll(elemToAdd);
+    }
+
+    @Transactional(readOnly = true)
+    public Student_EducatorDTO getEducatingStudents(Map<String, Object> userInfo) {
+        String educatorUsername = userInfo.get(JwtUtil.claimUsername).toString();
+        Educator educator = educatorRepository.findByUsername(educatorUsername).orElseThrow(()->new IllegalArgumentException("해당 교사가 존재하지 않습니다"));
+        List<Student> students = student_educatorRepository.findAllByEducator(educator).stream()
+                .map(Student_Educator::getStudent)
+                .collect(Collectors.toList());
+        return new Student_EducatorDTO(educator, students);
     }
 }
