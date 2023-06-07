@@ -1,22 +1,23 @@
 package com.example.demo.openapi.model.entity;
 
-import com.example.demo.openapi.model.parent.AirQualityParent;
 import com.example.demo.openapi.model.parent.OceanQualityParent;
-import lombok.AllArgsConstructor;
+import com.example.demo.user.model.entity.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Table(name = "oceanquality",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"PTNM","WMOD", "WMYR"}))
 public class OceanQuality extends OceanQualityParent {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@NotNull
+    private User owner;
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }
