@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+
+<body>
+<!-- css의 rotate로 그냥 할 수 없을까-->
+<div id="wrap-contents">
+    <div class="contents-item">
+        <input type="radio" name="chart" value="chart_div" onclick="showChart(this.value)"> 막대 그래프
+        <br>
+        <input type="radio" name="chart" value="chart_div2" onclick="showChart(this.value)"> 산점도
+        <br>
+        <input type="radio" name="chart" value="chart_div3" onclick="showChart(this.value)"> 파이 차트
+    </div>
+    <div id="wrap-charts" class="contents-item">
+        <!--
+            <div pys-onClick ="print_chart" id="clicked_charts" class="charts"></div>
+        -->
+        <div id="chart_div" class="charts" style="display:none;"></div>
+        <div id="chart_div2" class="charts" style="display:none;"></div>
+        <div id="chart_div3" class="charts" style="display:none;"></div>
+    </div>
+</div>
+<py-env>
+    - matplotlib
+</py-env>
+<py-script output="chart_div">
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure()
+
+    x = np.arange(4)
+    years = ['2018', '2019', '2020', '2021']
+    values = [100, 400, 900, 700]
+
+    plt.bar(x, values)
+    plt.xticks(x, years)
+
+    plt.show()
+    fig
+</py-script>
+<py-script output="chart_div2">
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure()
+
+    x = np.arange(3)
+    years = ['2018', '2019', '2020', '2021']
+    values = [100, 400, 900, 700]
+
+    plt.scatter(years,values)
+
+    plt.show()
+    fig
+</py-script>
+<py-script output="chart_div3">
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    fig = plt.figure()
+
+    x = np.arange(3)
+    years = ['2018', '2019', '2020', '2021']
+    values = [100, 400, 900, 700]
+    explode = [0.05, 0.05, 0.05, 0.05]
+    colors = ['#ff9999', '#ffc000', '#8fd9b6', '#d395d0']
+
+    # plot
+    plt.pie(values, labels=years, autopct='%.1f%%', startangle=260, counterclock=False, explode=explode, shadow=True, colors=colors)
+
+    plt.show()
+    fig
+</py-script>
+<style>
+    #wrap-contents{
+        margin:30px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #wrap-charts{
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .charts {
+        width: 400px;
+        height: 400px;
+        border: solid 1px black;
+        display: inline-block;
+        margin: auto auto;
+    }
+
+    py-config {
+        display: none;
+    }
+
+    py-loader {
+        display: none;
+    }
+</style>
+<script src="loading.js"></script>
+
+<script>
+    function showChart(chartId) {
+        // hide all charts
+        var charts = document.getElementsByClassName("charts");
+        for (var i = 0; i < charts.length; i++) {
+            charts[i].style.display = "none";
+        }
+        // show selected chart
+        var chart = document.getElementById(chartId);
+        chart.style.display = "block";
+    }
+</script>
+</body>
+
+</html>

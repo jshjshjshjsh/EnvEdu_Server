@@ -10,12 +10,22 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class AdminCipher {
+    /**
+     * 어드민 로그인에 사용되는 암호화 클래스
+     */
+
     @Value("${spring.cipher.key}")
     private String secretKey;
 
+    /**
+     * 암호화 알고리즘, ex. DES, AES
+     */
     @Value("${spring.cipher.transformation}")
     private String transformation;
 
+    /**
+     * 사용하는 DBMS에서 사용하는 암호화와 맞춘 암호화 메소드
+     */
     public String encrypt(String target) {
         try {
             Cipher cipher = Cipher.getInstance(transformation);

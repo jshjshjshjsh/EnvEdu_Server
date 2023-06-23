@@ -5,9 +5,7 @@ import com.example.demo.admin.cipher.AdminCipher;
 import com.example.demo.admin.model.Admin;
 import com.example.demo.admin.repository.AdminRepository;
 import com.example.demo.cookie.util.CookieUtil;
-import com.example.demo.jwt.model.JwtAccessToken;
 import com.example.demo.jwt.model.JwtRefreshToken;
-import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -19,9 +17,6 @@ import java.time.Duration;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-    @Value("${spring.server.domain}")
-    private String domain;
-
     private final AdminCipher adminCipher;
 
     private final AdminRepository adminRepository;
