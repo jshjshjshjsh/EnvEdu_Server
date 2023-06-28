@@ -24,7 +24,7 @@ public class MessageController {
      */
     @MessageMapping("/device")
     private void fromESP2Client(@Payload Seed seed) {
-        log.info("seed.getMac = " + seed.getMac() + ", seed.getCo2 = " + seed.getCo2());
+        log.info("seed.getMac = " + seed.getMac() + ", seed.getCo2 = " + seed.getCo2() + ", seed.getHum = " + seed.getHum() + ", seed.getDust = " + seed.getDust());
         //seed.setDateString(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString());
         template.convertAndSend("/topic/user/" + seed.getMac(),seed);
     }
