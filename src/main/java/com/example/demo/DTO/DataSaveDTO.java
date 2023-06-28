@@ -11,5 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataSaveDTO {
+    /**
+     * Seed 데이터를 저장할 때 사용하는 DTO
+     * todo: seed package로 이동, 사용하지 않는 어노테이션 제거
+     */
     List<String> data;
 }

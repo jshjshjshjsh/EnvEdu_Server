@@ -4,7 +4,7 @@ import com.example.demo.cookie.util.CookieUtil;
 import com.example.demo.jwt.model.JwtAccessToken;
 import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
-import com.example.demo.security.principal.PrincipalDetails;
+import com.example.demo.security.principal.AuthenticationFilterPrincipalDetails;
 import com.example.demo.user.dto.request.LoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * /login url로 request를 보냈을 때 거치는 필터
+ */
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -46,6 +49,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             }
             catch (BadCredentialsException | UsernameNotFoundException e) {
+                /**
+                 * todo: 여기서 status가 400으로 설정됐을 때 프론트에서 에러 메세지 지정, axios interceptor에서 에러를 처리하는 부분은 ResponseEntity에서 리턴된 status를 기반으로 처리함
+                 */
                 response.setStatus(HttpStatus.BAD_REQUEST.value());
             }
         }
@@ -54,7 +60,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        AuthenticationFilterPrincipalDetails principalDetails = (AuthenticationFilterPrincipalDetails) authResult.getPrincipal();
 
         JwtRefreshToken jwtRefreshToken = JwtRefreshToken.generateJwtRefreshToken(principalDetails);
         JwtAccessToken jwtAccessToken = JwtAccessToken.generateJwtAccessToken(principalDetails);

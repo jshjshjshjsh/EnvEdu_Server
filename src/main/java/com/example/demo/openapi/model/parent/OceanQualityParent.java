@@ -1,15 +1,11 @@
 package com.example.demo.openapi.model.parent;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import javax.persistence.MappedSuperclass;
 
-@Getter
-@Setter
-@ToString
+@Data
 @MappedSuperclass
 public abstract class OceanQualityParent {
     @JsonProperty("ROWNO")
