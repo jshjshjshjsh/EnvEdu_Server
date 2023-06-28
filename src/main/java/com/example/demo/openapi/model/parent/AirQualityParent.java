@@ -1,10 +1,10 @@
 package com.example.demo.openapi.model.parent;
 
-import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.MappedSuperclass;
 
-@Data
+@Getter
 @MappedSuperclass
 public abstract class AirQualityParent {
     private String stationName;

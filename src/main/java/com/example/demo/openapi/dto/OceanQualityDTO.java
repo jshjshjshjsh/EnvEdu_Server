@@ -2,18 +2,16 @@ package com.example.demo.openapi.dto;
 
 import com.example.demo.openapi.model.parent.OceanQualityParent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
+import lombok.ToString;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OceanQualityDTO extends OceanQualityParent {
 

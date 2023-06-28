@@ -1,20 +1,28 @@
 package com.example.demo.openapi.controller;
 
+import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.openapi.dto.AirQualityDTO;
 import com.example.demo.openapi.dto.OceanQualityDTO;
 import com.example.demo.openapi.dto.OpenApiParam;
+import com.example.demo.openapi.model.entity.AirQuality;
+import com.example.demo.openapi.model.entity.OceanQuality;
 import com.example.demo.openapi.module.OpenApiRequest;
 import com.example.demo.openapi.service.OpenApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +48,34 @@ public class OpenApiController {
 
         OceanQualityDTO oceanQualityDTO = new OceanQualityDTO();
         return new ResponseEntity<>(oceanQualityDTO.convertToOceanQuality(openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value)), HttpStatus.OK);
+    }
 
+    @PostMapping("/air-quality")
+    public ResponseEntity<?> setAirQuality(@RequestBody List<AirQuality> airQualities, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        openApiService.saveAirQuality(airQualities, userInfo.get(JwtUtil.claimUsername).toString());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/ocean-quality")
+    public ResponseEntity<?> setOceanQuality(@RequestBody List<OceanQuality> oceanQualities, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        openApiService.saveOceanQuality(oceanQualities, userInfo.get(JwtUtil.claimUsername).toString());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/air-quality/mine")
+    public ResponseEntity<?> getMyAirQuality(@RequestParam String username){
+        return new ResponseEntity<>(openApiService.findMyAirQuality(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/ocean-quality/mine")
+    public ResponseEntity<?> getMyOceanQuality(@RequestParam String username){
+        return new ResponseEntity<>(openApiService.findMyOceanQuality(username), HttpStatus.OK);
     }
 
     @ExceptionHandler(UnsupportedEncodingException.class)
@@ -57,6 +92,11 @@ public class OpenApiController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     private ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(NoSuchElementException.class)
+    private ResponseEntity<?> noSuchElementExceptionHandler(NoSuchElementException e)
     {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
