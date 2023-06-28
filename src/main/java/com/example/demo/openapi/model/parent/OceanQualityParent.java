@@ -1,6 +1,5 @@
 package com.example.demo.openapi.model.parent;
 
-import com.example.demo.openapi.dto.OceanQualityDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

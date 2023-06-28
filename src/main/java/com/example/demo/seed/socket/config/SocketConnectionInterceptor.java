@@ -19,6 +19,9 @@ import java.util.Objects;
 
 @Slf4j
 public class SocketConnectionInterceptor implements HandshakeInterceptor {
+    /**
+     * 로그인 시 발급되는 쿠키를 이용한 인증
+     */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         try {

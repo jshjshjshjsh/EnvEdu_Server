@@ -16,6 +16,9 @@ import java.util.Objects;
 public class DeviceSocketInterceptor implements HandshakeInterceptor {
     private final UserDeviceRepository userDeviceRepository;
 
+    /**
+     * 기기가 웹 소켓 handshake 시점에 전송하는 MAC 주소를 기반으로 인증
+     */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         try {

@@ -1,16 +1,10 @@
 package com.example.demo.security.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.Claim;
 import com.example.demo.cookie.util.CookieUtil;
 import com.example.demo.exceptions.NoJwtTokenContainedException;
-import com.example.demo.jwt.model.JwtRefreshToken;
 import com.example.demo.jwt.util.JwtUtil;
-import com.example.demo.security.principal.PrincipalDetails;
+import com.example.demo.security.principal.AuthorizationFilterPrincipalDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +18,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
@@ -35,7 +27,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String refreshToken = null;
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
@@ -44,9 +35,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         try {
-            Map<String, Object> user_info = JwtUtil.getJwtRefreshTokenFromCookieAndParse(cookies).get(JwtUtil.claimName).asMap();
-
-            PrincipalDetails principalDetails = new PrincipalDetails(user_info);
+            AuthorizationFilterPrincipalDetails principalDetails = new AuthorizationFilterPrincipalDetails(cookies);
             Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails,
                     null,
                     principalDetails.getAuthorities());

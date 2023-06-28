@@ -31,6 +31,10 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * 현재는 사용되고 있지 않음
+     * 일반 유저의 로그아웃 api 공유 중
+     */
     @PostMapping("/logout/admin")
     private ResponseEntity<?> logoutAdmin(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();

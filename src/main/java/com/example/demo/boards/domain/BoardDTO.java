@@ -1,11 +1,11 @@
 package com.example.demo.boards.domain;
 
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
 public class BoardDTO {
     private String title;
     private String author;
