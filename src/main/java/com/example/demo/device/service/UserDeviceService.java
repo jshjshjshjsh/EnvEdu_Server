@@ -29,6 +29,18 @@ public class UserDeviceService {
 
 
     @Transactional
+    public void addDevice(AddMACDTO addMACDTO, List<User> users) {
+        List<UserDevice> devices = new ArrayList<>();
+        int i=0;
+        for(String mac : addMACDTO.getMacs()) {
+            UserDevice device = UserDevice.of(mac);
+            device.updateUser(users.get(i));
+            devices.add(device);
+            i++;
+        }
+        userDeviceRepository.saveAll(devices);
+    }
+    @Transactional
     public void addDevice(AddMACDTO addMACDTO) {
         List<UserDevice> devices = new ArrayList<>();
         for(String mac : addMACDTO.getMacs()) {
