@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,13 @@ public class SeedController {
         List<Seed> list = seedService.getDataByDateAndUsername(startDate, endDate, username);
 
         return new ResponseDTO<>(HttpStatus.OK.value(), list);
+    }
+
+    @PostMapping("/seed/save")
+    private ResponseEntity<?> saveSingleSeed(Seed seed){
+        seedService.saveSingleData(seed);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

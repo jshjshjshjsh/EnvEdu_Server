@@ -41,4 +41,9 @@ public class SeedService {
     {
         seedRepository.saveAll(list);
     }
+
+    @Transactional
+    public void saveSingleData(Seed seed) {
+        seedRepository.save(seed);
+    }
 }

@@ -27,6 +27,7 @@ public class UserDeviceService {
 
     private final Student_EducatorRepository student_educatorRepository;
 
+
     @Transactional
     public void addDevice(AddMACDTO addMACDTO) {
         List<UserDevice> devices = new ArrayList<>();

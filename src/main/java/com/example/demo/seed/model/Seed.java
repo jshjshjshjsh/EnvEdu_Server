@@ -72,4 +72,5 @@ public class Seed {
     @Nullable
     @Column(length = 50)
     private String location;
+
 }

@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Entity
-public class Educator extends User{
+public class Educator extends User {
     public Educator() {}
 
     @Builder(builderMethodName = "educatorBuilder")

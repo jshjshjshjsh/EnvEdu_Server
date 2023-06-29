@@ -102,4 +102,14 @@ public class UserService {
                 .collect(Collectors.toList());
         return new Student_EducatorDTO(educator, students);
     }
+
+    @Transactional
+    public Student_Educator findEducatorByStudent(Student student) {
+        return student_educatorRepository.findByStudent(student);
+    }
+
+    @Transactional
+    public List<Student_Educator> findAllByEducator(Educator educator) {
+        return student_educatorRepository.findAllByEducator(educator);
+    }
 }

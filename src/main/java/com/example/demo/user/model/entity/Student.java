@@ -1,6 +1,5 @@
 package com.example.demo.user.model.entity;
 
-import com.example.demo.device.model.UserDevice;
 import com.example.demo.user.model.enumerate.Gender;
 import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.model.enumerate.Role;
@@ -8,14 +7,12 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-public class Student extends User{
+public class Student extends User {
     public Student() {}
 
     @Builder(builderMethodName = "studentBuilder")
