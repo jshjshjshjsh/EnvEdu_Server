@@ -1,6 +1,7 @@
 package com.example.demo.user.model.entity;
 
 import com.example.demo.device.model.UserDevice;
+import com.example.demo.educating.model.MeasuredUnit;
 import com.example.demo.location.model.Location;
 import com.example.demo.user.model.enumerate.Gender;
 import com.example.demo.user.model.enumerate.State;
@@ -8,6 +9,7 @@ import com.example.demo.user.model.enumerate.Role;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -70,6 +72,14 @@ public abstract class User {
 
     @UpdateTimestamp
     private Timestamp updatedTime;
+
+    @Nullable
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MeasuredUnit measuredUnit;
+
+    public void updateMeasuredUnit(MeasuredUnit updatedMeasuredUnit){
+        measuredUnit = updatedMeasuredUnit;
+    }
 
     public void setUsername(String username)
     {

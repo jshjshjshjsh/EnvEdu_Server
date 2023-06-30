@@ -80,4 +80,6 @@ public class Seed {
     public void updateUsername(String username){
         this.username = username;
     }
+
+    public void updateUnit(String unit) {this.unit = unit;}
 }

@@ -26,4 +26,10 @@ public class MeasuredUnit {
     public void updateJoinDateTime(){
         joinDateTime = LocalDateTime.now();
     }
+
+    public MeasuredUnit(@Nullable String unit, @Nullable String classNumber, @Nullable LocalDateTime joinDateTime) {
+        this.unit = unit;
+        this.classNumber = classNumber;
+        this.joinDateTime = joinDateTime;
+    }
 }

@@ -2,6 +2,7 @@ package com.example.demo.seed.service;
 
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.repository.SeedRepository;
+import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +45,12 @@ public class SeedService {
     }
 
     @Transactional
-    public void saveSingleData(Seed seed) {
+    public void saveSingleData(Seed seed, String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        user.ifPresent(value -> {
+            assert value.getMeasuredUnit() != null;
+            seed.updateUnit(value.getMeasuredUnit().getUnit());
+        });
         seedRepository.save(seed);
     }
 }
