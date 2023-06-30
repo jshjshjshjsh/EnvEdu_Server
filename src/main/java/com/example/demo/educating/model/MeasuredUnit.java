@@ -1,6 +1,7 @@
 package com.example.demo.educating.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class MeasuredUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
