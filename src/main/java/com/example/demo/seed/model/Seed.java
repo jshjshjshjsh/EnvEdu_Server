@@ -73,4 +73,11 @@ public class Seed {
     @Column(length = 50)
     private String location;
 
+    // 측정 소속기관
+    @Nullable
+    private String unit;
+
+    public void updateUsername(String username){
+        this.username = username;
+    }
 }
