@@ -12,35 +12,37 @@ import javax.persistence.MappedSuperclass;
 @ToString
 @MappedSuperclass
 public abstract class OceanQualityParent {
-    @JsonProperty("ROWNO")
-    private String ROWNO;
-    private String stationName;
     @JsonProperty("PTNM")
-    private String PTNM;
-    @JsonProperty("WMOD")
-    private String WMOD;
+    private String ptNm;
+    private String stationName;
     @JsonProperty("WMYR")
-    private String WMYR;
+    private String wmyr;
+    @JsonProperty("WMOD")
+    private String wmod;
     @JsonProperty("ITEMTEMP")
-    private String ITEMTEMP;
+    private String itemTemp;
     @JsonProperty("ITEMPH")
-    private String ITEMPH;
+    private String itemPh;
     @JsonProperty("ITEMDOC")
-    private String ITEMDOC;
+    private String itemDoc;
     @JsonProperty("ITEMBOD")
-    private String ITEMBOD;
+    private String itemBod;
     @JsonProperty("ITEMCOD")
-    private String ITEMCOD;
-    @JsonProperty("ITEMSS")
-    private String ITEMSS;
-    @JsonProperty("ITEMTCOLI")
-    private String ITEMTCOLI;
+    private String itemCod;
     @JsonProperty("ITEMTN")
-    private String ITEMTN;
+    private String itemTn;
     @JsonProperty("ITEMTP")
-    private String ITEMTP;
+    private String itemTp;
+    @JsonProperty("ITEMTRANS")
+    private String itemTrans;
+    @JsonProperty("ITEMCLOA")
+    private String itemCloa;
+    @JsonProperty("ITEMEC")
+    private String itemEc;
+    @JsonProperty("ITEMTOC")
+    private String itemToc;
 
     public void setupStationName() {
-        this.stationName = this.PTNM;
+        this.stationName = this.ptNm;
     }
 }
