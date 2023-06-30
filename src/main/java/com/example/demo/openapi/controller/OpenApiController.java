@@ -42,12 +42,12 @@ public class OpenApiController {
     }
 
     @GetMapping("/ocean-quality")
-    public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "") String months) throws UnsupportedEncodingException, JsonProcessingException {
+    public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "06") String months) throws UnsupportedEncodingException, JsonProcessingException {
         String[] key = {"ServiceKey", "pageNo", "numOfRows", "resultType", "ptNoList", "wmyrList", "wmodList"};
         String[] value = {serviceKey, "1", "50", "JSON", "", wmyrList, months};
-
+        ResponseEntity<String> stringResponseEntity = openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value);
         OceanQualityDTO oceanQualityDTO = new OceanQualityDTO();
-        return new ResponseEntity<>(oceanQualityDTO.convertToOceanQuality(openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value)), HttpStatus.OK);
+        return new ResponseEntity<>(oceanQualityDTO.convertToOceanQuality(stringResponseEntity), HttpStatus.OK);
     }
 
     @PostMapping("/air-quality")
