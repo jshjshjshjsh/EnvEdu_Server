@@ -1,5 +1,6 @@
 package com.example.demo.user.service;
 
+import com.example.demo.educating.model.MeasuredUnit;
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
 import com.example.demo.jwt.util.JwtUtil;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -111,5 +113,25 @@ public class UserService {
     @Transactional
     public List<Student_Educator> findAllByEducator(Educator educator) {
         return student_educatorRepository.findAllByEducator(educator);
+    }
+
+    @Transactional
+    public void updateMeasuredUnit(String target, MeasuredUnit measuredUnit){
+        Optional<User> findUser = userRepository.findByUsername(target);
+        findUser.ifPresent(user -> user.updateMeasuredUnit(measuredUnit));
+    }
+
+    @Transactional
+    public void updateAllMeasuredUnit(String target, MeasuredUnit measuredUnit){
+        Optional<User> findUser = userRepository.findByUsername(target);
+
+        if(findUser.isPresent() && findUser.get() instanceof Educator){
+            findUser.get().updateMeasuredUnit(measuredUnit);
+            List<Student_Educator> allByEducator = findAllByEducator((Educator) findUser.get());
+
+            for (Student_Educator student : allByEducator) {
+                userRepository.findByUsername(student.getStudent().getUsername()).ifPresent(user -> user.updateMeasuredUnit(measuredUnit));
+            }
+        }
     }
 }

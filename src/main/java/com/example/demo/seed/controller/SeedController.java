@@ -2,6 +2,7 @@ package com.example.demo.seed.controller;
 
 import com.example.demo.DTO.DataSaveDTO;
 import com.example.demo.DTO.ResponseDTO;
+import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,8 +46,10 @@ public class SeedController {
     }
 
     @PostMapping("/seed/save")
-    private ResponseEntity<?> saveSingleSeed(Seed seed){
-        seedService.saveSingleData(seed);
+    private ResponseEntity<?> saveSingleSeed(@RequestBody Seed seed, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        seedService.saveSingleData(seed, userInfo.get(JwtUtil.claimUsername).toString());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
