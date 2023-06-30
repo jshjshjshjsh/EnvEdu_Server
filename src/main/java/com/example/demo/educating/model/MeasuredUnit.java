@@ -1,4 +1,4 @@
-package com.example.demo.seed.model;
+package com.example.demo.educating.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @Entity
 @Getter
 public class MeasuredUnit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
