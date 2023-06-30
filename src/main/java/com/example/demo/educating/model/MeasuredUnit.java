@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,5 +19,11 @@ public class MeasuredUnit {
     @Nullable
     private String unit;
     @Nullable
-    private int classNumber;
+    private String classNumber;
+    @Nullable
+    private LocalDateTime joinDateTime;
+
+    public void updateJoinDateTime(){
+        joinDateTime = LocalDateTime.now();
+    }
 }
