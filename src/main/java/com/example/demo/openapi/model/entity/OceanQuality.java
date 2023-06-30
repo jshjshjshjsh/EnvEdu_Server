@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "oceanquality",
+@Table(name = "OceanQuality",
         uniqueConstraints = @UniqueConstraint(columnNames = {"PTNM","WMOD", "WMYR"}))
 public class OceanQuality extends OceanQualityParent {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
