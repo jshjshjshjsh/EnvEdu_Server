@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -37,10 +38,15 @@ public class SeedController {
         String start = mp.get("startDate");
         String end = mp.get("endDate");
 
-        LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.RFC_1123_DATE_TIME);
-        LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.RFC_1123_DATE_TIME);
+        LocalDateTime startDate = LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.now();
 
-        List<Seed> list = seedService.getDataByDateAndUsername(startDate, endDate, username);
+        if (start != null && end != null){
+            startDate = LocalDateTime.parse(start, DateTimeFormatter.RFC_1123_DATE_TIME);
+            endDate = LocalDateTime.parse(end, DateTimeFormatter.RFC_1123_DATE_TIME);
+        }
+
+        List<Seed> list = seedService.refactorSeedData(seedService.extendSeedData(seedService.getDataByDateAndUsername(startDate, endDate, username)));
 
         return new ResponseDTO<>(HttpStatus.OK.value(), list);
     }
@@ -62,18 +68,18 @@ public class SeedController {
     @PostMapping("/user/save")
     private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data)
     {
-//        List<Seed> list = new ArrayList<>();
-//        data.getData().forEach((elem)->{
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            try {
-//                Seed seed = objectMapper.readValue(elem, Seed.class);
-//                seed.setDate(LocalDateTime.parse(seed.getDateString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-//                list.add(seed);
-//            } catch (JsonProcessingException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        seedService.saveData(list);
+        List<Seed> list = new ArrayList<>();
+        data.getData().forEach((elem)->{
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                Seed seed = objectMapper.readValue(elem, Seed.class);
+                seed.setDate(LocalDateTime.parse(seed.getDateString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                list.add(seed);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        seedService.saveData(list);
         return new ResponseDTO<>(HttpStatus.OK.value(), null);
     }
 
