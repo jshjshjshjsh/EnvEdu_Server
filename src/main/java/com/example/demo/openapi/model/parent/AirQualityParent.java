@@ -15,4 +15,8 @@ public abstract class AirQualityParent {
     private String no2Value;
     private String pm10Value;
     private String pm25Value;
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
 }
