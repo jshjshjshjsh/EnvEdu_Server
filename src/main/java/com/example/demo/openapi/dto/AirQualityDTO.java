@@ -15,7 +15,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AirQualityDTO extends AirQualityParent {
 
-    public static String[] values = {"측정일","측정소명","아황산가스 농도(단위 : ppm)","일산화탄소 농도(단위 : ppm)","오존 농도(단위 : ppm)","이산화질소 농도(단위 : ppm)","미세먼지(PM10) 농도(단위 : ㎍/㎥)","미세먼지(PM25) 농도(단위 : ㎍/㎥)"};
     public List<AirQualityDTO> convertToAirQuality(ResponseEntity<String> response) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
