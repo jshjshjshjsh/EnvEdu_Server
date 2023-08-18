@@ -15,11 +15,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OceanQualityDTO extends OceanQualityParent {
 
-    public OceanQualityDTO setupStation() {
-        setupStationName();
-        return this;
-    }
-
     public List<OceanQualityDTO> convertToOceanQuality(ResponseEntity<String> response) throws JsonProcessingException {
 
 
@@ -32,7 +27,7 @@ public class OceanQualityDTO extends OceanQualityParent {
 
         for (Iterator<JsonNode> it = result.elements(); it.hasNext(); ) {
             JsonNode node = it.next();
-            oceanQualityDTOS.add(mapper.treeToValue(node, OceanQualityDTO.class).setupStation());
+            oceanQualityDTOS.add(mapper.treeToValue(node, OceanQualityDTO.class));
         }
 
         return oceanQualityDTOS;

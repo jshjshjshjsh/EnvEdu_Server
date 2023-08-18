@@ -77,9 +77,24 @@ public class Seed {
     @Nullable
     private String unit;
 
+    // 측정 간격 설정
+    @Nullable
+    private Integer period;
+
     public void updateUsername(String username){
         this.username = username;
     }
 
     public void updateUnit(String unit) {this.unit = unit;}
+
+    public void setDate(LocalDateTime measuredDate) {
+        this.measuredDate = measuredDate;
+    }
+
+    public Seed(String username, String mac, LocalDateTime measuredDate, Integer period) {
+        this.username = username;
+        this.mac = mac;
+        this.measuredDate = measuredDate;
+        this.period = period;
+    }
 }

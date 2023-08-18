@@ -2,24 +2,21 @@ package com.example.demo.openapi.controller;
 
 import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.openapi.dto.AirQualityDTO;
+import com.example.demo.openapi.dto.AirQualityStationDTO;
 import com.example.demo.openapi.dto.OceanQualityDTO;
-import com.example.demo.openapi.dto.OpenApiParam;
 import com.example.demo.openapi.model.entity.AirQuality;
 import com.example.demo.openapi.model.entity.OceanQuality;
-import com.example.demo.openapi.module.OpenApiRequest;
 import com.example.demo.openapi.service.OpenApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -27,26 +24,60 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 public class OpenApiController {
-    @Value("${spring.open-api.gonggong-data}")
-    private String serviceKey;
+    @Value("${spring.open-api.gonggong-data.air-status}")
+    private String serviceKeyAirStatus;
+    @Value("${spring.open-api.gonggong-data.air-station}")
+    private String serviceKeyAirStation;
     private final OpenApiService openApiService;
 
+    @GetMapping("/air-quality/station")
+    public ResponseEntity<?> getAirQualityStation(@RequestParam(name = "addr", defaultValue = "부산") String addr) throws UnsupportedEncodingException, JsonProcessingException {
+        String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "addr"};
+        String[] value = {serviceKeyAirStation, "json", "100", "1", addr};
+
+        AirQualityStationDTO airQualityStationDTO = new AirQualityStationDTO();
+        List<AirQualityStationDTO> airQualityStationDTOS = airQualityStationDTO.convertToAirQualityStation(openApiService.callApi("https://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getMsrstnList?", key, value));
+
+        return new ResponseEntity<>(airQualityStationDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/air-quality")
-    public ResponseEntity<?> getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location) throws UnsupportedEncodingException, JsonProcessingException {
+    public ResponseEntity<?>  getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location,
+                                                                    @RequestParam(name = "stationName", defaultValue = "") String stationName,
+                                                                     @RequestParam(name = "dataTerm", defaultValue = "DAILY") String dataTerm) throws UnsupportedEncodingException, JsonProcessingException {
 
         String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "sidoName", "ver"};
-        String[] value = {serviceKey, "json", "100", "1", location, "1.0"};
+        String[] value = {serviceKeyAirStatus, "json", "100", "1", location, "1.0"};
+        String url = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?";
+
+        if(!stationName.isEmpty()){
+            key = new String[]{"serviceKey", "returnType", "numOfRows", "pageNo", "stationName", "dataTerm", "ver"};
+            value = new String[]{serviceKeyAirStatus, "json", "100", "1", stationName, dataTerm, "1.0"};
+            url = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?";
+        }
 
         AirQualityDTO airQualityDTO = new AirQualityDTO();
-        return new ResponseEntity<>(airQualityDTO.convertToAirQuality(openApiService.callApi("https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?", key, value)), HttpStatus.OK);
+
+
+        List<AirQualityDTO> airQualityDTOS = airQualityDTO.convertToAirQuality(openApiService.callApi(url, key, value));
+
+        if(!stationName.isEmpty()){
+            for(AirQualityDTO single: airQualityDTOS) {
+                single.setStationName(stationName);
+            }
+        }
+
+        return new ResponseEntity<>(airQualityDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/ocean-quality")
     public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "06") String months) throws UnsupportedEncodingException, JsonProcessingException {
         String[] key = {"ServiceKey", "pageNo", "numOfRows", "resultType", "ptNoList", "wmyrList", "wmodList"};
-        String[] value = {serviceKey, "1", "50", "JSON", "", wmyrList, months};
+        String[] value = {serviceKeyAirStatus, "1", "50", "JSON", "", wmyrList, months};
+
         ResponseEntity<String> stringResponseEntity = openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value);
         OceanQualityDTO oceanQualityDTO = new OceanQualityDTO();
+
         return new ResponseEntity<>(oceanQualityDTO.convertToOceanQuality(stringResponseEntity), HttpStatus.OK);
     }
 

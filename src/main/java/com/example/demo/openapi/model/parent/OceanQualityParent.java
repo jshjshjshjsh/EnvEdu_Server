@@ -14,7 +14,6 @@ import javax.persistence.MappedSuperclass;
 public abstract class OceanQualityParent {
     @JsonProperty("PTNM")
     private String ptNm;
-    private String stationName;
     @JsonProperty("WMYR")
     private String wmyr;
     @JsonProperty("WMOD")
@@ -41,8 +40,4 @@ public abstract class OceanQualityParent {
     private String itemEc;
     @JsonProperty("ITEMTOC")
     private String itemToc;
-
-    public void setupStationName() {
-        this.stationName = this.ptNm;
-    }
 }

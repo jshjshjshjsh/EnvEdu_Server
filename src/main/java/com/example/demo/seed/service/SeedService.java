@@ -19,6 +19,42 @@ public class SeedService {
     private final SeedRepository seedRepository;
     private final UserRepository userRepository;
 
+    public List<Seed> refactorSeedData(List<Seed> seeds){
+        List<Seed> result = new ArrayList<>();
+
+        int passCnt = 0;
+        int passBase = 0;
+
+        for (Seed seed : seeds) {
+            if (passBase == passCnt){
+                result.add(seed);
+                passBase = 3;
+                if (seed.getPeriod() != null)
+                    passBase = seed.getPeriod();
+                passCnt = 0;
+            }
+            passCnt ++;
+        }
+
+
+        return result;
+    }
+
+    /*
+    * Seed Data를 3초에서 1초 간격으로 늘림
+    * */
+    public List<Seed> extendSeedData(List<Seed> seeds){
+        List<Seed> result = new ArrayList<>();
+
+        for (Seed seed : seeds) {
+            for (int j = 0; j < 3; j++) {
+                result.add(seed);
+            }
+        }
+
+        return result;
+    }
+
     @Transactional(readOnly = true)
     public List<Seed> getDataByDateAndUsername(LocalDateTime start, LocalDateTime end, String username)
     {
