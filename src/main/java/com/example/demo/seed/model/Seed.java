@@ -1,10 +1,12 @@
 package com.example.demo.seed.model;
 
+import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.misc.Misc;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
 
@@ -96,5 +98,39 @@ public class Seed {
         this.mac = mac;
         this.measuredDate = measuredDate;
         this.period = period;
+    }
+
+    public boolean deleteSingleFactor(DeleteSeedDto inputData) throws IllegalAccessException, NoSuchFieldException {
+        Class<?> seedClass = this.getClass();
+
+        for (String field: inputData.getSensors()){
+            Field declaredField = seedClass.getDeclaredField(field);
+            declaredField.set(this, -99999);
+        }
+
+        String[] split = toString().split(", ");
+
+        for (int i = 0; i < split.length; i++) {
+            String[] splited = split[i].split("=");
+            if(!splited[1].equals("-99999.0")){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "hum=" + hum +
+                ", temp=" + temp +
+                ", tur=" + tur +
+                ", ph=" + ph +
+                ", dust=" + dust +
+                ", dox=" + dox +
+                ", co2=" + co2 +
+                ", lux=" + lux +
+                ", hum_EARTH=" + hum_EARTH +
+                ", pre=" + pre;
     }
 }

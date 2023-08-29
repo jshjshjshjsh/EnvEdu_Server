@@ -3,6 +3,7 @@ package com.example.demo.seed.controller;
 import com.example.demo.DTO.DataSaveDTO;
 import com.example.demo.DTO.ResponseDTO;
 import com.example.demo.jwt.util.JwtUtil;
+import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -60,6 +61,13 @@ public class SeedController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/seed/delete")
+    public ResponseEntity<?> deleteSingle(@RequestBody List<DeleteSeedDto> deleteSeedDto) throws NoSuchFieldException, IllegalAccessException {
+        seedService.updateSingleSeed(deleteSeedDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     /**
      * todo: url을 restful하게 수정
      * todo: 문자열 형태의 seed 데이터를 적절히 Seed.class로 변환해 저장 구현
@@ -83,9 +91,20 @@ public class SeedController {
         return new ResponseDTO<>(HttpStatus.OK.value(), null);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    private void illegalArgumentExceptionHandler(HttpServletResponse response)
+    @ExceptionHandler(NoSuchFieldException.class)
+    private ResponseEntity<?> noSuchFieldExceptionHandler(NoSuchFieldException e)
     {
-        response.setStatus(HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    private ResponseEntity<?> illegalAccessExceptionHandler(IllegalAccessException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<?> illegalArgumentExceptionHandler(IllegalArgumentException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

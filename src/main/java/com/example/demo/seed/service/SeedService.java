@@ -1,5 +1,6 @@
 package com.example.demo.seed.service;
 
+import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.repository.SeedRepository;
 import com.example.demo.user.model.entity.User;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class SeedService {
     private final SeedRepository seedRepository;
     private final UserRepository userRepository;
+
+    private final String[] sensors_list = {"co2", "dox", "dust", "hum", "hum_EARTH", "lux", "ph", "pre", "temp", "tur"};
 
     public List<Seed> refactorSeedData(List<Seed> seeds){
         List<Seed> result = new ArrayList<>();
@@ -53,6 +57,21 @@ public class SeedService {
         }
 
         return result;
+    }
+
+    @Transactional
+    public void updateSingleSeed(List<DeleteSeedDto> deleteSeedDtos) throws NoSuchFieldException, IllegalAccessException {
+        for (DeleteSeedDto deleteSeedDto: deleteSeedDtos){
+            Optional<Seed> seed = seedRepository.findById(deleteSeedDto.getId());
+            if (seed.isPresent()){
+                if(seed.get().deleteSingleFactor(deleteSeedDto)){
+                    // todo -99999 이거 값 const 같은 걸로 확실히 정하기
+                    seedRepository.deleteById(seed.get().getId());
+                }
+
+            }
+
+        }
     }
 
     @Transactional(readOnly = true)
