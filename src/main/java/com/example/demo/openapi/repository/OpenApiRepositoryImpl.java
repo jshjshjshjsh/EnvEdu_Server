@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -53,6 +54,16 @@ public class OpenApiRepositoryImpl implements OpenApiRepository{
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public List<AirQuality> findAllByDataTimeBetween(LocalDateTime start, LocalDateTime end) {
+        //return em.createQuery("SELECT t FROM AirQuality t WHERE t.owner.id = :id", AirQuality.class).setParameter("id", id).getResultList();
+
+        return em.createQuery("SELECT t FROM AirQuality t WHERE t.dataTime BETWEEN :start AND :end", AirQuality.class)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
     }
 
 }
