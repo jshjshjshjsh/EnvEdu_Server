@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -99,13 +103,49 @@ public class OpenApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/air-quality/mine")
-    public ResponseEntity<?> getMyAirQuality(@RequestParam String username){
-        return new ResponseEntity<>(openApiService.findMyAirQuality(username), HttpStatus.OK);
+    @DeleteMapping("/air-quality/mine/{airQualityId}")
+    public ResponseEntity<?> deleteAirQuality(@PathVariable long airQualityId){
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/ocean-quality/mine/{oceanQualityId}")
+    public ResponseEntity<?> deleteOceanQuality(@PathVariable long oceanQualityId){
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 연.월.일 시간:분
+    @GetMapping("/air-quality/mine")
+    public ResponseEntity<?> getMyAirQuality(@RequestParam String username,
+                                             @RequestParam(name="startDateTime", defaultValue = "") String startDateTime,
+                                             @RequestParam(name="endDateTime", defaultValue = "") String endDateTime){
+        LocalDateTime defaultStart = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0, 0);
+        LocalDateTime defaultEnd = LocalDateTime.now();
+
+        if (!startDateTime.isEmpty())
+            defaultStart = LocalDateTime.parse(startDateTime, DateTimeFormatter.RFC_1123_DATE_TIME);
+        if (!endDateTime.isEmpty())
+            defaultEnd = LocalDateTime.parse(endDateTime, DateTimeFormatter.RFC_1123_DATE_TIME);
+
+        return new ResponseEntity<>(openApiService.findMyAirQuality(username, defaultStart, defaultEnd), HttpStatus.OK);
+    }
+
+    // 연+월
     @GetMapping("/ocean-quality/mine")
-    public ResponseEntity<?> getMyOceanQuality(@RequestParam String username){
+    public ResponseEntity<?> getMyOceanQuality(@RequestParam String username,
+                                               @RequestParam(name="startYear", defaultValue = "1900") String startYear,
+                                               @RequestParam(name="startMonth", defaultValue = "01") String startMonth,
+                                               @RequestParam(name="endYear", defaultValue = "") String endYear,
+                                               @RequestParam(name="endMonth", defaultValue = "") String endMonth){
+        YearMonth now = YearMonth.now();
+        if (endYear.isEmpty())
+            endYear = String.valueOf(now.getYear());
+        if (endMonth.isEmpty())
+            endMonth = String.valueOf(now.getMonthValue());
+
         return new ResponseEntity<>(openApiService.findMyOceanQuality(username), HttpStatus.OK);
     }
 

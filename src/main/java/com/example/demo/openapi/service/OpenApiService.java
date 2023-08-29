@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,6 +32,11 @@ public class OpenApiService {
                 .setKey(key)
                 .setValue(value)
                 .build());
+    }
+
+    @Transactional
+    public boolean deleteAirQuality(long airQualityId){
+        return false;
     }
 
     @Transactional
@@ -53,9 +59,11 @@ public class OpenApiService {
         return openApiRepositoryImpl.saveOceanQuality(oceanQualities);
     }
 
-    public List<AirQuality> findMyAirQuality(String username) throws NoSuchElementException {
+    public List<AirQuality> findMyAirQuality(String username, LocalDateTime start, LocalDateTime end) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
-        List<AirQuality> result = openApiRepositoryImpl.findAirQualityAllByUserId(user.get().getId());
+        //List<AirQuality> result = openApiRepositoryImpl.findAirQualityAllByUserId(user.get().getId());
+
+        List<AirQuality> result = openApiRepositoryImpl.findAllByDataTimeBetween(start, end);
 
         for (AirQuality airQuality : result) {
             airQuality.setOwner(null);
