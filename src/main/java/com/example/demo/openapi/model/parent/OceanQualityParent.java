@@ -15,9 +15,9 @@ public abstract class OceanQualityParent {
     @JsonProperty("PTNM")
     private String ptNm;
     @JsonProperty("WMYR")
-    private String wmyr;
+    private Integer wmyr;
     @JsonProperty("WMOD")
-    private String wmod;
+    private Integer wmod;
     @JsonProperty("ITEMTEMP")
     private String itemTemp;
     @JsonProperty("ITEMPH")
