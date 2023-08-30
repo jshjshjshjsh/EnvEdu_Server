@@ -61,9 +61,9 @@ public class OpenApiService {
 
     public List<AirQuality> findMyAirQuality(String username, LocalDateTime start, LocalDateTime end) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
-        //List<AirQuality> result = openApiRepositoryImpl.findAirQualityAllByUserId(user.get().getId());
+        List<AirQuality> result = openApiRepositoryImpl.findAirQualityAllByUserId(user.get().getId());
 
-        List<AirQuality> result = openApiRepositoryImpl.findAllByDataTimeBetween(start, end);
+        //List<AirQuality> result = openApiRepositoryImpl.findAllByDataTimeBetween(start, end);
 
         for (AirQuality airQuality : result) {
             airQuality.setOwner(null);
