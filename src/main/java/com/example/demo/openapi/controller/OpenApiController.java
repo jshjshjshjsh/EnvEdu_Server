@@ -35,9 +35,10 @@ public class OpenApiController {
     private final OpenApiService openApiService;
 
     @GetMapping("/air-quality/station")
-    public ResponseEntity<?> getAirQualityStation(@RequestParam(name = "addr", defaultValue = "부산") String addr) throws UnsupportedEncodingException, JsonProcessingException {
-        String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "addr"};
-        String[] value = {serviceKeyAirStation, "json", "100", "1", addr};
+    public ResponseEntity<?> getAirQualityStation(@RequestParam(name = "addr", defaultValue = "부산") String addr,
+                                                  @RequestParam(name = "stationName", defaultValue = "") String stationName) throws UnsupportedEncodingException, JsonProcessingException {
+        String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "addr", "stationName"};
+        String[] value = {serviceKeyAirStation, "json", "100", "1", addr, stationName};
 
         AirQualityStationDTO airQualityStationDTO = new AirQualityStationDTO();
         List<AirQualityStationDTO> airQualityStationDTOS = airQualityStationDTO.convertToAirQualityStation(openApiService.callApi("https://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getMsrstnList?", key, value));
@@ -47,16 +48,18 @@ public class OpenApiController {
 
     @GetMapping("/air-quality")
     public ResponseEntity<?>  getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location,
-                                                                    @RequestParam(name = "stationName", defaultValue = "") String stationName,
-                                                                     @RequestParam(name = "dataTerm", defaultValue = "DAILY") String dataTerm) throws UnsupportedEncodingException, JsonProcessingException {
+                                            @RequestParam(name = "stationName", defaultValue = "") String stationName,
+                                            @RequestParam(name = "dataTerm", defaultValue = "DAILY") String dataTerm,
+                                            @RequestParam(name = "pageSize", defaultValue = "100") String pageSize,
+                                            @RequestParam(name = "pageNo", defaultValue = "1") String pageNo) throws UnsupportedEncodingException, JsonProcessingException {
 
         String[] key = {"serviceKey", "returnType", "numOfRows", "pageNo", "sidoName", "ver"};
-        String[] value = {serviceKeyAirStatus, "json", "100", "1", location, "1.0"};
+        String[] value = {serviceKeyAirStatus, "json", pageSize, pageNo, location, "1.0"};
         String url = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?";
 
         if(!stationName.isEmpty()){
             key = new String[]{"serviceKey", "returnType", "numOfRows", "pageNo", "stationName", "dataTerm", "ver"};
-            value = new String[]{serviceKeyAirStatus, "json", "100", "1", stationName, dataTerm, "1.0"};
+            value = new String[]{serviceKeyAirStatus, "json", pageSize, pageNo, stationName, dataTerm, "1.0"};
             url = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?";
         }
 
@@ -75,9 +78,12 @@ public class OpenApiController {
     }
 
     @GetMapping("/ocean-quality")
-    public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList, @RequestParam(name="months", defaultValue = "06") String months) throws UnsupportedEncodingException, JsonProcessingException {
+    public ResponseEntity<?> getOceanQuality(@RequestParam(name="year", defaultValue = "2022") String wmyrList,
+                                             @RequestParam(name="months", defaultValue = "06") String months,
+                                             @RequestParam(name = "pageSize", defaultValue = "50") String pageSize,
+                                             @RequestParam(name = "pageNo", defaultValue = "1") String pageNo) throws UnsupportedEncodingException, JsonProcessingException {
         String[] key = {"ServiceKey", "pageNo", "numOfRows", "resultType", "ptNoList", "wmyrList", "wmodList"};
-        String[] value = {serviceKeyAirStatus, "1", "50", "JSON", "", wmyrList, months};
+        String[] value = {serviceKeyAirStatus, pageNo, pageSize, "JSON", "", wmyrList, months};
 
         ResponseEntity<String> stringResponseEntity = openApiService.callApi("https://apis.data.go.kr/1480523/WaterQualityService/getWaterMeasuringListMavg?", key, value);
         OceanQualityDTO oceanQualityDTO = new OceanQualityDTO();
