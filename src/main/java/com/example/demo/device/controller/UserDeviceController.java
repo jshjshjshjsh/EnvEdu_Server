@@ -46,7 +46,7 @@ public class UserDeviceController {
      * 학생의 경우, 자신에게 등록된 기기
      * 교사의 경우, 자신의 기기 및 자신이 지도하는 학생에게 등록된 기기
      */
-    @GetMapping("/user/device")
+    @GetMapping("/seed/device")
     private ResponseEntity<?> getMyDevices(HttpServletRequest request) {
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         return new ResponseEntity<>(userDeviceService.getDeviceList(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
