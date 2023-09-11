@@ -14,16 +14,12 @@ public class DataFolder_DataCompilation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "dataFolder_id")
     private DataFolder dataFolder;
     @ManyToOne
-    @JoinColumn(name = "seed_id")
     private Seed seed;
     @ManyToOne
-    @JoinColumn(name = "airQuality_id")
     private AirQuality airQuality;
     @ManyToOne
-    @JoinColumn(name = "oceanQuality_id")
     private OceanQuality oceanQuality;
 
     public void addDataFolder(DataFolder inputDataFolder) {
