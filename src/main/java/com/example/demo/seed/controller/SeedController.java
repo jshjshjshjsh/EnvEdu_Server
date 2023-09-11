@@ -32,7 +32,7 @@ public class SeedController {
      * /test/fetch url에서 예시 확인할 수 있음
      * todo: ResponseEntity로 return 수정
      */
-    @GetMapping("/user/fetch")
+    @GetMapping("/seed/fetch")
     private ResponseDTO<List<Seed>> fetchData(@RequestParam Map<String,String> mp)
     {
         String username = mp.get("username");
@@ -43,8 +43,8 @@ public class SeedController {
         LocalDateTime endDate = LocalDateTime.now();
 
         if (start != null && end != null){
-            startDate = LocalDateTime.parse(start, DateTimeFormatter.RFC_1123_DATE_TIME);
-            endDate = LocalDateTime.parse(end, DateTimeFormatter.RFC_1123_DATE_TIME);
+            startDate = LocalDateTime.parse(start, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            endDate = LocalDateTime.parse(end, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
 
         List<Seed> list = seedService.refactorSeedData(seedService.extendSeedData(seedService.getDataByDateAndUsername(startDate, endDate, username)));
@@ -52,7 +52,7 @@ public class SeedController {
         return new ResponseDTO<>(HttpStatus.OK.value(), list);
     }
 
-    @PostMapping("/seed/save")
+    @PostMapping("/seed/save/single")
     private ResponseEntity<?> saveSingleSeed(@RequestBody Seed seed, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
 
@@ -73,7 +73,7 @@ public class SeedController {
      * todo: 문자열 형태의 seed 데이터를 적절히 Seed.class로 변환해 저장 구현
      * todo: ResponseEntity로 return 수정
      */
-    @PostMapping("/user/save")
+    @PostMapping("/seed/save/continuous")
     private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data)
     {
         List<Seed> list = new ArrayList<>();

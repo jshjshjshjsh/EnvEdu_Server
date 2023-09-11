@@ -1,7 +1,7 @@
-package com.example.demo.educating.service;
+package com.example.demo.datacontrol.datachunk.service;
 
-import com.example.demo.educating.model.MeasuredUnit;
-import com.example.demo.educating.repository.MeasuredUnitRepository;
+import com.example.demo.datacontrol.datachunk.model.MeasuredUnit;
+import com.example.demo.datacontrol.datachunk.repository.MeasuredUnitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.example.demo.user.model.entity;
 
 import com.example.demo.device.model.UserDevice;
-import com.example.demo.educating.model.MeasuredUnit;
+import com.example.demo.datacontrol.datachunk.model.MeasuredUnit;
 import com.example.demo.location.model.Location;
 import com.example.demo.user.model.enumerate.Gender;
 import com.example.demo.user.model.enumerate.State;
