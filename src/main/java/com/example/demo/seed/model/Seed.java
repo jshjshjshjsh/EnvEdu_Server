@@ -133,4 +133,23 @@ public class Seed {
                 ", hum_EARTH=" + hum_EARTH +
                 ", pre=" + pre;
     }
+
+    public Seed(String username, String mac, float hum, float temp, float tur, float ph, float dust, float dox, float co2, float lux, float hum_EARTH, float pre, String dateString, @Nullable String location, @Nullable String unit, @Nullable Integer period) {
+        this.username = username;
+        this.mac = mac;
+        this.hum = hum;
+        this.temp = temp;
+        this.tur = tur;
+        this.ph = ph;
+        this.dust = dust;
+        this.dox = dox;
+        this.co2 = co2;
+        this.lux = lux;
+        this.hum_EARTH = hum_EARTH;
+        this.pre = pre;
+        this.dateString = dateString;
+        this.location = location;
+        this.unit = unit;
+        this.period = period;
+    }
 }
