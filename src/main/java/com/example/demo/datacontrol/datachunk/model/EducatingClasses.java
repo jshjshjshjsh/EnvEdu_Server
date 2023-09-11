@@ -11,7 +11,6 @@ import javax.persistence.Id;
 @Getter
 public class EducatingClasses {
     @Id @GeneratedValue
-    @Column(name = "educatingClasses_id")
     private Long id;
     private String className;
 }

@@ -18,7 +18,6 @@ import java.util.List;
 public class DataFolder {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dataFolder_id")
     private Long id;
     private String folderName;
     @ManyToOne(fetch = FetchType.LAZY)

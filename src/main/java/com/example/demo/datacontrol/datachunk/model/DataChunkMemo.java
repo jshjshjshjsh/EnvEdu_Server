@@ -9,7 +9,6 @@ import javax.persistence.*;
 public class DataChunkMemo {
 
     @Id @GeneratedValue
-    @Column(name = "dataChunkMemo_id")
     private Long id;
     private String text;
     //@ForeignKey

@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Getter
 public class DataFolder_DataCompilation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dataFolder_DataCompilation_id")
     private Long id;
     @ManyToOne
     @JoinColumn(name = "dataFolder_id")

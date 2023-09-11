@@ -16,7 +16,6 @@ public class AirQuality extends AirQualityParent {
     @ManyToOne(fetch = FetchType.LAZY)
     //@NotNull
     private User owner;
-
     public void setOwner(User owner) {
         this.owner = owner;
     }

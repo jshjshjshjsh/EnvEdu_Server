@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class MeasuredUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "measuredUnit_id")
     private long id;
     @Nullable
     private String unit;
