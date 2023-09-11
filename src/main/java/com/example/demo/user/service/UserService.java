@@ -1,6 +1,6 @@
 package com.example.demo.user.service;
 
-import com.example.demo.educating.model.MeasuredUnit;
+import com.example.demo.datacontrol.datachunk.model.MeasuredUnit;
 import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.exceptions.DuplicateAttributeException;
 import com.example.demo.jwt.util.JwtUtil;
