@@ -1,7 +1,7 @@
-package com.example.demo.educating.controller;
+package com.example.demo.datacontrol.datachunk.controller;
 
-import com.example.demo.educating.model.MeasuredUnit;
-import com.example.demo.educating.service.EducatingService;
+import com.example.demo.datacontrol.datachunk.model.MeasuredUnit;
+import com.example.demo.datacontrol.datachunk.service.EducatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
