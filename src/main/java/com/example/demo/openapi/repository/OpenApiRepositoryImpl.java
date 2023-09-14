@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,9 +19,25 @@ public class OpenApiRepositoryImpl implements OpenApiRepository{
     private final EntityManager em;
 
     @Override
+    public List<AirQuality> findAirQualityAllByUserIdAndDataUuid(UUID uuid, Long id) {
+        return em.createQuery("SELECT t FROM AirQuality t WHERE t.owner.id = :id and t.dataUUID = :uuid", AirQuality.class)
+                .setParameter("id", id)
+                .setParameter("uuid", uuid)
+                .getResultList();
+    }
+
+    @Override
     public List<AirQuality> findAirQualityAllByUserId(Long id) {
         //return em.createQuery("SELECT t FROM AirQuality t", AirQuality.class).getResultList();
         return em.createQuery("SELECT t FROM AirQuality t WHERE t.owner.id = :id", AirQuality.class).setParameter("id", id).getResultList();
+    }
+
+    @Override
+    public List<OceanQuality> findOceanQualityAllByUserIdAndDataUuid(UUID uuid, Long id) {
+        return em.createQuery("SELECT t FROM OceanQuality t WHERE t.owner.id = :id and t.dataUUID = :uuid", OceanQuality.class)
+                .setParameter("id", id)
+                .setParameter("uuid", uuid)
+                .getResultList();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.demo.datacontrol.datafolder.service;
 
+import com.example.demo.datacontrol.datachunk.model.parent.DataSuperTypes;
+import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
 import com.example.demo.datacontrol.datafolder.model.DataFolder;
 import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
 import com.example.demo.datacontrol.datafolder.repository.DataFolderRepository;
@@ -17,14 +19,25 @@ public class DataFolderService {
     private final DataFolder_DataCompilationRepository dataFolder_dataCompilationRepository;
     private final DataFolderRepository dataFolderRepository;
 
-    public List<DataFolder_DataCompilation> findByDataFolderId(Long id){
+    private DataFolder_DataCompilationDto reassemble(List<DataFolder_DataCompilation> items){
+        DataFolder_DataCompilationDto dto = new DataFolder_DataCompilationDto();
+        List<DataSuperTypes> datas = dto.getData();
+
+        for(DataFolder_DataCompilation item : items)
+            datas.add(new DataSuperTypes(item.getSeed(), item.getAirQuality(), item.getOceanQuality(), item.getSaveDate()));
+
+        return dto;
+    }
+
+    public DataFolder_DataCompilationDto findByDataFolderCompilationId(Long id){
         List<DataFolder_DataCompilation> datas = dataFolder_dataCompilationRepository.findByDataFolderId(id);
         for (DataFolder_DataCompilation item: datas){
             item.getDataFolder().deleteThisParentDataFolder();
         }
-        return datas;
+
+        return reassemble(datas);
     }
-    public List<DataFolder> findByDataFolder2(Long id){
+    public List<DataFolder> findByDataFolder(Long id){
         List<DataFolder> datas = dataFolderRepository.findAllById(id);
         for(DataFolder item: datas)
             item.deleteThisParentDataFolder();

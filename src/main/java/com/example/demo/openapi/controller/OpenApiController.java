@@ -20,10 +20,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -121,6 +118,20 @@ public class OpenApiController {
 
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/air-quality/mine/chunk")
+    public ResponseEntity<?> getMyAirQualityChunked(@RequestParam UUID dataUUID, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        return new ResponseEntity<>(openApiService.findMyAirQualityChunked(dataUUID, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+    }
+
+    @GetMapping("/ocean-quality/mine/chunk")
+    public ResponseEntity<?> getMyOceanQualityChunked(@RequestParam UUID dataUUID, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        return new ResponseEntity<>(openApiService.findMyOceanQualityChunked(dataUUID, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
     }
 
     // 연.월.일 시간:분
