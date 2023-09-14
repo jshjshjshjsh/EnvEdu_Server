@@ -6,11 +6,14 @@ import com.example.demo.datacontrol.datafolder.model.DataFolder;
 import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
 import com.example.demo.datacontrol.datafolder.repository.DataFolderRepository;
 import com.example.demo.datacontrol.datafolder.repository.DataFolder_DataCompilationRepository;
+import com.example.demo.user.model.entity.User;
+import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public class DataFolderService {
 
     private final DataFolder_DataCompilationRepository dataFolder_dataCompilationRepository;
     private final DataFolderRepository dataFolderRepository;
-
+    private final UserRepository userRepository;
     private DataFolder_DataCompilationDto reassemble(List<DataFolder_DataCompilation> items){
         DataFolder_DataCompilationDto dto = new DataFolder_DataCompilationDto();
         List<DataSuperTypes> datas = dto.getData();
@@ -37,8 +40,9 @@ public class DataFolderService {
 
         return reassemble(datas);
     }
-    public List<DataFolder> findByDataFolder(Long id){
-        List<DataFolder> datas = dataFolderRepository.findAllById(id);
+    public List<DataFolder> findByDataFolder(String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        List<DataFolder> datas = dataFolderRepository.findAllById(user.get().getId());
         for(DataFolder item: datas)
             item.deleteThisParentDataFolder();
         return datas;
