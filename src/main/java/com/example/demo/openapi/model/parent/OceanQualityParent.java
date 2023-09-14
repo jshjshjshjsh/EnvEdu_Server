@@ -1,17 +1,19 @@
 package com.example.demo.openapi.model.parent;
 
+import com.example.demo.datacontrol.datachunk.model.parent.Data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
 @MappedSuperclass
-public abstract class OceanQualityParent {
+public abstract class OceanQualityParent extends Data {
     @JsonProperty("PTNM")
     private String ptNm;
     @JsonProperty("WMYR")

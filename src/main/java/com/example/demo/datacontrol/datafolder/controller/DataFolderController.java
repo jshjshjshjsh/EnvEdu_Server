@@ -1,6 +1,7 @@
 package com.example.demo.datacontrol.datafolder.controller;
 
 import com.example.demo.datacontrol.datafolder.dto.DataFolderDto;
+import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
 import com.example.demo.datacontrol.datafolder.service.DataFolderService;
 import com.example.demo.datacontrol.datafolder.model.DataFolder;
 import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
@@ -20,14 +21,14 @@ public class DataFolderController {
     private final DataFolderService dataFolderService;
 
     @GetMapping("/datafolder/items")
-    public ResponseEntity<?> getDataFolder(@RequestParam Long id){
-        List<DataFolder_DataCompilation> byDataFolder = dataFolderService.findByDataFolderId(id);
+    public ResponseEntity<?> getDataFolderCompilation(@RequestParam Long id){
+        DataFolder_DataCompilationDto byDataFolder = dataFolderService.findByDataFolderCompilationId(id);
 
         return new ResponseEntity<>(byDataFolder, HttpStatus.OK);
     }
     @GetMapping("/datafolder/list")
-    public ResponseEntity<?> getDataFolder2(@RequestParam Long id){
-        List<DataFolder> byDataFolder = dataFolderService.findByDataFolder2(id);
+    public ResponseEntity<?> getDataFolder(@RequestParam Long id){
+        List<DataFolder> byDataFolder = dataFolderService.findByDataFolder(id);
 
         return new ResponseEntity<>(byDataFolder, HttpStatus.OK);
     }

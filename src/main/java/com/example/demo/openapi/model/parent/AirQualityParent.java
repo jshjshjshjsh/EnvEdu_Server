@@ -1,5 +1,6 @@
 package com.example.demo.openapi.model.parent;
 
+import com.example.demo.datacontrol.datachunk.model.parent.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
-public abstract class AirQualityParent {
+public abstract class AirQualityParent extends Data {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
@@ -24,7 +25,6 @@ public abstract class AirQualityParent {
     private String no2Value;
     private String pm10Value;
     private String pm25Value;
-
     public void setStationName(String stationName) {
         this.stationName = stationName;
     }

@@ -1,5 +1,6 @@
 package com.example.demo.seed.model;
 
+import com.example.demo.datacontrol.datachunk.model.parent.Data;
 import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.misc.Misc;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Seed {
+public class Seed extends Data {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

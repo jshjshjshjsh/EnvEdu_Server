@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
                                 "/air-quality/**","/ocean-quality/**").permitAll()
                         // todo : 나중엔 꼭 삭제해야 함
-                        .mvcMatchers("/educating/**","/seed/**","/datafolder/**").permitAll()
+                        .mvcMatchers("/educating/**","/seed/**","/datafolder/**","/mydata/**").permitAll()
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")

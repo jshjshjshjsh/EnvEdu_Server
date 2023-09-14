@@ -8,14 +8,12 @@ import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +23,13 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SeedController {
     private final SeedService seedService;
+
+    @GetMapping("/seed/mine/chunk")
+    private ResponseEntity<?> getMySeedChunked(@RequestParam UUID dataUUID, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        return new ResponseEntity<>(seedService.findMySeedChunked(dataUUID, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+    }
 
     /**
      * 테스트에 사용된 api
