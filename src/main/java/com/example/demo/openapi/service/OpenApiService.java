@@ -1,5 +1,7 @@
 package com.example.demo.openapi.service;
 
+import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
+import com.example.demo.datacontrol.datachunk.service.DataChunkService;
 import com.example.demo.openapi.dto.OpenApiParam;
 import com.example.demo.openapi.model.entity.AirQuality;
 import com.example.demo.openapi.model.entity.OceanQuality;
@@ -17,14 +19,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class OpenApiService {
-
     private final OpenApiRequest openApiRequest;
     private final OpenApiRepository openApiRepositoryImpl;
     private final UserRepository userRepository;
+    private final DataChunkService dataChunkService;
 
     public ResponseEntity<String> callApi(String domain, String[] key, String[] value) throws UnsupportedEncodingException {
         return openApiRequest.call(new OpenApiParam.OpenApiParamBuilder()
@@ -42,21 +45,42 @@ public class OpenApiService {
     @Transactional
     public boolean saveAirQuality(List<AirQuality> airQualities, String username) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
+        LocalDateTime now = LocalDateTime.now();
+        UUID uuid = UUID.randomUUID();
         for (AirQuality airQuality : airQualities) {
             airQuality.setOwner(user.get());
+            airQuality.addSaveDate(now);
+            airQuality.addUuid(uuid);
         }
 
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.AIRQUALITY.name(), user.get(), now, airQualities.size());
         return openApiRepositoryImpl.saveAirQuality(airQualities);
     }
 
     @Transactional
     public boolean saveOceanQuality(List<OceanQuality> oceanQualities, String username) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
+        LocalDateTime now = LocalDateTime.now();
+        UUID uuid = UUID.randomUUID();
         for (OceanQuality oceanQuality : oceanQualities) {
             oceanQuality.setOwner(user.get());
+            oceanQuality.addSaveDate(now);
+            oceanQuality.addUuid(uuid);
+
         }
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.OCEANQUALITY.name(), user.get(), now, oceanQualities.size());
 
         return openApiRepositoryImpl.saveOceanQuality(oceanQualities);
+    }
+
+    public List<AirQuality> findMyAirQualityChunked(UUID uuid, String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        return openApiRepositoryImpl.findAirQualityAllByUserIdAndDataUuid(uuid, user.get().getId());
+    }
+
+    public List<OceanQuality> findMyOceanQualityChunked(UUID uuid, String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        return openApiRepositoryImpl.findOceanQualityAllByUserIdAndDataUuid(uuid, user.get().getId());
     }
 
     public List<AirQuality> findMyAirQuality(String username, LocalDateTime start, LocalDateTime end) throws NoSuchElementException {

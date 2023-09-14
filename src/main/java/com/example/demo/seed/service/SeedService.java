@@ -1,5 +1,7 @@
 package com.example.demo.seed.service;
 
+import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
+import com.example.demo.datacontrol.datachunk.service.DataChunkService;
 import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.repository.SeedRepository;
@@ -9,19 +11,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class SeedService {
     private final SeedRepository seedRepository;
     private final UserRepository userRepository;
-
-    private final String[] sensors_list = {"co2", "dox", "dust", "hum", "hum_EARTH", "lux", "ph", "pre", "temp", "tur"};
+    private final DataChunkService dataChunkService;
 
     public List<Seed> refactorSeedData(List<Seed> seeds){
         List<Seed> result = new ArrayList<>();
@@ -74,6 +75,10 @@ public class SeedService {
         }
     }
 
+    public List<Seed> findMySeedChunked(UUID dataUUID, String username){
+        return seedRepository.findAllByDataUUIDAndUsername(dataUUID, username);
+    }
+
     @Transactional(readOnly = true)
     public List<Seed> getDataByDateAndUsername(LocalDateTime start, LocalDateTime end, String username)
     {
@@ -96,16 +101,27 @@ public class SeedService {
     @Transactional
     public void saveData(List<Seed> list)
     {
+        if (list.isEmpty())
+            return;
+        Optional<User> user = userRepository.findByUsername(list.get(0).getUsername());
+        UUID uuid = UUID.randomUUID();
+        for(Seed seed : list){
+            seed.addUuid(uuid);
+        }
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), list.get(0).getMeasuredDate(), list.size());
         seedRepository.saveAll(list);
     }
 
     @Transactional
     public void saveSingleData(Seed seed, String username) {
         Optional<User> user = userRepository.findByUsername(username);
+        UUID uuid = UUID.randomUUID();
         user.ifPresent(value -> {
             assert value.getMeasuredUnit() != null;
             seed.updateUnit(value.getMeasuredUnit().getUnit());
+            seed.addUuid(uuid);
         });
         seedRepository.save(seed);
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), seed.getMeasuredDate(), 1);
     }
 }
