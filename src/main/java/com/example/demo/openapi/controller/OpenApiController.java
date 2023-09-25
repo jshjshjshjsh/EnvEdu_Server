@@ -1,13 +1,13 @@
 package com.example.demo.openapi.controller;
 
+import com.example.demo.DTO.DataSaveDTO;
 import com.example.demo.jwt.util.JwtUtil;
-import com.example.demo.openapi.dto.AirQualityDTO;
-import com.example.demo.openapi.dto.AirQualityStationDTO;
-import com.example.demo.openapi.dto.OceanQualityDTO;
+import com.example.demo.openapi.dto.*;
 import com.example.demo.openapi.model.entity.AirQuality;
-import com.example.demo.openapi.model.entity.OceanQuality;
 import com.example.demo.openapi.service.OpenApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -89,19 +89,21 @@ public class OpenApiController {
     }
 
     @PostMapping("/air-quality")
-    public ResponseEntity<?> setAirQuality(@RequestBody List<AirQuality> airQualities, HttpServletRequest request){
+    public ResponseEntity<?> setAirQuality(@RequestBody AirQualityRequestDto airQualityRequestDto, HttpServletRequest request){
+
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
 
-        openApiService.saveAirQuality(airQualities, userInfo.get(JwtUtil.claimUsername).toString());
+        openApiService.saveAirQuality(airQualityRequestDto.getData(), userInfo.get(JwtUtil.claimUsername).toString(), airQualityRequestDto.getMemo());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/ocean-quality")
-    public ResponseEntity<?> setOceanQuality(@RequestBody List<OceanQuality> oceanQualities, HttpServletRequest request){
+    public ResponseEntity<?> setOceanQuality(@RequestBody OceanQualityRequestDto oceanQualityRequestDto, HttpServletRequest request) {
+
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
 
-        openApiService.saveOceanQuality(oceanQualities, userInfo.get(JwtUtil.claimUsername).toString());
+        openApiService.saveOceanQuality(oceanQualityRequestDto.getData(), userInfo.get(JwtUtil.claimUsername).toString(), oceanQualityRequestDto.getMemo());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -164,6 +166,12 @@ public class OpenApiController {
             endMonth = String.valueOf(now.getMonthValue());
 
         return new ResponseEntity<>(openApiService.findMyOceanQuality(username), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    private ResponseEntity<?> jsonProcessingException(JsonProcessingException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnsupportedEncodingException.class)

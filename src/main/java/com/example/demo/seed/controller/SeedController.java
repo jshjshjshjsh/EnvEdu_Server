@@ -8,6 +8,7 @@ import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,11 +58,13 @@ public class SeedController {
         return new ResponseDTO<>(HttpStatus.OK.value(), list);
     }
 
+    @Deprecated
     @PostMapping("/seed/save/single")
     private ResponseEntity<?> saveSingleSeed(@RequestBody Seed seed, HttpServletRequest request){
+
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
 
-        seedService.saveSingleData(seed, userInfo.get(JwtUtil.claimUsername).toString());
+        seedService.saveSingleData(seed, userInfo.get(JwtUtil.claimUsername).toString(), "");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -79,8 +82,7 @@ public class SeedController {
      * todo: ResponseEntity로 return 수정
      */
     @PostMapping("/seed/save/continuous")
-    private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data)
-    {
+    private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data){
         List<Seed> list = new ArrayList<>();
         data.getData().forEach((elem)->{
             ObjectMapper objectMapper = new ObjectMapper();
@@ -92,8 +94,14 @@ public class SeedController {
                 e.printStackTrace();
             }
         });
-        seedService.saveData(list);
+        seedService.saveData(list, data.getMemo());
         return new ResponseDTO<>(HttpStatus.OK.value(), null);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    private ResponseEntity<?> jsonProcessingException(JsonProcessingException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchFieldException.class)

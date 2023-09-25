@@ -99,29 +99,35 @@ public class SeedService {
     }
 
     @Transactional
-    public void saveData(List<Seed> list)
+    public void saveData(List<Seed> list, String memo)
     {
         if (list.isEmpty())
             return;
         Optional<User> user = userRepository.findByUsername(list.get(0).getUsername());
         UUID uuid = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
         for(Seed seed : list){
             seed.addUuid(uuid);
+            seed.addSaveDate(now);
+            seed.setDate(now);
         }
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), list.get(0).getMeasuredDate(), list.size());
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), list.get(0).getMeasuredDate(), list.size(), memo);
         seedRepository.saveAll(list);
     }
 
     @Transactional
-    public void saveSingleData(Seed seed, String username) {
+    public void saveSingleData(Seed seed, String username, String memo) {
         Optional<User> user = userRepository.findByUsername(username);
         UUID uuid = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
         user.ifPresent(value -> {
             assert value.getMeasuredUnit() != null;
             seed.updateUnit(value.getMeasuredUnit().getUnit());
             seed.addUuid(uuid);
+            seed.addSaveDate(now);
+            seed.setDate(now);
         });
         seedRepository.save(seed);
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), seed.getMeasuredDate(), 1);
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), seed.getMeasuredDate(), 1, memo);
     }
 }
