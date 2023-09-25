@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataUploadController {
     private final DataUploadService dataUploadService;
-    @PostMapping(value = "/dataupload")
+    @PostMapping("/dataupload")
     public ResponseEntity<?> uploadExcel(@RequestBody DataUploadRequestDto uploadedData, HttpServletRequest request) {
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         dataUploadService.uploadData(uploadedData, userInfo.get(JwtUtil.claimUsername).toString());
