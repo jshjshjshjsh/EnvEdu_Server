@@ -2,9 +2,7 @@ package com.example.demo.openapi.model.parent;
 
 import com.example.demo.datacontrol.datachunk.model.parent.Data;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @MappedSuperclass
 public abstract class OceanQualityParent extends Data {
     @JsonProperty("PTNM")

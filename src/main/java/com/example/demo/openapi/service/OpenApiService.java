@@ -43,7 +43,7 @@ public class OpenApiService {
     }
 
     @Transactional
-    public boolean saveAirQuality(List<AirQuality> airQualities, String username) throws NoSuchElementException {
+    public boolean saveAirQuality(List<AirQuality> airQualities, String username, String memo) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
         LocalDateTime now = LocalDateTime.now();
         UUID uuid = UUID.randomUUID();
@@ -53,12 +53,12 @@ public class OpenApiService {
             airQuality.addUuid(uuid);
         }
 
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.AIRQUALITY.name(), user.get(), now, airQualities.size());
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.AIRQUALITY.name(), user.get(), now, airQualities.size(), memo);
         return openApiRepositoryImpl.saveAirQuality(airQualities);
     }
 
     @Transactional
-    public boolean saveOceanQuality(List<OceanQuality> oceanQualities, String username) throws NoSuchElementException {
+    public boolean saveOceanQuality(List<OceanQuality> oceanQualities, String username, String memo) throws NoSuchElementException {
         Optional<User> user = userRepository.findByUsername(username);
         LocalDateTime now = LocalDateTime.now();
         UUID uuid = UUID.randomUUID();
@@ -68,7 +68,7 @@ public class OpenApiService {
             oceanQuality.addUuid(uuid);
 
         }
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.OCEANQUALITY.name(), user.get(), now, oceanQualities.size());
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.OCEANQUALITY.name(), user.get(), now, oceanQualities.size(), memo);
 
         return openApiRepositoryImpl.saveOceanQuality(oceanQualities);
     }

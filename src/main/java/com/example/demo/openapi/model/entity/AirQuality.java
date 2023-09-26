@@ -3,7 +3,10 @@ package com.example.demo.openapi.model.entity;
 import com.example.demo.openapi.model.parent.AirQualityParent;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +21,8 @@ public class AirQuality extends AirQualityParent {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User owner;
+
+
     public void setOwner(User owner) {
         this.owner = owner;
     }

@@ -26,11 +26,12 @@ public class DataCompilation {
     private int dataSize;
     private String memo;
 
-    public DataCompilation(User owner, LocalDateTime saveDate, String dataLabel, UUID uuid, int dataSize) {
+    public DataCompilation(User owner, LocalDateTime saveDate, String dataLabel, UUID uuid, int dataSize, String memo) {
         this.owner = owner;
         this.saveDate = saveDate;
         this.dataLabel = dataLabel;
         this.dataUUID = uuid;
         this.dataSize = dataSize;
+        this.memo = memo;
     }
 }

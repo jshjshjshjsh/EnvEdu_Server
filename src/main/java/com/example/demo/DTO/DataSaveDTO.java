@@ -16,4 +16,5 @@ public class DataSaveDTO {
      * todo: seed package로 이동, 사용하지 않는 어노테이션 제거
      */
     List<String> data;
+    String memo;
 }

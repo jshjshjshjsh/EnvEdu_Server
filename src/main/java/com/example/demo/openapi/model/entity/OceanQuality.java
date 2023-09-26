@@ -3,6 +3,7 @@ package com.example.demo.openapi.model.entity;
 import com.example.demo.openapi.model.parent.OceanQualityParent;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import javax.persistence.*;
