@@ -20,4 +20,11 @@ public class AirQuality extends AirQualityParent {
     public void setOwner(User owner) {
         this.owner = owner;
     }
+
+    public AirQuality() {
+        super();
+    }
+    public AirQuality(LocalDateTime dataTime, String stationName, String so2Value, String coValue, String o3Value, String no2Value, String pm10Value, String pm25Value) {
+        super(dataTime, stationName, so2Value, coValue, o3Value, no2Value, pm10Value, pm25Value);
+    }
 }
