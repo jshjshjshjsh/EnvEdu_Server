@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class SeedController {
@@ -83,6 +85,7 @@ public class SeedController {
      */
     @PostMapping("/seed/save/continuous")
     private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data){
+        log.info("data : " + data.toString());
         List<Seed> list = new ArrayList<>();
         data.getData().forEach((elem)->{
             ObjectMapper objectMapper = new ObjectMapper();

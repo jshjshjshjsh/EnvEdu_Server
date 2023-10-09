@@ -4,7 +4,6 @@ import com.example.demo.exceptions.CustomMailException;
 import com.example.demo.user.dto.request.EmailDTO;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender javaMailSender;
@@ -38,7 +36,6 @@ public class MailService {
             message.setText(content, "utf-8", "html");
             javaMailSender.send(message);
         } catch (MessagingException | MailException e) {
-            log.warn(e.getMessage());
             throw new CustomMailException("메일 전송에 실패했습니다");
         }
     }
