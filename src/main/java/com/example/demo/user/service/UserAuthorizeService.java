@@ -35,14 +35,19 @@ public class UserAuthorizeService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> findEducatorByNoAuthorized() {
-        Optional<List<Educator>> unauthorizedEducators = educatorRepository.findIdByIsAuthorized(IsAuthorized.NO);
+    public List<UserDto> findEducatorByNoAuthorized(IsAuthorized isAuthorized) {
+        List<Educator> unauthorizedEducators;
+
+        if (isAuthorized == null)
+            unauthorizedEducators =  educatorRepository.findAll();
+        else
+            unauthorizedEducators = educatorRepository.findIdByIsAuthorized(isAuthorized).orElse(Collections.emptyList());
 
         if (unauthorizedEducators.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<Long> unauthorizedEducatorIds = unauthorizedEducators.get().stream()
+        List<Long> unauthorizedEducatorIds = unauthorizedEducators.stream()
                 .map(Educator::getId)
                 .collect(Collectors.toList());
 
