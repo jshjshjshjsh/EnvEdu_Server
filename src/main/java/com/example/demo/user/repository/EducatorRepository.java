@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EducatorRepository extends JpaRepository<Educator, Long> {
+    List<Educator> findAll();
     Optional<Educator> findByUsername(String username);
     Optional<Educator> findById(Long id);
     Optional<List<Educator>> findIdByIsAuthorized(IsAuthorized isAuthorized);

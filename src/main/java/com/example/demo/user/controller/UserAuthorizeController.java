@@ -2,14 +2,13 @@ package com.example.demo.user.controller;
 
 import com.example.demo.user.dto.request.EducatorAuthenticationDTO;
 import com.example.demo.user.dto.response.UserDto;
+import com.example.demo.user.model.enumerate.IsAuthorized;
 import com.example.demo.user.service.UserAuthorizeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,9 +24,9 @@ public class UserAuthorizeController {
     }
 
     @GetMapping("/admin/educator/accept")
-    public ResponseEntity<?> educatorAccept(){
+    public ResponseEntity<?> educatorAccept(@RequestParam(name="scope", defaultValue = "") IsAuthorized scope){
 
-        return new ResponseEntity<>(userAuthenticationService.findEducatorByNoAuthorized(), HttpStatus.OK);
+        return new ResponseEntity<>(userAuthenticationService.findEducatorByNoAuthorized(scope), HttpStatus.OK);
     }
 
     @PostMapping("/admin/educator/accept")
