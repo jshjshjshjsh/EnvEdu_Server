@@ -109,7 +109,6 @@ public class SeedService {
         for(Seed seed : list){
             seed.addUuid(uuid);
             seed.addSaveDate(now);
-            seed.setDate(now);
         }
         dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), list.get(0).getMeasuredDate(), list.size(), memo);
         seedRepository.saveAll(list);
@@ -125,7 +124,6 @@ public class SeedService {
             seed.updateUnit(value.getMeasuredUnit().getUnit());
             seed.addUuid(uuid);
             seed.addSaveDate(now);
-            seed.setDate(now);
         });
         seedRepository.save(seed);
         dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), seed.getMeasuredDate(), 1, memo);
