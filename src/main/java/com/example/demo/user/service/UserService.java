@@ -11,15 +11,9 @@ import com.example.demo.user.dto.request.EmailDTO;
 import com.example.demo.user.dto.request.RegisterDTO;
 import com.example.demo.user.dto.request.StudentAddDTO;
 import com.example.demo.user.dto.response.Student_EducatorDTO;
-import com.example.demo.user.model.entity.Educator;
-import com.example.demo.user.model.entity.Student;
-import com.example.demo.user.model.entity.Student_Educator;
-import com.example.demo.user.model.entity.User;
+import com.example.demo.user.model.entity.*;
 import com.example.demo.user.model.enumerate.State;
-import com.example.demo.user.repository.EducatorRepository;
-import com.example.demo.user.repository.StudentRepository;
-import com.example.demo.user.repository.Student_EducatorRepository;
-import com.example.demo.user.repository.UserRepository;
+import com.example.demo.user.repository.*;
 import com.example.demo.user.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
@@ -28,9 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -43,6 +39,48 @@ public class UserService {
     private final EducatorRepository educatorRepository;
     private final AuthNumRepository authNumRepository;
     private final Student_EducatorRepository student_educatorRepository;
+    private final InviteCodeRepository inviteCodeRepository;
+
+    @Transactional
+    public Boolean joinInviteCode(String username, String inviteCode){
+        Optional<User> findUser = userRepository.findByUsername(username);
+        Optional<InviteCode> findInviteCode = inviteCodeRepository.findByCode(inviteCode);
+        if (findInviteCode.isPresent() && findUser.isPresent()){
+            student_educatorRepository.save(Student_Educator.of((Student) findUser.get(), (Educator) findInviteCode.get().getUser()));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Transactional
+    public InviteCode generateInviteCode(String educator){
+        Optional<User> findUser = userRepository.findByUsername(educator);
+        Optional<InviteCode> findInviteCode = inviteCodeRepository.findByUser(findUser.get());
+
+        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuilder randomBuilder = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(characters.length());
+            char randomChar = characters.charAt(randomIndex);
+            randomBuilder.append(randomChar);
+        }
+        LocalDateTime now = LocalDateTime.now();
+
+        if(findInviteCode.isPresent()){
+            findInviteCode.get().updateInviteCode(randomBuilder.toString(), now, now.plusHours(1L));
+            return findInviteCode.get();
+        }
+        else{
+            InviteCode inviteCode = new InviteCode(findUser.get(), randomBuilder.toString(), now, now.plusHours(1L));
+            inviteCodeRepository.save(inviteCode);
+            return inviteCode;
+        }
+
+    }
 
     /**
      register service
