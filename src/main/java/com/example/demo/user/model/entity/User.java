@@ -55,6 +55,7 @@ public abstract class User {
 
     @Column(nullable = false, length = 6)
     @Enumerated(EnumType.STRING)
+    @Nullable
     private Gender gender;
 
     @Column(nullable = false, length = 8)
