@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/air-quality/**","/ocean-quality/**").permitAll()
                         // todo : 나중엔 꼭 삭제해야 함
                         .mvcMatchers("/educating/**","/datafolder/**","/mydata/**","/dataupload/**",
-                                "/educator/inviteCode/generate","/student/join/**").permitAll()
+                                "/educator/inviteCode/generate","/student/join/**", "/dataLiteracy/**").permitAll()
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**","/mydata/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
