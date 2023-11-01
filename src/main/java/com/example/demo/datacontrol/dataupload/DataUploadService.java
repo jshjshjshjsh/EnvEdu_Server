@@ -1,12 +1,16 @@
 package com.example.demo.datacontrol.dataupload;
 
 import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
+import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
+import com.example.demo.datacontrol.dataliteracy.service.DataLiteracyService;
 import com.example.demo.datacontrol.dataupload.dto.DataUploadRequestDto;
 import com.example.demo.openapi.model.entity.AirQuality;
 import com.example.demo.openapi.model.entity.OceanQuality;
 import com.example.demo.openapi.service.OpenApiService;
 import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
+import com.example.demo.user.model.entity.User;
+import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +18,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DataUploadService {
 
+    private final UserRepository userRepository;
     private final OpenApiService openApiService;
     private final SeedService seedService;
+    private final DataLiteracyService dataLiteracyService;
+
+    private void uploadCustomData(DataUploadRequestDto uploadedData, String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        CustomDataDto customDataDto = new CustomDataDto(uploadedData.getProperties(), uploadedData.getData(), uploadedData.getMemo(), user.get());
+        dataLiteracyService.uploadCustomData(customDataDto);
+    }
 
     public void uploadData(DataUploadRequestDto uploadedData, String username){
 
@@ -54,6 +67,9 @@ public class DataUploadService {
                 data.add(seed);
             }
             seedService.saveData(data, uploadedData.getMemo());
+        }
+        if (uploadedData.getLabel().equals(DataEnumTypes.CUSTOM.name())){
+            this.uploadCustomData(uploadedData, username);
         }
     }
 }

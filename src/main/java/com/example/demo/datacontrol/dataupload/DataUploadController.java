@@ -22,4 +22,9 @@ public class DataUploadController {
         dataUploadService.uploadData(uploadedData, userInfo.get(JwtUtil.claimUsername).toString());
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
+    @PostMapping("/test/dataupload")
+    public ResponseEntity<?> uploadExcelTest(@RequestBody DataUploadRequestDto uploadedData, HttpServletRequest request) {
+        dataUploadService.uploadData(uploadedData, "Student1");
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
 }

@@ -1,11 +1,15 @@
 package com.example.demo.datacontrol.dataliteracy.model.dto;
 
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
+import com.example.demo.user.model.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,12 +19,14 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class CustomDataDto {
-    private final List<String> properties = new ArrayList<>();
-    private final List<List<String>> data = new ArrayList<>();
+    private List<String> properties = new ArrayList<>();
+    private List<List<String>> data = new ArrayList<>();
     private String memo;
     @Column(columnDefinition = "BINARY(16)")
     private UUID uuid;
     private LocalDateTime saveDate;
+    @JsonIgnore
+    private User owner;
 
     public CustomDataDto convertCustomDataToDto(List<CustomData> customDataList){
         CustomData firstCustomData = customDataList.get(0);
@@ -56,10 +62,17 @@ public class CustomDataDto {
             }
             record = record.substring(0, record.length() - 2);
 
-            customData.add(new CustomData(properties, record, memo, uuid, now));
+            customData.add(new CustomData(properties, record, memo, uuid, now, owner));
         }
 
 
         return customData;
+    }
+
+    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner) {
+        this.properties = properties;
+        this.data = data;
+        this.memo = memo;
+        this.owner = owner;
     }
 }

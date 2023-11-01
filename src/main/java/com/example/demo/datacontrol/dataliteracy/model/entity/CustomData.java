@@ -1,12 +1,11 @@
 package com.example.demo.datacontrol.dataliteracy.model.entity;
 
+import com.example.demo.user.model.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,12 +21,16 @@ public class CustomData {
     @Column(columnDefinition = "BINARY(16)")
     private UUID uuid;
     private LocalDateTime saveDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User owner;
 
-    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate) {
+    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate, User owner) {
         this.properties = properties;
         this.data = data;
         this.memo = memo;
         this.uuid = uuid;
         this.saveDate = saveDate;
+        this.owner = owner;
     }
 }
