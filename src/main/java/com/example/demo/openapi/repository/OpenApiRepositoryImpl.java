@@ -19,6 +19,20 @@ public class OpenApiRepositoryImpl implements OpenApiRepository{
     private final EntityManager em;
 
     @Override
+    public AirQuality findAirQualityById(Long id) {
+        return em.createQuery("SELECT t FROM AirQuality t WHERE t.id = :id", AirQuality.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
+    public OceanQuality findOceanQualityById(Long id) {
+        return em.createQuery("SELECT t FROM OceanQuality t WHERE t.id = :id", OceanQuality.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
     public List<AirQuality> findAirQualityAllByUserIdAndDataUuid(UUID uuid, Long id) {
         return em.createQuery("SELECT t FROM AirQuality t WHERE t.owner.id = :id and t.dataUUID = :uuid", AirQuality.class)
                 .setParameter("id", id)

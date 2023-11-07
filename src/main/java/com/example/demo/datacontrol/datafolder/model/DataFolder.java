@@ -32,9 +32,11 @@ public class DataFolder {
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<DataFolder> child = new ArrayList<>();
 
-    public void updateDataFolder(String folderName, User owner) {
+    public void updateDataFolder(String folderName, User owner, LocalDateTime createDate, LocalDateTime updateDate) {
         this.folderName = folderName;
         this.owner = owner;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
     public void updateParentDataFolder(DataFolder inputParentDataFolder) {
         parent = inputParentDataFolder;
