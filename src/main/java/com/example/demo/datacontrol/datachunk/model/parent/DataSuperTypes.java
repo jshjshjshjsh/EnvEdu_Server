@@ -1,5 +1,6 @@
 package com.example.demo.datacontrol.datachunk.model.parent;
 
+import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.openapi.model.entity.AirQuality;
 import com.example.demo.openapi.model.entity.OceanQuality;
 import com.example.demo.seed.model.Seed;
@@ -24,6 +25,8 @@ public class DataSuperTypes {
     private AirQuality airQuality;
     @ManyToOne
     private OceanQuality oceanQuality;
+    @ManyToOne
+    private CustomData customData;
     private LocalDateTime saveDate;
     public void addSeed(Seed inputSeed) {
         seed = inputSeed;
@@ -33,6 +36,9 @@ public class DataSuperTypes {
     }
     public void addOceanQuality(OceanQuality inputOceanQuality) {
         oceanQuality = inputOceanQuality;
+    }
+    public void addCustomData(CustomData inputCustomData) {
+        customData = inputCustomData;
     }
     public void addSaveDate(LocalDateTime inputSaveDate) {
         saveDate = inputSaveDate;

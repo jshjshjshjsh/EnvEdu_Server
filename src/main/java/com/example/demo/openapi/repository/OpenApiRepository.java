@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface OpenApiRepository {
+    AirQuality findAirQualityById(Long id);
+    OceanQuality findOceanQualityById(Long id);
     List<AirQuality> findAirQualityAllByUserIdAndDataUuid(UUID uuid, Long id);
     List<AirQuality> findAirQualityAllByUserId(Long id);
     List<OceanQuality> findOceanQualityAllByUserIdAndDataUuid(UUID uuid, Long id);
