@@ -66,7 +66,7 @@ public class DataFolderController {
     public ResponseEntity<?> getDataFolder(HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         List<DataFolder> byDataFolder = dataFolderService.findByDataFolder(userInfo.get(JwtUtil.claimUsername).toString());
-//        List<DataFolder> byDataFolder = dataFolderService.findByDataFolder("Student1");
+        //List<DataFolder> byDataFolder = dataFolderService.findByDataFolder("Student1");
 
         return new ResponseEntity<>(byDataFolder, HttpStatus.OK);
     }
