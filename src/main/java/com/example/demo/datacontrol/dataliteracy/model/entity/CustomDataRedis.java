@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.RedisHash;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @RedisHash(value = "customDataRedis", timeToLive = 3600)
 public class CustomDataRedis {
@@ -19,11 +18,13 @@ public class CustomDataRedis {
     private String code;
     private String properties;
     private String data;
+    private String memo;
 
-    private CustomDataRedis(String code, List<String> properties, List<List<String>> data){
+    private CustomDataRedis(String code, List<String> properties, List<List<String>> data, String memo){
         this.code = code;
         this.properties = properties.toString();
         this.data = data.toString();
+        this.memo = memo;
     }
-    public static CustomDataRedis of(String code, List<String> properties, List<List<String>> data){ return new CustomDataRedis(code, properties, data); };
+    public static CustomDataRedis of(String code, List<String> properties, List<List<String>> data, String memo){ return new CustomDataRedis(code, properties, data, memo); };
 }

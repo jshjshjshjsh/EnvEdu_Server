@@ -36,7 +36,7 @@ public class DataLiteracyService {
             LocalDateTime now = LocalDateTime.now();
 
             for (int i = 0; i < chunks.length; i++) {
-                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), inviteCode, uuid, now, user.get()));
+                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), findCustomData.get().getMemo(), uuid, now, user.get()));
             }
 
             customDataRepository.saveAll(customDataList);
@@ -56,7 +56,7 @@ public class DataLiteracyService {
             char randomChar = characters.charAt(randomIndex);
             randomBuilder.append(randomChar);
         }
-        customDataRedisRepository.save(CustomDataRedis.of(randomBuilder.toString(), customDataDto.getProperties(), customDataDto.getData()));
+        customDataRedisRepository.save(CustomDataRedis.of(randomBuilder.toString(), customDataDto.getProperties(), customDataDto.getData(), customDataDto.getMemo()));
 
         return randomBuilder.toString();
     }
