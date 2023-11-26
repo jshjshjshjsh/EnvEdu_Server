@@ -1,7 +1,7 @@
 package com.example.demo.datacontrol.dataliteracy.controller;
 
+import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataCopyRequest;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
-import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.datacontrol.dataliteracy.service.DataLiteracyService;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,6 +20,16 @@ public class DataLiteracyController {
 
     private final DataLiteracyService dataLiteracyService;
 
+    @PostMapping("/dataLiteracy/inviteStudent")
+    public ResponseEntity<?> inviteStudent(@RequestBody CustomDataCopyRequest request){
+        // List<User> 형태로 들어온 사람들한테 data 복제
+        // CustomDataDto 에 들어온 값을 복제
+        dataLiteracyService.copyCustomData(request);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Deprecated
     @GetMapping("/dataLiteracy/inviteData")
     public ResponseEntity<?> joinData(@RequestParam String inviteCode, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
@@ -30,6 +39,7 @@ public class DataLiteracyController {
         return new ResponseEntity<>(dataLiteracyService.joinCustomData(userInfo.get(JwtUtil.claimUsername).toString(), inviteCode), HttpStatus.OK);
     }
 
+    @Deprecated
     @PostMapping("/dataLiteracy/inviteData")
     public ResponseEntity<?> inviteData(@RequestBody CustomDataDto customDataDto){
         String code = dataLiteracyService.generateInviteCustomData(customDataDto);

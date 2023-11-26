@@ -1,5 +1,6 @@
 package com.example.demo.datacontrol.dataliteracy.service;
 
+import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataCopyRequest;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomDataRedis;
@@ -21,6 +22,32 @@ public class DataLiteracyService {
     private final CustomDataRepository customDataRepository;
     private final CustomDataRedisRepository customDataRedisRepository;
     private final UserRepository userRepository;
+
+    @Transactional
+    public void copyCustomData(CustomDataCopyRequest target){
+        List<CustomData> result = target.getData().convertPropertiesListToString();
+        int customDataSize = result.size();
+
+        for (int i = 0; i<target.getUsers().size()-1; i++){
+            for (int j = 0; j<customDataSize; j++) {
+                result.add(result.get(j).clone());
+            }
+        }
+
+        int studentCnt = 0;
+        UUID uuid = UUID.randomUUID();
+        for (int i = 0; i< result.size(); i++){
+            result.get(i).updateOwner(target.getUsers().get(studentCnt));
+            result.get(i).updateUuid(uuid);
+
+            if ((i+1)%customDataSize == 0){
+                studentCnt += 1;
+                uuid = UUID.randomUUID();
+            }
+
+        }
+        customDataRepository.saveAll(result);
+    }
 
     @Transactional
     public CustomDataDto joinCustomData(String username, String inviteCode){
