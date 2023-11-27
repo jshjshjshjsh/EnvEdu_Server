@@ -1,6 +1,7 @@
 package com.example.demo.datacontrol.dataliteracy.repository;
 
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
+import com.example.demo.user.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,6 @@ import java.util.UUID;
 public interface CustomDataRepository extends JpaRepository<CustomData, Long> {
     Optional<List<CustomData>> findCustomDataByUuid(UUID uuid);
     Optional<CustomData> findById(Long id);
+    Optional<List<CustomData>> findAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
+    void deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
 }
