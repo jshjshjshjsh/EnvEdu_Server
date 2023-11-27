@@ -6,6 +6,7 @@ import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomDataRedis;
 import com.example.demo.datacontrol.dataliteracy.repository.CustomDataRepository;
 import com.example.demo.redis.repo.CustomDataRedisRepository;
+import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.Student_Educator;
 import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.EducatorRepository;
@@ -60,6 +61,14 @@ public class DataLiteracyService {
     public void copyCustomData(CustomDataCopyRequest target){
         // todo: 여기서 제약사항 있어야 할 듯,
         //  이미 owner_id와 class_id 조건으로 데이터가 있으면 => 원래 있던 데이터 제거하고 다시 넣기
+        for (Student s: target.getUsers()){
+            Optional<User> user = userRepository.findByUsername(s.getUsername());
+            CustomDataDto customDataDto = target.getData();
+            customDataDto.updateOwner(user.get());
+            customDataRepository.deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(customDataDto.getClassId(), customDataDto.getChapterId(),
+                    customDataDto.getSequenceId(), customDataDto.getOwner());
+        }
+
         List<CustomData> result = target.getData().convertDtoToEntity();
         int customDataSize = result.size();
 
