@@ -20,6 +20,30 @@ public class DataLiteracyController {
 
     private final DataLiteracyService dataLiteracyService;
 
+    @PutMapping("/dataLiteracy/sequenceData")
+    public ResponseEntity<?> putSingleSequenceData(@RequestBody CustomDataDto customDataDto, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        dataLiteracyService.updateSingleSequenceCustomData(customDataDto, userInfo.get(JwtUtil.claimUsername).toString());
+        //dataLiteracyService.updateSingleSequenceCustomData(customDataDto, "Student1");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/dataLiteracy/sequenceData")
+    public ResponseEntity<?> getSingleSequenceData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getSingleSequenceCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.getSingleSequenceCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
+    }
+
+    @GetMapping("/dataLiteracy/studentData")
+    public ResponseEntity<?> getRelatedStudentsData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getRelatedStudentsData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+
+        //return new ResponseEntity<>(dataLiteracyService.getRelatedStudentsData(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
+    }
+
     @PostMapping("/dataLiteracy/inviteStudent")
     public ResponseEntity<?> inviteStudent(@RequestBody CustomDataCopyRequest request){
         // List<User> 형태로 들어온 사람들한테 data 복제

@@ -1,5 +1,6 @@
 package com.example.demo.datacontrol.dataliteracy.model.entity;
 
+import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataListener;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -9,11 +10,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@EntityListeners(CustomDataListener.class)
 public class CustomData implements Cloneable{
     @Id @GeneratedValue
     private Long id;
@@ -26,6 +29,11 @@ public class CustomData implements Cloneable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User owner;
+    @Transient
+    private String username;
+    private Long classId;
+    private Long chapterId;
+    private Long sequenceId;
 
     @Override
     public CustomData clone() {
@@ -42,13 +50,18 @@ public class CustomData implements Cloneable{
     public void updateUuid(UUID uuid) {
         this.uuid = uuid;
     }
-
-    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate, User owner) {
+    public void updateUsername(){
+        this.username = owner.getUsername();
+    }
+    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate, User owner, Long classId, Long chapterId, Long sequenceId) {
         this.properties = properties;
         this.data = data;
         this.memo = memo;
         this.uuid = uuid;
         this.saveDate = saveDate;
         this.owner = owner;
+        this.classId = classId;
+        this.chapterId = chapterId;
+        this.sequenceId = sequenceId;
     }
 }

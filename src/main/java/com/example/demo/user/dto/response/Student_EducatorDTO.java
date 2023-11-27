@@ -13,17 +13,19 @@ public class Student_EducatorDTO {
 
     public Student_EducatorDTO(Educator educator, List<Student> users) {
         elems = users.stream()
-                .map(user -> new Student_EducatorDTOElem(educator.getUsername(), user.getUsername()))
+                .map(user -> new Student_EducatorDTOElem(educator.getUsername(), user.getId(), user.getUsername()))
                 .collect(Collectors.toList());
     }
 
     @Getter
     public static class Student_EducatorDTOElem {
         private final String educatorUsername;
+        private final Long id;
         private final String studentUsername;
 
-        public Student_EducatorDTOElem(String educatorUsername, String studentUsername) {
+        public Student_EducatorDTOElem(String educatorUsername, Long id, String studentUsername) {
             this.educatorUsername = educatorUsername;
+            this.id = id;
             this.studentUsername = studentUsername;
         }
     }

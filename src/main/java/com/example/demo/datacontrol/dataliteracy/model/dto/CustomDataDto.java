@@ -5,11 +5,8 @@ import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +24,12 @@ public class CustomDataDto {
     private LocalDateTime saveDate;
     @JsonIgnore
     private User owner;
+    private Long classId;
+    private Long chapterId;
+    private Long sequenceId;
+    public void updateOwner(User owner){
+        this.owner = owner;
+    }
 
     public CustomDataDto convertCustomDataToDto(List<CustomData> customDataList){
         CustomData firstCustomData = customDataList.get(0);
@@ -44,7 +47,7 @@ public class CustomDataDto {
         return this;
     }
 
-    public List<CustomData> convertPropertiesListToString(){
+    public List<CustomData> convertDtoToEntity(){
         ArrayList<CustomData> customData = new ArrayList<>();
         UUID uuid = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
@@ -62,17 +65,20 @@ public class CustomDataDto {
             }
             record = record.substring(0, record.length() - 2);
 
-            customData.add(new CustomData(properties, record, memo, uuid, now, owner));
+            customData.add(new CustomData(properties, record, memo, uuid, now, owner, classId, chapterId, sequenceId));
         }
 
 
         return customData;
     }
 
-    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner) {
+    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner, Long classId, Long chapterId, Long sequenceId) {
         this.properties = properties;
         this.data = data;
         this.memo = memo;
         this.owner = owner;
+        this.classId = classId;
+        this.chapterId = chapterId;
+        this.sequenceId = sequenceId;
     }
 }

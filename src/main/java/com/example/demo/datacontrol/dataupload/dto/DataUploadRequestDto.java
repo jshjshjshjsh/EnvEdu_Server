@@ -10,4 +10,7 @@ public class DataUploadRequestDto {
     List<List<String>> data;
     String label;
     String memo;
+    Long classId;
+    Long chapterId;
+    Long sequenceId;
 }
