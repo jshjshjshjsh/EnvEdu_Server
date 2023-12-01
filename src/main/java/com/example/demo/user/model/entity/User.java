@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public abstract class User {
     protected User() {}
 
-    protected User(String username, String password, String email, Date birthday, Role role, Gender gender, State state) {
+    protected User(String username, String password, String email, Date birthday, Role role, Gender gender, State state, String nickname) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -31,6 +31,7 @@ public abstract class User {
         this.role = role;
         this.gender = gender;
         this.state = state;
+        this.nickname = nickname;
     }
 
     @Id
@@ -61,6 +62,8 @@ public abstract class User {
     @Column(nullable = false, length = 8)
     @Enumerated(EnumType.STRING)
     private State state;
+
+    private String nickname;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Location> locations;
