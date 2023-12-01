@@ -63,6 +63,7 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private State state;
 
+    @Column(nullable = true, length = 20)
     private String nickname;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
