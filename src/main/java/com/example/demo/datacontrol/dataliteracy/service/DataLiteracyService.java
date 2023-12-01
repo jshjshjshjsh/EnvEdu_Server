@@ -10,6 +10,7 @@ import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.Student_Educator;
 import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.EducatorRepository;
+import com.example.demo.user.repository.Student_EducatorRepository;
 import com.example.demo.user.repository.UserRepository;
 import com.example.demo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -58,9 +59,16 @@ public class DataLiteracyService {
     }
 
     @Transactional
-    public void copyCustomData(CustomDataCopyRequest target){
+    public void copyCustomData(CustomDataCopyRequest target, String educator){
         // todo: 여기서 제약사항 있어야 할 듯,
         //  이미 owner_id와 class_id 조건으로 데이터가 있으면 => 원래 있던 데이터 제거하고 다시 넣기
+        /* 데이터를 배포한 교사의 데이터로 저장 => 기준이 되는 데이터로 만들기 위함 */
+        Optional<User> findEducator = userRepository.findByUsername(educator);
+        target.getData().updateOwner(findEducator.get());
+        List<CustomData> data = target.getData().convertDtoToEntity();
+        customDataRepository.saveAll(data);
+
+        /* 배포된 데이터를 학생들의 데이터로 저장 */
         for (Student s: target.getUsers()){
             Optional<User> user = userRepository.findByUsername(s.getUsername());
             CustomDataDto customDataDto = target.getData();
@@ -156,5 +164,17 @@ public class DataLiteracyService {
     public void uploadCustomData(CustomDataDto customDataDto) {
         List<CustomData> customData = customDataDto.convertDtoToEntity();
         customDataRepository.saveAll(customData);
+    }
+
+    /*
+    * 배포했던 교사(기준이 되는) 데이터 조회*/
+    public List<CustomData> getBasedSingleSequenceCustomData(Long classId, Long chapterId, Long sequenceId, String studentName) {
+        Optional<User> student = userRepository.findByUsername(studentName);
+        Student_Educator educatorByStudent = null;
+        if (student.isPresent() && student.get() instanceof Student){
+            educatorByStudent = userService.findEducatorByStudent((Student) student.get());
+        }
+        return customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwner(classId, chapterId, sequenceId, educatorByStudent.getEducator()).orElse(null);
+
     }
 }
