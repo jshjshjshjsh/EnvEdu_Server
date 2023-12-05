@@ -18,6 +18,7 @@ public enum Role {
                     .role(registerDTO.getRole())
                     .state(State.ACTIVE)
                     .birthday(registerDTO.getBirthday())
+                    .nickname(registerDTO.getNickname())
                     .build();
         }
     }, ROLE_EDUCATOR {
@@ -32,6 +33,7 @@ public enum Role {
                     .state(State.ACTIVE)
                     .isAuthorized(IsAuthorized.NO)
                     .birthday(registerDTO.getBirthday())
+                    .nickname(registerDTO.getNickname())
                     .build();
         }
     };

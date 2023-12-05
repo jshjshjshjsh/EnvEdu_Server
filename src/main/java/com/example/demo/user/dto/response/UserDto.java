@@ -19,6 +19,7 @@ public class UserDto {
     private final Role role;
     private final Gender gender;
     private final State state;
+    private final String nickname;
     private final Timestamp updatedTime;
     private final MeasuredUnit measuredUnit;
 
@@ -32,5 +33,6 @@ public class UserDto {
         state = user.getState();
         updatedTime = user.getUpdatedTime();
         measuredUnit = user.getMeasuredUnit();
+        nickname = user.getNickname();
     }
 }

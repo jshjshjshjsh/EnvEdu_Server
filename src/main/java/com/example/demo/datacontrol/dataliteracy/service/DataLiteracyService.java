@@ -1,5 +1,8 @@
 package com.example.demo.datacontrol.dataliteracy.service;
 
+import com.example.demo.datacontrol.datachunk.service.DataChunkService;
+import com.example.demo.datacontrol.datafolder.model.DataFolder;
+import com.example.demo.datacontrol.datafolder.repository.DataFolderRepository;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataCopyRequest;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
@@ -28,6 +31,8 @@ public class DataLiteracyService {
     private final UserRepository userRepository;
     private final EducatorRepository educatorRepository;
     private final UserService userService;
+    private final DataChunkService dataChunkService;
+    private final DataFolderRepository dataFolderRepository;
 
     @Transactional
     public void updateSingleSequenceCustomData(CustomDataDto customDataDto, String username){
@@ -58,9 +63,20 @@ public class DataLiteracyService {
     }
 
     @Transactional
-    public void copyCustomData(CustomDataCopyRequest target){
+    public void copyCustomData(CustomDataCopyRequest target, String educator){
         // todo: 여기서 제약사항 있어야 할 듯,
         //  이미 owner_id와 class_id 조건으로 데이터가 있으면 => 원래 있던 데이터 제거하고 다시 넣기
+
+        // todo: 20231205 ==> DataFolder, DataCompilation 를 만들어서 소속 시켜줘야 함
+        //  dataChunkService.saveMyDataCompilation(); 를 사용해서 DataFolder에 넣어줘야 함
+        /* 데이터를 배포한 교사의 데이터로 저장 => 기준이 되는 데이터로 만들기 위함 */
+        Optional<User> findEducator = userRepository.findByUsername(educator);
+        target.getData().updateOwner(findEducator.get());
+        List<CustomData> data = target.getData().convertDtoToEntity();
+        customDataRepository.saveAll(data);
+
+
+        /* 배포된 데이터를 학생들의 데이터로 저장 */
         for (Student s: target.getUsers()){
             Optional<User> user = userRepository.findByUsername(s.getUsername());
             CustomDataDto customDataDto = target.getData();
@@ -84,11 +100,16 @@ public class DataLiteracyService {
             result.get(i).updateOwner(target.getUsers().get(studentCnt));
             result.get(i).updateUuid(uuid);
 
+
+
             if ((i+1)%customDataSize == 0){
+                /* DataCompilation에 저장해서 MyData에서 조회되게 추가 */
+                dataChunkService.saveMyDataCompilation(uuid, "CUSTOM", target.getUsers().get(studentCnt), result.get(i).getSaveDate(),
+                        target.getData().getData().size(), target.getData().getMemo());
+
                 studentCnt += 1;
                 uuid = UUID.randomUUID();
             }
-
         }
         customDataRepository.saveAll(result);
     }
@@ -156,5 +177,17 @@ public class DataLiteracyService {
     public void uploadCustomData(CustomDataDto customDataDto) {
         List<CustomData> customData = customDataDto.convertDtoToEntity();
         customDataRepository.saveAll(customData);
+    }
+
+    /*
+    * 배포했던 교사(기준이 되는) 데이터 조회*/
+    public List<CustomData> getBasedSingleSequenceCustomData(Long classId, Long chapterId, Long sequenceId, String studentName) {
+        Optional<User> student = userRepository.findByUsername(studentName);
+        Student_Educator educatorByStudent = null;
+        if (student.isPresent() && student.get() instanceof Student){
+            educatorByStudent = userService.findEducatorByStudent((Student) student.get());
+        }
+        return customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwner(classId, chapterId, sequenceId, educatorByStudent.getEducator()).orElse(null);
+
     }
 }

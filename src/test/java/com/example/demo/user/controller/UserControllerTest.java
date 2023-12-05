@@ -68,7 +68,7 @@ public class UserControllerTest {
 
     @Test
     void userLoginTest() throws Exception {
-        RegisterDTO registerDTO = new RegisterDTO("test" ,"test", "'test@naver.com", Gender.MALE, Role.ROLE_STUDENT, new Date(100));
+        RegisterDTO registerDTO = new RegisterDTO("test" ,"test", "'test@naver.com", Gender.MALE, Role.ROLE_STUDENT, new Date(100), "tester");
         addSomeUserRecords(registerDTO);
         userService.addUser(registerDTO);
 
@@ -90,7 +90,8 @@ public class UserControllerTest {
                 "testEducatorEmail@naver.com",
                 Gender.MALE,
                 Role.ROLE_EDUCATOR,
-                Date.valueOf(LocalDate.now()));
+                Date.valueOf(LocalDate.now()),
+                "tester11");
 
         addSomeUserRecords(
                 educatorDTO,
@@ -100,14 +101,16 @@ public class UserControllerTest {
                         "testStudent1Email@naver.com",
                         Gender.MALE,
                         Role.ROLE_STUDENT,
-                        Date.valueOf(LocalDate.now())),
+                        Date.valueOf(LocalDate.now()),
+                        "tester22"),
                 new RegisterDTO(
                         "testStudent2",
                         "testPassword",
                         "testStudent2Email@naver.com",
                         Gender.MALE,
                         Role.ROLE_STUDENT,
-                        Date.valueOf(LocalDate.now()))
+                        Date.valueOf(LocalDate.now()),
+                        "tester33")
         );
 
         String requestBody = "{" +

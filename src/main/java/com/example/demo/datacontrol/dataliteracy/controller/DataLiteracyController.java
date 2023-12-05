@@ -36,6 +36,13 @@ public class DataLiteracyController {
         //return new ResponseEntity<>(dataLiteracyService.getSingleSequenceCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
     }
 
+    @GetMapping("/dataLiteracy/sequenceData/base")
+    public ResponseEntity<?> getBasedSingleSequenceData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getSingleSequenceCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.getBasedSingleSequenceCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
+    }
+
     @GetMapping("/dataLiteracy/studentData")
     public ResponseEntity<?> getRelatedStudentsData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
@@ -45,10 +52,12 @@ public class DataLiteracyController {
     }
 
     @PostMapping("/dataLiteracy/inviteStudent")
-    public ResponseEntity<?> inviteStudent(@RequestBody CustomDataCopyRequest request){
+    public ResponseEntity<?> inviteStudent(@RequestBody CustomDataCopyRequest dataCopyRequest, HttpServletRequest request){
         // List<User> 형태로 들어온 사람들한테 data 복제
         // CustomDataDto 에 들어온 값을 복제
-        dataLiteracyService.copyCustomData(request);
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        dataLiteracyService.copyCustomData(dataCopyRequest, userInfo.get(JwtUtil.claimUsername).toString());
+        //dataLiteracyService.copyCustomData(dataCopyRequest, "Educator1");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
