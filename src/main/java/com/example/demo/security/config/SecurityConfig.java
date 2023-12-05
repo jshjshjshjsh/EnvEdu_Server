@@ -38,10 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
                                 "/air-quality/**","/ocean-quality/**").permitAll()
-                        // todo : 나중엔 꼭 삭제해야 함
-                        .mvcMatchers("/educating/**","/datafolder/**","/mydata/**","/dataupload/**",
-                                "/educator/inviteCode/generate","/student/join/**", "/dataLiteracy/**").permitAll()
-                        .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**","/mydata/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
+                        .mvcMatchers("/educating/**","/dataLiteracy/**").permitAll()
+                        .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**",
+                                "/datafolder/**","/mydata/**","/dataupload/**", "/student/join/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
