@@ -32,7 +32,7 @@ public class DataUploadService {
     private void uploadCustomData(DataUploadRequestDto uploadedData, String username){
         Optional<User> user = userRepository.findByUsername(username);
         CustomDataDto customDataDto = new CustomDataDto(uploadedData.getProperties(), uploadedData.getData(), uploadedData.getMemo(), user.get(),
-                uploadedData.getClassId(), uploadedData.getChapterId(), uploadedData.getSequenceId());
+                uploadedData.getClassId(), uploadedData.getChapterId(), uploadedData.getSequenceId(), false);
         dataLiteracyService.uploadCustomData(customDataDto);
     }
 

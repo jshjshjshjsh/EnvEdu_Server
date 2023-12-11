@@ -27,6 +27,8 @@ public class CustomDataDto {
     private Long classId;
     private Long chapterId;
     private Long sequenceId;
+    private Boolean isSubmit;
+
     public void updateOwner(User owner){
         this.owner = owner;
     }
@@ -48,9 +50,11 @@ public class CustomDataDto {
     }
 
     public List<CustomData> convertDtoToEntity(){
-        ArrayList<CustomData> customData = new ArrayList<>();
+        List<CustomData> customData = new ArrayList<>();
         UUID uuid = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
+        if(isSubmit == null)
+            isSubmit = false;
 
         String properties = "";
         for (String property : this.properties) {
@@ -65,14 +69,14 @@ public class CustomDataDto {
             }
             record = record.substring(0, record.length() - 2);
 
-            customData.add(new CustomData(properties, record, memo, uuid, now, owner, classId, chapterId, sequenceId));
+            customData.add(new CustomData(properties, record, memo, uuid, now, owner, classId, chapterId, sequenceId, isSubmit));
         }
 
 
         return customData;
     }
 
-    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner, Long classId, Long chapterId, Long sequenceId) {
+    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
         this.properties = properties;
         this.data = data;
         this.memo = memo;
@@ -80,5 +84,6 @@ public class CustomDataDto {
         this.classId = classId;
         this.chapterId = chapterId;
         this.sequenceId = sequenceId;
+        this.isSubmit = isSubmit;
     }
 }

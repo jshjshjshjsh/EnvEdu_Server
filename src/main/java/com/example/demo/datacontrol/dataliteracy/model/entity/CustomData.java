@@ -3,14 +3,11 @@ package com.example.demo.datacontrol.dataliteracy.model.entity;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataListener;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,6 +31,7 @@ public class CustomData implements Cloneable{
     private Long classId;
     private Long chapterId;
     private Long sequenceId;
+    private Boolean isSubmit = false;
 
     @Override
     public CustomData clone() {
@@ -44,6 +42,9 @@ public class CustomData implements Cloneable{
         }
     }
 
+    public void updateIsSubmit(Boolean isSubmit) {
+        this.isSubmit = isSubmit;
+    }
     public void updateOwner(User owner){
         this.owner = owner;
     }
@@ -53,7 +54,8 @@ public class CustomData implements Cloneable{
     public void updateUsername(){
         this.username = owner.getUsername();
     }
-    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate, User owner, Long classId, Long chapterId, Long sequenceId) {
+    public CustomData(String properties, String data, String memo, UUID uuid, LocalDateTime saveDate, User owner,
+                      Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
         this.properties = properties;
         this.data = data;
         this.memo = memo;
@@ -63,5 +65,6 @@ public class CustomData implements Cloneable{
         this.classId = classId;
         this.chapterId = chapterId;
         this.sequenceId = sequenceId;
+        this.isSubmit = isSubmit;
     }
 }
