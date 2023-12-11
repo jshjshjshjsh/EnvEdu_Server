@@ -20,6 +20,15 @@ public class DataLiteracyController {
 
     private final DataLiteracyService dataLiteracyService;
 
+    @PutMapping("/dataLiteracy/sequenceData/submit")
+    public ResponseEntity<?> putSequenceDataSubmit(@RequestBody CustomDataDto customDataDto, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        dataLiteracyService.updateSequenceDataSubmit(customDataDto, userInfo.get(JwtUtil.claimUsername).toString());
+        //dataLiteracyService.updateSequenceDataSubmit(customDataDto, "Student1");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/dataLiteracy/sequenceData")
     public ResponseEntity<?> putSingleSequenceData(@RequestBody CustomDataDto customDataDto, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
@@ -39,15 +48,15 @@ public class DataLiteracyController {
     @GetMapping("/dataLiteracy/sequenceData/base")
     public ResponseEntity<?> getBasedSingleSequenceData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        return new ResponseEntity<>(dataLiteracyService.getSingleSequenceCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        return new ResponseEntity<>(dataLiteracyService.getBasedSingleSequenceCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
         //return new ResponseEntity<>(dataLiteracyService.getBasedSingleSequenceCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
     }
 
+    /* 학생들의 데이터 교사가 조회 */
     @GetMapping("/dataLiteracy/studentData")
     public ResponseEntity<?> getRelatedStudentsData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         return new ResponseEntity<>(dataLiteracyService.getRelatedStudentsData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
-
         //return new ResponseEntity<>(dataLiteracyService.getRelatedStudentsData(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
     }
 
