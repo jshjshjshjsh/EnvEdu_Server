@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Controller
@@ -106,4 +107,8 @@ public class DataLiteracyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    private ResponseEntity<?> noSuchElementException(NoSuchElementException e) {
+        return new ResponseEntity<>("저장된 데이터 값이 없습니다.", HttpStatus.BAD_REQUEST);
+    }
 }
