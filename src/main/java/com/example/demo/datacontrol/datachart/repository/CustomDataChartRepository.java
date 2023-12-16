@@ -1,0 +1,11 @@
+package com.example.demo.datacontrol.datachart.repository;
+
+import com.example.demo.datacontrol.datachart.domain.entity.CustomDataChart;
+import com.example.demo.user.model.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface CustomDataChartRepository extends JpaRepository<CustomDataChart, Long> {
+    Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
+}
