@@ -62,14 +62,9 @@ public class DataLiteracyService {
         return data.orElse(null);
     }
 
-    public List<CustomData> getRelatedStudentsData(Long classId,Long  chapterId,Long  sequenceId, String educatorName){
-        User user = userRepository.findByUsername(educatorName).get();
+    public List<CustomData> getRelatedStudentsData(Long classId,Long  chapterId,Long  sequenceId, String username){
+        List<Student_Educator> students = userService.findStudentsByStudentOrEducator(username);
 
-        if (user instanceof Student){
-            Student_Educator educatorByStudent = userService.findEducatorByStudent((Student) user);
-            user = educatorByStudent.getEducator();
-        }
-        List<Student_Educator> students = userService.findAllByEducator((Educator) user);
         List<CustomData> result = new ArrayList<>();
         for (Student_Educator s_e: students){
             Optional<List<CustomData>> find = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndIsSubmit(

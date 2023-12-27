@@ -143,6 +143,16 @@ public class UserService {
         return new Student_EducatorDTO(educator, students);
     }
 
+    public List<Student_Educator> findStudentsByStudentOrEducator(String username){
+        User user = userRepository.findByUsername(username).get();
+
+        if (user instanceof Student){
+            Student_Educator educatorByStudent = findEducatorByStudent((Student) user);
+            user = educatorByStudent.getEducator();
+        }
+        return findAllByEducator((Educator) user);
+    }
+
     @Transactional
     public Student_Educator findEducatorByStudent(Student student) {
         return student_educatorRepository.findByStudent(student);
