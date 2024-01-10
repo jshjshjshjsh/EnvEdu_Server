@@ -37,9 +37,9 @@ public class CustomDataChartController {
 
     @PostMapping("/dataLiteracy/chart/properties")
     public ResponseEntity<?> createCustomDataChart(@RequestBody CustomDataChart customDataChart, HttpServletRequest request){
-        //Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        //customDataChartService.createCustomDataChart(customDataChart, userInfo.get(JwtUtil.claimUsername).toString());
-        customDataChartService.createCustomDataChart(customDataChart, "Student1");
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        customDataChartService.createCustomDataChart(customDataChart, userInfo.get(JwtUtil.claimUsername).toString());
+        //customDataChartService.createCustomDataChart(customDataChart, "Student1");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -48,25 +48,25 @@ public class CustomDataChartController {
     @GetMapping("/dataLiteracy/chart/students/properties")
     public ResponseEntity<?> getRelatedCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
                                                        @RequestParam Long sequenceId, HttpServletRequest request){
-        //Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        //return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
-        return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
     }
 
     @GetMapping("/dataLiteracy/chart/properties/all")
     public ResponseEntity<?> getAllCustomDataChartNotForClass(HttpServletRequest request){
-        //Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        //return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
-        return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass("Student1"), HttpStatus.OK);
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass("Student1"), HttpStatus.OK);
     }
 
 
     @GetMapping("/dataLiteracy/chart/properties")
     public ResponseEntity<?> getSingleCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
                                                       @RequestParam Long sequenceId, HttpServletRequest request){
-        //Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        //return new ResponseEntity<>(customDataChartService.getSingleCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
-        return new ResponseEntity<>(customDataChartService.getSingleCustomDataChart(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getSingleCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getSingleCustomDataChart(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
