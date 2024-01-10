@@ -91,8 +91,10 @@ public class DataLiteracyController {
     }
 
     @GetMapping("/dataLiteracy/customData/list")
-    public ResponseEntity<?> getCustomDataList(){
-        return new ResponseEntity<>(dataLiteracyService.getCustomDataList(), HttpStatus.OK);
+    public ResponseEntity<?> getCustomDataList(HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getCustomDataList(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.getCustomDataList("Student1"), HttpStatus.OK);
     }
 
     @GetMapping("/dataLiteracy/customData/download/{uuid}")
@@ -101,10 +103,10 @@ public class DataLiteracyController {
     }
 
     @PostMapping("/dataLiteracy/customData/upload")
-    public ResponseEntity<?> uploadCustomData(@RequestBody CustomDataDto customDataDto){
-        dataLiteracyService.uploadCustomData(customDataDto);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> uploadCustomData(@RequestBody CustomDataDto customDataDto, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.uploadCustomData(customDataDto, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.uploadCustomData(customDataDto, "Student1"), HttpStatus.OK);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

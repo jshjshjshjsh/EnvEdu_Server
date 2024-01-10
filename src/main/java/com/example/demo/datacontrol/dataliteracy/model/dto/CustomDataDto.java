@@ -40,6 +40,10 @@ public class CustomDataDto {
         this.memo = firstCustomData.getMemo();
         this.uuid = firstCustomData.getUuid();
         this.saveDate = firstCustomData.getSaveDate();
+        this.classId = firstCustomData.getClassId();
+        this.chapterId = firstCustomData.getChapterId();
+        this.sequenceId = firstCustomData.getSequenceId();
+        this.isSubmit = firstCustomData.getIsSubmit();
 
         for (CustomData customData : customDataList) {
             String[] customDataData = customData.getData().split(", ");

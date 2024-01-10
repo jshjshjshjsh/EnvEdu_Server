@@ -30,10 +30,9 @@ public class DataUploadService {
     private final DataLiteracyService dataLiteracyService;
 
     private void uploadCustomData(DataUploadRequestDto uploadedData, String username){
-        Optional<User> user = userRepository.findByUsername(username);
-        CustomDataDto customDataDto = new CustomDataDto(uploadedData.getProperties(), uploadedData.getData(), uploadedData.getMemo(), user.get(),
+        CustomDataDto customDataDto = new CustomDataDto(uploadedData.getProperties(), uploadedData.getData(), uploadedData.getMemo(), null,
                 uploadedData.getClassId(), uploadedData.getChapterId(), uploadedData.getSequenceId(), false);
-        dataLiteracyService.uploadCustomData(customDataDto);
+        dataLiteracyService.uploadCustomData(customDataDto, username);
     }
 
     public void uploadData(DataUploadRequestDto uploadedData, String username){

@@ -62,14 +62,9 @@ public class DataLiteracyService {
         return data.orElse(null);
     }
 
-    public List<CustomData> getRelatedStudentsData(Long classId,Long  chapterId,Long  sequenceId, String educatorName){
-        User user = userRepository.findByUsername(educatorName).get();
+    public List<CustomData> getRelatedStudentsData(Long classId,Long  chapterId,Long  sequenceId, String username){
+        List<Student_Educator> students = userService.findStudentsByStudentOrEducator(username);
 
-        if (user instanceof Student){
-            Student_Educator educatorByStudent = userService.findEducatorByStudent((Student) user);
-            user = educatorByStudent.getEducator();
-        }
-        List<Student_Educator> students = userService.findAllByEducator((Educator) user);
         List<CustomData> result = new ArrayList<>();
         for (Student_Educator s_e: students){
             Optional<List<CustomData>> find = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndIsSubmit(
@@ -176,8 +171,9 @@ public class DataLiteracyService {
         return randomBuilder.toString();
     }
 
-    public List<CustomData> getCustomDataList(){
-        List<CustomData> customDataList = customDataRepository.findAll();
+    public List<CustomData> getCustomDataList(String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        List<CustomData> customDataList = customDataRepository.findAllByOwner(user.get());
         int index = 1;
         while (index < customDataList.size()){
             if (customDataList.get(index-1).getUuid().equals(customDataList.get(index).getUuid())){
@@ -197,9 +193,14 @@ public class DataLiteracyService {
     }
 
     @Transactional
-    public void uploadCustomData(CustomDataDto customDataDto) {
-        List<CustomData> customData = customDataDto.convertDtoToEntity();
-        customDataRepository.saveAll(customData);
+    public UUID uploadCustomData(CustomDataDto customDataDto, String username) {
+        Optional<User> student = userRepository.findByUsername(username);
+        List<CustomData> customDataList = customDataDto.convertDtoToEntity();
+        for (CustomData customData : customDataList) {
+            customData.updateOwner(student.get());
+        }
+        customDataRepository.saveAll(customDataList);
+        return customDataList.get(0).getUuid();
     }
 
     /*

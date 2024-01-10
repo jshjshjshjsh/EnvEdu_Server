@@ -23,6 +23,17 @@ public class CustomDataChartController {
     /**
      * Chart에 대해 저장 / 수정 / 삭제 / 조회(단일 조회, 소속 학생의 차트 전체 조회)
      * */
+    /** todo: 1. 차트에 Data 연결 (o)
+     *        2. 차트 종류 넣기   (o)
+     *        3. 학생들의 차트 전부 조회 (o)
+     * */ 
+
+    @PostMapping("/test/dataLiteracy/chart/properties/{username}")
+    public ResponseEntity<?> createCustomDataChart(@RequestBody CustomDataChart customDataChart, @PathVariable String username, HttpServletRequest request){
+        customDataChartService.createCustomDataChart(customDataChart, username);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PostMapping("/dataLiteracy/chart/properties")
     public ResponseEntity<?> createCustomDataChart(@RequestBody CustomDataChart customDataChart, HttpServletRequest request){
@@ -32,6 +43,23 @@ public class CustomDataChartController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @GetMapping("/dataLiteracy/chart/students/properties")
+    public ResponseEntity<?> getRelatedCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
+                                                       @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getRelateCustomDataChart(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
+    }
+
+    @GetMapping("/dataLiteracy/chart/properties/all")
+    public ResponseEntity<?> getAllCustomDataChartNotForClass(HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getAllCustomDataChartNotForClass("Student1"), HttpStatus.OK);
+    }
+
 
     @GetMapping("/dataLiteracy/chart/properties")
     public ResponseEntity<?> getSingleCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
