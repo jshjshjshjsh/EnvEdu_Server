@@ -17,4 +17,5 @@ public interface CustomDataRepository extends JpaRepository<CustomData, Long> {
     Optional<List<CustomData>> findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndIsSubmit(Long classId, Long chapterId, Long sequenceId, User owner, Boolean isSubmit);
     List<CustomData> findAllByUuidAndOwner(UUID uuid, User owner);
     void deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
+    List<CustomData> findAllByOwner(User user);
 }

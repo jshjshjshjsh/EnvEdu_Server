@@ -171,8 +171,9 @@ public class DataLiteracyService {
         return randomBuilder.toString();
     }
 
-    public List<CustomData> getCustomDataList(){
-        List<CustomData> customDataList = customDataRepository.findAll();
+    public List<CustomData> getCustomDataList(String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        List<CustomData> customDataList = customDataRepository.findAllByOwner(user.get());
         int index = 1;
         while (index < customDataList.size()){
             if (customDataList.get(index-1).getUuid().equals(customDataList.get(index).getUuid())){
@@ -192,9 +193,14 @@ public class DataLiteracyService {
     }
 
     @Transactional
-    public void uploadCustomData(CustomDataDto customDataDto) {
-        List<CustomData> customData = customDataDto.convertDtoToEntity();
-        customDataRepository.saveAll(customData);
+    public UUID uploadCustomData(CustomDataDto customDataDto, String username) {
+        Optional<User> student = userRepository.findByUsername(username);
+        List<CustomData> customDataList = customDataDto.convertDtoToEntity();
+        for (CustomData customData : customDataList) {
+            customData.updateOwner(student.get());
+        }
+        customDataRepository.saveAll(customDataList);
+        return customDataList.get(0).getUuid();
     }
 
     /*
