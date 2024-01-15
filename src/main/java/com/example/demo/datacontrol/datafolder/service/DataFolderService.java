@@ -104,7 +104,7 @@ public class DataFolderService {
     }
     public List<DataFolder> findByDataFolder(String username){
         Optional<User> user = userRepository.findByUsername(username);
-        List<DataFolder> datas = dataFolderRepository.findAllById(user.get().getId());
+        List<DataFolder> datas = dataFolderRepository.findAllByOwnerAndParentIsNull(user.get());
         for(DataFolder item: datas)
             item.deleteThisParentDataFolder();
         return datas;
