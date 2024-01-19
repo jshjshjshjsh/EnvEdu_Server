@@ -87,6 +87,8 @@ public class DataLiteracyService {
         Optional<User> findEducator = userRepository.findByUsername(educator);
         target.getData().updateOwner(findEducator.get());
         List<CustomData> data = target.getData().convertDtoToEntity();
+        customDataRepository.deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(target.getData().getClassId(), target.getData().getChapterId(),
+                target.getData().getSequenceId(), findEducator.get());
         customDataRepository.saveAll(data);
 
 

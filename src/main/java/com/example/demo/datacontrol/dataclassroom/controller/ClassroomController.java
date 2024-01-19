@@ -18,7 +18,7 @@ public class ClassroomController {
 
     private final ClassroomService classroomService;
 
-    @GetMapping("/classroom/list")
+    @GetMapping("/dataLiteracy/classroom/list")
     public ResponseEntity<?> getAllClassroomTest(HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         return new ResponseEntity<>(classroomService.findAllClassroom(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
