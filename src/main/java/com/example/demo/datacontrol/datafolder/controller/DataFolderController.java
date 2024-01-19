@@ -1,12 +1,10 @@
 package com.example.demo.datacontrol.datafolder.controller;
 
-import com.example.demo.datacontrol.datafolder.dto.DataFolderDto;
 import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
 import com.example.demo.datacontrol.datafolder.dto.DataFromDataFolderDto;
 import com.example.demo.datacontrol.datafolder.dto.DataToDataFolderDto;
 import com.example.demo.datacontrol.datafolder.service.DataFolderService;
 import com.example.demo.datacontrol.datafolder.model.DataFolder;
-import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -66,8 +64,8 @@ public class DataFolderController {
     @GetMapping("/datafolder/list")
     public ResponseEntity<?> getDataFolder(HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        List<DataFolder> byDataFolder = dataFolderService.findByDataFolder(userInfo.get(JwtUtil.claimUsername).toString());
-        //List<DataFolder> byDataFolder = dataFolderService.findByDataFolder("Student1");
+        List<DataFolder> byDataFolder = dataFolderService.findDataFolderList(userInfo.get(JwtUtil.claimUsername).toString());
+        //List<DataFolder> byDataFolder = dataFolderService.findDataFolderList("Student1");
 
         return new ResponseEntity<>(byDataFolder, HttpStatus.OK);
     }
