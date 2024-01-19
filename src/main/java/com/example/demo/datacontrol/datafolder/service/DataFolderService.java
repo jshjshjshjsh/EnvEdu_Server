@@ -104,7 +104,7 @@ public class DataFolderService {
     }
     public List<DataFolder> findByDataFolder(String username){
         Optional<User> user = userRepository.findByUsername(username);
-        return dataFolderRepository.findAllByOwnerAndParentIsNull(user.get());
+        return dataFolderRepository.findAllByOwnerAndParentNull(user.get());
     }
 
 
