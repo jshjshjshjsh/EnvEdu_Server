@@ -102,9 +102,11 @@ public class DataFolderService {
 
         return reassemble(datas);
     }
-    public List<DataFolder> findByDataFolder(String username){
+
+    @Transactional(readOnly = true)
+    public List<DataFolder> findDataFolderList(String username){
         Optional<User> user = userRepository.findByUsername(username);
-        return dataFolderRepository.findAllByOwnerAndParentNull(user.get());
+        return dataFolderRepository.findAllByOwnerAndParentIsNull(user.get());
     }
 
 

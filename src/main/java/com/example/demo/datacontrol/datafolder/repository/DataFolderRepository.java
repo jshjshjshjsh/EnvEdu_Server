@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface DataFolderRepository extends JpaRepository<DataFolder, Long> {
-    List<DataFolder> findAllByOwnerAndParentNull(User owner);
+    List<DataFolder> findAllByOwnerAndParentIsNull(User owner);
     Optional<DataFolder> findById(Long id);
     Optional<DataFolder> findDataFolderByIdAndOwner(Long id, User owner);
 }
