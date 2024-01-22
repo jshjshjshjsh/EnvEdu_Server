@@ -29,7 +29,7 @@ public class DataFolder {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DataFolder> child = new ArrayList<>();
 
     public void updateDataFolder(String folderName, User owner, LocalDateTime createDate, LocalDateTime updateDate) {
