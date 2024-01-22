@@ -25,7 +25,7 @@ public class DataFolderController {
 
     @DeleteMapping("/datafolder/item/delete")
     public ResponseEntity<?> deleteDataFromDataFolder(@RequestBody DataFromDataFolderDto data){
-        dataFolderService.delete(data.getId());
+        dataFolderService.deleteDataFolderItem(data.getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -36,6 +36,16 @@ public class DataFolderController {
         dataFolderService.store(dataToDataFolderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/datafolder/list")
+    public ResponseEntity<?> deleteDataFolder(HttpServletRequest request, @RequestBody Map<String, Long> folderTarget){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        dataFolderService.deleteDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), folderTarget.get("parentId"));
+        //dataFolderService.deleteDataFolder("Student1", folderTarget.get("parentId"));
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @PutMapping("/datafolder/list")
     public ResponseEntity<?> parentStoreDataFolder(HttpServletRequest request, @RequestBody Map<String, Long> folderTarget){

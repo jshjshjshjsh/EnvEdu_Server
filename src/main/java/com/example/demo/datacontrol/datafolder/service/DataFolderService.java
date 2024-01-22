@@ -33,7 +33,7 @@ public class DataFolderService {
     private final CustomDataRepository customDataRepository;
 
     @Transactional
-    public void delete(List<Long> id) {
+    public void deleteDataFolderItem(List<Long> id) {
         dataFolder_dataCompilationRepository.deleteAllById(id);
 
     }
@@ -61,6 +61,12 @@ public class DataFolderService {
         dto.addSaveDate(LocalDateTime.now());
 
         dataFolder_dataCompilationRepository.save(dto);
+    }
+
+    @Transactional
+    public void deleteDataFolder(String username, Long parentId){
+        Optional<User> user = userRepository.findByUsername(username);
+        dataFolderRepository.deleteByIdAndOwner(parentId, user.get());
     }
 
     @Transactional
