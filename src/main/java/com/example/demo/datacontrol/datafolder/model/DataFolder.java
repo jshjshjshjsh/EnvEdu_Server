@@ -41,6 +41,10 @@ public class DataFolder {
     public void updateParentDataFolder(DataFolder inputParentDataFolder) {
         parent = inputParentDataFolder;
     }
+    public void updateFolderName(String folderName) {
+        this.folderName = folderName;
+        this.updateDate = LocalDateTime.now();
+    }
     public void deleteThisParentDataFolder(){
         deleteParentDFS(this);
     }

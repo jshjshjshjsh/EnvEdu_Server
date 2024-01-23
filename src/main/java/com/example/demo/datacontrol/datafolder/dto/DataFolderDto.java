@@ -21,6 +21,10 @@ public class DataFolderDto {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
+    /** 이하부턴 DataFolder에 없는 속성 */
+    private Long parentId;
+    private Long childId;
+
     public DataFolderDto convertToDto(DataFolder dataFolder) {
         id = dataFolder.getId();
         folderName = dataFolder.getFolderName();

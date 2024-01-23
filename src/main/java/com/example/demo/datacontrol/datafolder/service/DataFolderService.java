@@ -1,6 +1,7 @@
 package com.example.demo.datacontrol.datafolder.service;
 
 import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
+import com.example.demo.datacontrol.datafolder.dto.DataFolderDto;
 import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
 import com.example.demo.datacontrol.datafolder.dto.DataItems;
 import com.example.demo.datacontrol.datafolder.dto.DataToDataFolderDto;
@@ -64,16 +65,16 @@ public class DataFolderService {
     }
 
     @Transactional
-    public void deleteDataFolder(String username, Long parentId){
+    public void deleteDataFolder(String username, DataFolderDto dataFolderDto){
         Optional<User> user = userRepository.findByUsername(username);
-        dataFolderRepository.deleteByIdAndOwner(parentId, user.get());
+        dataFolderRepository.deleteByIdAndOwner(dataFolderDto.getParentId(), user.get());
     }
 
     @Transactional
-    public void linkParentDataFolder(String username, Long parentId, Long childId){
+    public void linkParentDataFolder(String username, DataFolderDto dataFolderDto){
         Optional<User> user = userRepository.findByUsername(username);
-        Optional<DataFolder> parent = dataFolderRepository.findDataFolderByIdAndOwner(parentId, user.get());
-        Optional<DataFolder> child = dataFolderRepository.findDataFolderByIdAndOwner(childId, user.get());
+        Optional<DataFolder> parent = dataFolderRepository.findDataFolderByIdAndOwner(dataFolderDto.getParentId(), user.get());
+        Optional<DataFolder> child = dataFolderRepository.findDataFolderByIdAndOwner(dataFolderDto.getChildId(), user.get());
 
         if (parent.isPresent() && child.isPresent()){
             child.get().updateParentDataFolder(parent.get());
@@ -82,11 +83,11 @@ public class DataFolderService {
     }
 
     @Transactional
-    public void createDataFolder(String username, String folderName){
+    public void createDataFolder(String username, DataFolderDto dataFolderDto){
         Optional<User> user = userRepository.findByUsername(username);
         LocalDateTime now = LocalDateTime.now();
         DataFolder dataFolder = new DataFolder();
-        dataFolder.updateDataFolder(folderName, user.get(), now, now);
+        dataFolder.updateDataFolder(dataFolderDto.getFolderName(), user.get(), now, now);
         dataFolderRepository.save(dataFolder);
     }
 
@@ -107,6 +108,13 @@ public class DataFolderService {
         }
 
         return reassemble(datas);
+    }
+
+    @Transactional
+    public void updateDataFolderName(String username, DataFolderDto dataFolderDto) {
+        Optional<User> user = userRepository.findByUsername(username);
+        Optional<DataFolder> findDataFolder = dataFolderRepository.findDataFolderByIdAndOwner(dataFolderDto.getParentId(), user.get());
+        findDataFolder.get().updateFolderName(dataFolderDto.getFolderName());
     }
 
     @Transactional(readOnly = true)
