@@ -1,5 +1,6 @@
 package com.example.demo.datacontrol.datafolder.controller;
 
+import com.example.demo.datacontrol.datafolder.dto.DataFolderDto;
 import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
 import com.example.demo.datacontrol.datafolder.dto.DataFromDataFolderDto;
 import com.example.demo.datacontrol.datafolder.dto.DataToDataFolderDto;
@@ -37,30 +38,39 @@ public class DataFolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/datafolder/list")
-    public ResponseEntity<?> deleteDataFolder(HttpServletRequest request, @RequestBody Map<String, Long> folderTarget){
+    @PutMapping("/datafolder/list/foldername")
+    public ResponseEntity<?> updateDataFolderName(HttpServletRequest request, @RequestBody DataFolderDto dataFolderDto){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        dataFolderService.deleteDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), folderTarget.get("parentId"));
-        //dataFolderService.deleteDataFolder("Student1", folderTarget.get("parentId"));
+        dataFolderService.updateDataFolderName(userInfo.get(JwtUtil.claimUsername).toString(), dataFolderDto);
+        //dataFolderService.updateDataFolderName("Student1", dataFolderDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/datafolder/list")
+    public ResponseEntity<?> deleteDataFolder(HttpServletRequest request, @RequestBody DataFolderDto dataFolderDto){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        dataFolderService.deleteDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), dataFolderDto);
+        //dataFolderService.deleteDataFolder("Student1", dataFolderDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @PutMapping("/datafolder/list")
-    public ResponseEntity<?> parentStoreDataFolder(HttpServletRequest request, @RequestBody Map<String, Long> folderTarget){
+    public ResponseEntity<?> parentStoreDataFolder(HttpServletRequest request, @RequestBody DataFolderDto dataFolderDto){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        dataFolderService.linkParentDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), folderTarget.get("parentId"), folderTarget.get("childId"));
-        //dataFolderService.linkParentDataFolder("Student1", folderTarget.get("parentId"), folderTarget.get("childId"));
+        dataFolderService.linkParentDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), dataFolderDto);
+        //dataFolderService.linkParentDataFolder("Student1", dataFolderDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/datafolder/list")
-    public ResponseEntity<?> postDataFolder(HttpServletRequest request, @RequestBody Map<String, String> folderName) {
+    public ResponseEntity<?> postDataFolder(HttpServletRequest request, @RequestBody DataFolderDto dataFolderDto) {
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        dataFolderService.createDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), folderName.get("folderName"));
-        //dataFolderService.createDataFolder("Student1", folderName.get("folderName"));
+        dataFolderService.createDataFolder(userInfo.get(JwtUtil.claimUsername).toString(), dataFolderDto);
+        //dataFolderService.createDataFolder("Student1", dataFolderDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

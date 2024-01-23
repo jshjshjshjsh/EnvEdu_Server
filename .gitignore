@@ -204,3 +204,4 @@ README.html
 src/main/java/com/example/demo/InitDB.java
 src/main/resources/static/files_sample_data/대기질 업로드 샘플.xlsx
 src/main/resources/static/files_sample_data/수질 업로드 샘플.xlsx
+/src/main/resources/application_server.yml
