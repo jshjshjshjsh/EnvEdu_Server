@@ -38,7 +38,7 @@ public class CustomDataDto {
         String[] items = firstCustomData.getProperties().split(", ");
         this.properties.addAll(Arrays.asList(items));
         this.memo = firstCustomData.getMemo();
-        this.uuid = firstCustomData.getUuid();
+        this.uuid = firstCustomData.getDataUUID();
         this.saveDate = firstCustomData.getSaveDate();
         this.classId = firstCustomData.getClassId();
         this.chapterId = firstCustomData.getChapterId();
@@ -80,9 +80,11 @@ public class CustomDataDto {
         return customData;
     }
 
-    public CustomDataDto(List<String> properties, List<List<String>> data, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
+    public CustomDataDto(List<String> properties, List<List<String>> data, UUID uuid, LocalDateTime saveDate, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
         this.properties = properties;
         this.data = data;
+        this.uuid = uuid;
+        this.saveDate = saveDate;
         this.memo = memo;
         this.owner = owner;
         this.classId = classId;

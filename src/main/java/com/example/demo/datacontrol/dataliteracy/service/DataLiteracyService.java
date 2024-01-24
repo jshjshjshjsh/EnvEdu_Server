@@ -1,5 +1,6 @@
 package com.example.demo.datacontrol.dataliteracy.service;
 
+import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
 import com.example.demo.datacontrol.datachunk.service.DataChunkService;
 import com.example.demo.datacontrol.datafolder.repository.DataFolderRepository;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataCopyRequest;
@@ -8,7 +9,6 @@ import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomDataRedis;
 import com.example.demo.datacontrol.dataliteracy.repository.CustomDataRepository;
 import com.example.demo.redis.repo.CustomDataRedisRepository;
-import com.example.demo.user.model.entity.Educator;
 import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.Student_Educator;
 import com.example.demo.user.model.entity.User;
@@ -33,6 +33,7 @@ public class DataLiteracyService {
     private final UserService userService;
     private final DataChunkService dataChunkService;
     private final DataFolderRepository dataFolderRepository;
+
 
     @Transactional
     public void updateSequenceDataSubmit(CustomDataDto customDataDto, String username){
@@ -114,7 +115,7 @@ public class DataLiteracyService {
         UUID uuid = UUID.randomUUID();
         for (int i = 0; i< result.size(); i++){
             result.get(i).updateOwner(target.getUsers().get(studentCnt));
-            result.get(i).updateUuid(uuid);
+            result.get(i).addUuid(uuid);
 
 
 
@@ -178,7 +179,7 @@ public class DataLiteracyService {
         List<CustomData> customDataList = customDataRepository.findAllByOwner(user.get());
         int index = 1;
         while (index < customDataList.size()){
-            if (customDataList.get(index-1).getUuid().equals(customDataList.get(index).getUuid())){
+            if (customDataList.get(index-1).getDataUUID().equals(customDataList.get(index).getDataUUID())){
                 customDataList.remove(index);
                 index -= 1;
             }
@@ -188,7 +189,7 @@ public class DataLiteracyService {
     }
 
     public CustomDataDto downloadCustomData(UUID uuid){
-        Optional<List<CustomData>> customDataByUuid = customDataRepository.findCustomDataByUuid(uuid);
+        Optional<List<CustomData>> customDataByUuid = customDataRepository.findCustomDataByDataUUID(uuid);
         CustomDataDto customDataDto = new CustomDataDto();
         customDataByUuid.ifPresent(customDataDto::convertCustomDataToDto);
         return customDataDto;
@@ -196,13 +197,20 @@ public class DataLiteracyService {
 
     @Transactional
     public UUID uploadCustomData(CustomDataDto customDataDto, String username) {
-        Optional<User> student = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         List<CustomData> customDataList = customDataDto.convertDtoToEntity();
+        LocalDateTime now = null;
+        UUID uuid = null;
+
         for (CustomData customData : customDataList) {
-            customData.updateOwner(student.get());
+            customData.updateOwner(user.get());
+            now = customData.getSaveDate();
+            uuid = customData.getDataUUID();
         }
         customDataRepository.saveAll(customDataList);
-        return customDataList.get(0).getUuid();
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.CUSTOM.name(), user.get(),
+                                                now, 1, customDataDto.getMemo());
+        return customDataList.get(0).getDataUUID();
     }
 
     /*

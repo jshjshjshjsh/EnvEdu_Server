@@ -49,8 +49,7 @@ public class OpenApiService {
         UUID uuid = UUID.randomUUID();
         for (AirQuality airQuality : airQualities) {
             airQuality.setOwner(user.get());
-            airQuality.addSaveDate(now);
-            airQuality.addUuid(uuid);
+            airQuality.updateBasicAttribute(uuid, now, memo, DataEnumTypes.AIRQUALITY);
         }
 
         dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.AIRQUALITY.name(), user.get(), now, airQualities.size(), memo);
@@ -64,9 +63,7 @@ public class OpenApiService {
         UUID uuid = UUID.randomUUID();
         for (OceanQuality oceanQuality : oceanQualities) {
             oceanQuality.setOwner(user.get());
-            oceanQuality.addSaveDate(now);
-            oceanQuality.addUuid(uuid);
-
+            oceanQuality.updateBasicAttribute(uuid, now, memo, DataEnumTypes.OCEANQUALITY);
         }
         dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.OCEANQUALITY.name(), user.get(), now, oceanQualities.size(), memo);
 

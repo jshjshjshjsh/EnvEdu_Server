@@ -1,5 +1,7 @@
 package com.example.demo.datacontrol.dataliteracy.model.entity;
 
+import com.example.demo.datacontrol.datachunk.model.parent.Data;
+import com.example.demo.datacontrol.datachunk.model.parent.DataEnumTypes;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataListener;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,15 +16,11 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @EntityListeners(CustomDataListener.class)
-public class CustomData implements Cloneable{
+public class CustomData extends Data implements Cloneable {
     @Id @GeneratedValue
     private Long id;
     private String properties;
     private String data;
-    private String memo;
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID uuid;
-    private LocalDateTime saveDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private User owner;
@@ -48,9 +46,6 @@ public class CustomData implements Cloneable{
     public void updateOwner(User owner){
         this.owner = owner;
     }
-    public void updateUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
     public void updateUsername(){
         this.username = owner.getUsername();
     }
@@ -58,13 +53,11 @@ public class CustomData implements Cloneable{
                       Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
         this.properties = properties;
         this.data = data;
-        this.memo = memo;
-        this.uuid = uuid;
-        this.saveDate = saveDate;
         this.owner = owner;
         this.classId = classId;
         this.chapterId = chapterId;
         this.sequenceId = sequenceId;
         this.isSubmit = isSubmit;
+        super.updateBasicAttribute(uuid, saveDate, memo, DataEnumTypes.CUSTOM);
     }
 }
