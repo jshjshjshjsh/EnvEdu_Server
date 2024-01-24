@@ -107,10 +107,9 @@ public class SeedService {
         UUID uuid = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         for(Seed seed : list){
-            seed.addUuid(uuid);
-            seed.addSaveDate(now);
+            seed.updateBasicAttribute(uuid, now, memo, DataEnumTypes.SEED);
         }
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), list.get(0).getMeasuredDate(), list.size(), memo);
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), now, list.size(), memo);
         seedRepository.saveAll(list);
     }
 

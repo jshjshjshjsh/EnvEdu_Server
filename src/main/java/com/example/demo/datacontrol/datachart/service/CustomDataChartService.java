@@ -36,7 +36,7 @@ public class CustomDataChartService {
         findCustomDataChart.ifPresent(dataChart -> customDataChartRepository.deleteById(dataChart.getId()));
 
         customDataChart.updateOwner(user.get());
-        List<CustomData> customDataList = customDataRepository.findCustomDataByUuid(customDataChart.getUuid()).get();
+        List<CustomData> customDataList = customDataRepository.findCustomDataByDataUUID(customDataChart.getUuid()).get();
         for (CustomData customData : customDataList) {
             customData.updateIsSubmit(true);
         }

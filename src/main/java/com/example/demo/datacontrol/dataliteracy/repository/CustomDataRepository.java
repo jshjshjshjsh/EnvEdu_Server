@@ -11,11 +11,11 @@ import java.util.UUID;
 
 @Repository
 public interface CustomDataRepository extends JpaRepository<CustomData, Long> {
-    Optional<List<CustomData>> findCustomDataByUuid(UUID uuid);
+    Optional<List<CustomData>> findCustomDataByDataUUID(UUID uuid);
     Optional<CustomData> findById(Long id);
     Optional<List<CustomData>> findAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
     Optional<List<CustomData>> findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndIsSubmit(Long classId, Long chapterId, Long sequenceId, User owner, Boolean isSubmit);
-    List<CustomData> findAllByUuidAndOwner(UUID uuid, User owner);
+    List<CustomData> findAllByDataUUIDAndOwner(UUID uuid, User owner);
     void deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
     List<CustomData> findAllByOwner(User user);
 }
