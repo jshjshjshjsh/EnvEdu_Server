@@ -76,9 +76,10 @@ public class DataFolderService {
         Optional<DataFolder> parent = dataFolderRepository.findDataFolderByIdAndOwner(dataFolderDto.getParentId(), user.get());
         Optional<DataFolder> child = dataFolderRepository.findDataFolderByIdAndOwner(dataFolderDto.getChildId(), user.get());
 
-        if (parent.isPresent() && child.isPresent()){
+        if (dataFolderDto.getParentId() == null )
+            child.get().updateParentDataFolder(null);
+        else if (parent.isPresent() && child.isPresent())
             child.get().updateParentDataFolder(parent.get());
-        }
 
     }
 
