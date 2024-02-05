@@ -1,6 +1,10 @@
 package com.example.demo.datacontrol.dataclassroom.domain.entity;
 
+import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomDataType;
+import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomStudentGrade;
+import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSubjectType;
 import com.example.demo.user.model.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +17,42 @@ import java.util.List;
 @NoArgsConstructor
 public class ClassroomClass extends Classroom{
 
-    @OneToMany(mappedBy = "classroomClass", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    private ClassroomStudentGrade grade;
+    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    private ClassroomSubjectType subject;
+    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    private ClassroomDataType dataType;
+    @Transient
+    private String gradeLabel;
+    @Transient
+    private String subjectLabel;
+    @Transient
+    private String dataTypeLabel;
+
+    @OneToMany(mappedBy = "classroomClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClassroomChapter> classroomChapters = new ArrayList<>();
 
-    public ClassroomClass(String title, String subtitle, String description, User owner) {
+    public ClassroomClass(ClassroomStudentGrade grade, ClassroomSubjectType subject, ClassroomDataType dataType, String title, String subtitle, String description, User owner) {
         super(title, subtitle, description, owner);
+        this.grade = grade;
+        this.subject = subject;
+        this.dataType = dataType;
     }
 
     public void updateClassroomChapter(List<ClassroomChapter> inputClassroomChapters){
         classroomChapters.addAll(inputClassroomChapters);
+    }
+
+    public void updateLabels(){
+        if(grade != null)
+            gradeLabel = grade.label;
+        if(subject != null)
+            subjectLabel = subject.label;
+        if(dataType != null)
+            dataTypeLabel = dataType.label;
     }
 }
