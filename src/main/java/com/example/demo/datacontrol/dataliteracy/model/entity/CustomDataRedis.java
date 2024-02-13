@@ -17,16 +17,18 @@ public class CustomDataRedis {
     @Id
     private String code;
     private String properties;
+    private String axisTypes;
     private String data;
     private String memo;
     private Boolean isSubmit;
 
-    private CustomDataRedis(String code, List<String> properties, List<List<String>> data, String memo, Boolean isSubmit){
+    private CustomDataRedis(String code, List<String> properties, List<List<String>> data, List<String> axisTypes, String memo, Boolean isSubmit){
         this.code = code;
         this.properties = properties.toString();
         this.data = data.toString();
+        this.axisTypes = axisTypes.toString();
         this.memo = memo;
         this.isSubmit = isSubmit;
     }
-    public static CustomDataRedis of(String code, List<String> properties, List<List<String>> data, String memo, Boolean isSubmit){ return new CustomDataRedis(code, properties, data, memo, isSubmit); };
+    public static CustomDataRedis of(String code, List<String> properties, List<List<String>> data, List<String> axisTypes, String memo, Boolean isSubmit){ return new CustomDataRedis(code, properties, data, axisTypes, memo, isSubmit); };
 }

@@ -38,11 +38,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
                                 "/air-quality/**","/ocean-quality/**","/survey/**").permitAll()
-                        .mvcMatchers("/educating/**","/dataLiteracy/**","/classroom/**").permitAll()
+                        .mvcMatchers("/educating/**","/dataLiteracy/**","/classroom/**","/dataset/list").permitAll()
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**",
                                 "/datafolder/**","/mydata/**","/dataupload/**", "/student/join/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
-                        .mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
+                        .mvcMatchers("/manager/**","/dataset/manage/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().denyAll()
                 );
