@@ -1,5 +1,8 @@
 package com.example.demo.datacontrol.dataclassroom.controller;
 
+import com.example.demo.datacontrol.dataclassroom.domain.dto.ClassroomSequenceRequestDto;
+import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomClass;
+import com.example.demo.datacontrol.dataclassroom.domain.entity.classroomsequencechunk.ClassroomSequenceChunk;
 import com.example.demo.datacontrol.dataclassroom.service.ClassroomService;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -7,9 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -18,14 +24,20 @@ public class ClassroomController {
 
     private final ClassroomService classroomService;
 
+    @PostMapping("/dataLiteracy/classroom/e-class/new")
+    public ResponseEntity<?> generateClassroom(@RequestBody ClassroomSequenceRequestDto item, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        classroomService.generateClassroom(userInfo.get(JwtUtil.claimUsername).toString(), item);
+        //classroomService.generateClassroom("Educator1", item);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/dataLiteracy/classroom/list")
     public ResponseEntity<?> getAllClassroomTest(@RequestParam(required = false) String grade, @RequestParam(required = false) String subject,
                                                  @RequestParam(required = false) String dataType){
         return new ResponseEntity<>(classroomService.findAllClassroomByGradeSubjectDataType(grade, subject, dataType), HttpStatus.OK);
         //return new ResponseEntity<>(classroomService.findAllClassroomByGradeSubjectDataType(grade, subject, dataType), HttpStatus.OK);
     }
-
-    // todo: Dto 말고 여기서 Types로 검색할 애들 리스트로 반환하는 API 생성
 
     @GetMapping("/dataLiteracy/classroom/searchTypes")
     public ResponseEntity<?> getSearchTypes(){

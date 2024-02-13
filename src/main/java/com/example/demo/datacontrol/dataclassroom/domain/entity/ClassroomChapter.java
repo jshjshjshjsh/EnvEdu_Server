@@ -25,6 +25,10 @@ public class ClassroomChapter extends Classroom {
         this.classroomClass = classroomClass;
     }
 
+    public void updateClassroomSequence(ClassroomSequence inputClassroomSequence) {
+        classroomSequences.add(inputClassroomSequence);
+    }
+
     public void updateClassroomSequence(List<ClassroomSequence> inputClassroomSequences) {
         classroomSequences.addAll(inputClassroomSequences);
     }

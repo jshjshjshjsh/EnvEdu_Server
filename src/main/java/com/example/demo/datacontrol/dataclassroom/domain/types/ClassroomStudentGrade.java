@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum ClassroomStudentGrade {
-    EL1("초등1"), EL2("초등2"), EL3("초등3"), EL4("초등4"), EL5("초등5"), EL6("초등6"),
-    MD1("중등1"), MD2("중등2"), MD3("중등3"),
-    HI1("고등1"), HI2("고등2"), HI3("고등3");
+    EL1("초등1"), EL2("초등2"), EL3("초등3"), EL4("초등4"), EL5("초등5"), EL6("초등6"), ELCOMMON("초등 공통"),
+    MD1("중등1"), MD2("중등2"), MD3("중등3"), MDCOMMON("중등 공통"),
+    HI1("고등1"), HI2("고등2"), HI3("고등3"), HICOMMON("고등 공통"),
+    COMMON("전체 공통");
 
     public final String label;
 

@@ -32,15 +32,21 @@ public class ClassroomClass extends Classroom{
     private String subjectLabel;
     @Transient
     private String dataTypeLabel;
+    private String thumbnail;
 
     @OneToMany(mappedBy = "classroomClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClassroomChapter> classroomChapters = new ArrayList<>();
 
-    public ClassroomClass(ClassroomStudentGrade grade, ClassroomSubjectType subject, ClassroomDataType dataType, String title, String subtitle, String description, User owner) {
+    public ClassroomClass(ClassroomStudentGrade grade, ClassroomSubjectType subject, ClassroomDataType dataType, String title, String subtitle, String description, User owner, String thumbnail) {
         super(title, subtitle, description, owner);
         this.grade = grade;
         this.subject = subject;
         this.dataType = dataType;
+        this.thumbnail = thumbnail;
+    }
+
+    public void updateClassroomChapter(ClassroomChapter inputClassroomChapters){
+        classroomChapters.add(inputClassroomChapters);
     }
 
     public void updateClassroomChapter(List<ClassroomChapter> inputClassroomChapters){
@@ -54,5 +60,14 @@ public class ClassroomClass extends Classroom{
             subjectLabel = subject.label;
         if(dataType != null)
             dataTypeLabel = dataType.label;
+    }
+
+    public void updateLabelToEnum(){
+        if(gradeLabel != null)
+            grade = ClassroomStudentGrade.getByLabel(gradeLabel);
+        if(subjectLabel != null)
+            subject = ClassroomSubjectType.getByLabel(subjectLabel);
+        if(dataTypeLabel != null)
+            dataType = ClassroomDataType.getByLabel(dataTypeLabel);
     }
 }
