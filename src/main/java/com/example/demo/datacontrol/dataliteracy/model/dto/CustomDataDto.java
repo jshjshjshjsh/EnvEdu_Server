@@ -18,6 +18,7 @@ import java.util.UUID;
 public class CustomDataDto {
     private List<String> properties = new ArrayList<>();
     private List<List<String>> data = new ArrayList<>();
+    private List<String> axisTypes = new ArrayList<>();
     private String memo;
     @Column(columnDefinition = "BINARY(16)")
     private UUID uuid;
@@ -35,8 +36,10 @@ public class CustomDataDto {
 
     public CustomDataDto convertCustomDataToDto(List<CustomData> customDataList){
         CustomData firstCustomData = customDataList.get(0);
-        String[] items = firstCustomData.getProperties().split(", ");
-        this.properties.addAll(Arrays.asList(items));
+        String[] properties = firstCustomData.getProperties().split(", ");
+        String[] axisTypes = firstCustomData.getAxisTypes().split(", ");
+        this.properties.addAll(Arrays.asList(properties));
+        this.axisTypes.addAll(Arrays.asList(axisTypes));
         this.memo = firstCustomData.getMemo();
         this.uuid = firstCustomData.getDataUUID();
         this.saveDate = firstCustomData.getSaveDate();
@@ -66,6 +69,14 @@ public class CustomDataDto {
         }
         properties = properties.substring(0, properties.length() - 2);
 
+        String axisTypes = "";
+        if(this.axisTypes.size() > 0){
+            for (String axisType : this.axisTypes) {
+                axisTypes += axisType + ", ";
+            }
+            axisTypes = axisTypes.substring(0, axisTypes.length() - 2);
+        }
+
         for (List<String> data: this.data) {
             String record = "";
             for (String value : data) {
@@ -73,16 +84,17 @@ public class CustomDataDto {
             }
             record = record.substring(0, record.length() - 2);
 
-            customData.add(new CustomData(properties, record, memo, uuid, now, owner, classId, chapterId, sequenceId, isSubmit));
+            customData.add(new CustomData(properties, record, axisTypes, memo, uuid, now, owner, classId, chapterId, sequenceId, isSubmit));
         }
 
 
         return customData;
     }
 
-    public CustomDataDto(List<String> properties, List<List<String>> data, UUID uuid, LocalDateTime saveDate, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
+    public CustomDataDto(List<String> properties, List<List<String>> data, List<String> axisTypes, UUID uuid, LocalDateTime saveDate, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
         this.properties = properties;
         this.data = data;
+        this.axisTypes = axisTypes;
         this.uuid = uuid;
         this.saveDate = saveDate;
         this.memo = memo;

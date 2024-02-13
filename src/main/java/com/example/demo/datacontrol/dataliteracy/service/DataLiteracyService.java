@@ -142,13 +142,14 @@ public class DataLiteracyService {
 
         if(findCustomData.isPresent()) {
             String properties = findCustomData.get().getProperties().replaceAll("\\[|\\]", "").trim();
+            String axisTypes = findCustomData.get().getAxisTypes().replaceAll("\\[|\\]", "").trim();
             String[] chunks = findCustomData.get().getData().replaceAll("^\\[|\\]$", "").split("\\], \\[");
 
             UUID uuid = UUID.randomUUID();
             LocalDateTime now = LocalDateTime.now();
 
             for (int i = 0; i < chunks.length; i++) {
-                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), findCustomData.get().getMemo(), uuid, now, user.get(),null,null,null, false));
+                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), axisTypes, findCustomData.get().getMemo(), uuid, now, user.get(),null,null,null, false));
             }
 
             customDataRepository.saveAll(customDataList);
@@ -169,7 +170,7 @@ public class DataLiteracyService {
             randomBuilder.append(randomChar);
         }
         customDataRedisRepository.save(CustomDataRedis.of(randomBuilder.toString(), customDataDto.getProperties(),
-                customDataDto.getData(), customDataDto.getMemo(), customDataDto.getIsSubmit()));
+                customDataDto.getData(), customDataDto.getAxisTypes(), customDataDto.getMemo(), customDataDto.getIsSubmit()));
 
         return randomBuilder.toString();
     }
@@ -197,18 +198,23 @@ public class DataLiteracyService {
 
     @Transactional
     public UUID uploadCustomData(CustomDataDto customDataDto, String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+        User user = null;
+        Optional<User> findUser = userRepository.findByUsername(username);
+        if (findUser.isPresent()) {
+            user = findUser.get();
+        }
+
         List<CustomData> customDataList = customDataDto.convertDtoToEntity();
         LocalDateTime now = null;
         UUID uuid = null;
 
         for (CustomData customData : customDataList) {
-            customData.updateOwner(user.get());
+            customData.updateOwner(user);
             now = customData.getSaveDate();
             uuid = customData.getDataUUID();
         }
         customDataRepository.saveAll(customDataList);
-        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.CUSTOM.name(), user.get(),
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.CUSTOM.name(), user,
                                                 now, 1, customDataDto.getMemo());
         return customDataList.get(0).getDataUUID();
     }

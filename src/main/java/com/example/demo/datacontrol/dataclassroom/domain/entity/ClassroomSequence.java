@@ -1,27 +1,34 @@
 package com.example.demo.datacontrol.dataclassroom.domain.entity;
 
-import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSequenceType;
+import com.example.demo.datacontrol.dataclassroom.domain.entity.classroomsequencechunk.ClassroomSequenceChunk;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class ClassroomSequence extends Classroom {
 
-    @Enumerated(EnumType.STRING)
-    private ClassroomSequenceType classroomSequenceType;
+    @OneToMany(mappedBy = "classroomSequence", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    List<ClassroomSequenceChunk> sequenceChunks = new ArrayList<>();
+
     @ManyToOne
     @JsonIgnore
     private ClassroomChapter classroomChapter;
 
-    public ClassroomSequence(String title, String subtitle, String description, User owner, ClassroomChapter classroomChapter, ClassroomSequenceType classroomSequenceType) {
+    public ClassroomSequence(String title, String subtitle, String description, User owner, ClassroomChapter classroomChapter) {
         super(title, subtitle, description, owner);
         this.classroomChapter = classroomChapter;
-        this.classroomSequenceType = classroomSequenceType;
     }
+
+    public void updateClassroomSequenceChunk(List<ClassroomSequenceChunk> inputClassroomSequenceChunks) {
+        sequenceChunks.addAll(inputClassroomSequenceChunks);
+    }
+
 }

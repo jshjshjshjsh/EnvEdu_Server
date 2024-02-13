@@ -31,4 +31,8 @@ public abstract class Classroom {
         this.description = description;
         this.owner = owner;
     }
+
+    public void updateOwner(User owner){
+        this.owner = owner;
+    }
 }

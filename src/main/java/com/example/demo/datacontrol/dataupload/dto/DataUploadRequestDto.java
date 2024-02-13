@@ -11,6 +11,7 @@ import java.util.UUID;
 public class DataUploadRequestDto {
     private List<String> properties;
     private List<List<String>> data;
+    private List<String> axisTypes;
     private String label;
     private String memo;
     private Long classId;
