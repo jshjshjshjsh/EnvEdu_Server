@@ -30,8 +30,50 @@ public class CustomDataDto {
     private Long sequenceId;
     private Boolean isSubmit;
 
+    public void updateClassroomIds(Long classId, Long chapterId, Long sequenceId) {
+        this.classId = classId;
+        this.chapterId = chapterId;
+        this.sequenceId = sequenceId;
+    }
+
     public void updateOwner(User owner){
         this.owner = owner;
+    }
+
+    public static List<String> parseStringToProperties(String input) {
+        List<String> resultList = new ArrayList<>();
+
+        // Remove the outer brackets and split by ', ' to get individual elements
+        String[] elements = input.substring(1, input.length() - 1).split(", ");
+
+        for (String element : elements) {
+            // Remove any leading or trailing whitespace
+            element = element.trim();
+            resultList.add(element);
+        }
+
+        return resultList;
+    }
+
+    public static List<List<String>> parseStringToData(String input) {
+        List<List<String>> resultList = new ArrayList<>();
+
+        // Remove the outer brackets and split by "], [" to get individual lists
+        String[] lists = input.substring(2, input.length() - 2).split("\\], \\[");
+
+        for (String list : lists) {
+            List<String> innerList = new ArrayList<>();
+            // Split each inner list by ", " to get individual elements
+            String[] elements = list.split(", ");
+            for (String element : elements) {
+                // Remove any leading or trailing whitespace and brackets
+                element = element.trim().replaceAll("[\\[\\]]", "");
+                innerList.add(element);
+            }
+            resultList.add(innerList);
+        }
+
+        return resultList;
     }
 
     public CustomDataDto convertCustomDataToDto(List<CustomData> customDataList){
@@ -70,7 +112,7 @@ public class CustomDataDto {
         properties = properties.substring(0, properties.length() - 2);
 
         String axisTypes = "";
-        if(this.axisTypes.size() > 0){
+        if(!axisTypes.isEmpty() && this.axisTypes.size() > 0){
             for (String axisType : this.axisTypes) {
                 axisTypes += axisType + ", ";
             }
