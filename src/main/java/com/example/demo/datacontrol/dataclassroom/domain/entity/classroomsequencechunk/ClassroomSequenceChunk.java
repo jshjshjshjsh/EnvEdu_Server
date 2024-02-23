@@ -1,12 +1,20 @@
 package com.example.demo.datacontrol.dataclassroom.domain.entity.classroomsequencechunk;
 
+import com.example.demo.datacontrol.datachart.domain.entity.CustomDataChart;
+import com.example.demo.datacontrol.datachart.domain.entity.CustomDataChartProperties;
+import com.example.demo.datacontrol.datachart.domain.types.ChartLabelPosition;
+import com.example.demo.datacontrol.datachart.domain.types.ChartLegendPosition;
+import com.example.demo.datacontrol.datachart.domain.types.ChartType;
 import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomSequence;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSequenceType;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,13 +25,14 @@ public class ClassroomSequenceChunk {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private ClassroomSequence classroomSequence;
 
     @Enumerated(EnumType.STRING)
     private ClassroomSequenceType classroomSequenceType;
     private Boolean studentVisibleStatus;
 
-    // H1, H2, 토론, 질문,
+    // H1, H2, 토론, 질문, 차트
     private String title;
     private String content;
 
@@ -33,6 +42,24 @@ public class ClassroomSequenceChunk {
     // 표
     private String properties;
     private String data;
+
+    // 차트
+    @ManyToOne
+    private CustomDataChart customDataChart;
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private ChartLegendPosition legendPosition;
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private ChartLabelPosition labelPosition;
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private ChartType chartType;
+    @Transient
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID uuid;
+    @Transient
+    private List<CustomDataChartProperties> axisProperties = new ArrayList<>();
 
     public ClassroomSequenceChunk(ClassroomSequence classroomSequence, ClassroomSequenceType classroomSequenceType, Boolean studentVisibleStatus, String title, String content, String url, String properties, String data) {
         this.classroomSequence = classroomSequence;

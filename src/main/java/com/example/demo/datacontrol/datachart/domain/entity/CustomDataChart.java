@@ -6,6 +6,7 @@ import com.example.demo.datacontrol.datachart.domain.types.ChartType;
 import com.example.demo.user.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @EntityListeners(CustomDataChartListener.class)
+@NoArgsConstructor
 public class CustomDataChart {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +48,26 @@ public class CustomDataChart {
 
     public void updateUsername() {
         this.username = owner.getUsername();
+    }
+
+    public void updateClassroomIds(Long classId, Long chapterId, Long sequenceId) {
+        this.classId = classId;
+        this.chapterId = chapterId;
+        this.sequenceId = sequenceId;
+    }
+
+    public CustomDataChart(String title, ChartLegendPosition legendPosition, ChartLabelPosition labelPosition, User owner, String username, Long classId, Long chapterId, Long sequenceId, ChartType chartType, UUID uuid, Boolean forClass, List<CustomDataChartProperties> axisProperties) {
+        this.title = title;
+        this.legendPosition = legendPosition;
+        this.labelPosition = labelPosition;
+        this.owner = owner;
+        this.username = username;
+        this.classId = classId;
+        this.chapterId = chapterId;
+        this.sequenceId = sequenceId;
+        this.chartType = chartType;
+        this.uuid = uuid;
+        this.forClass = forClass;
+        this.axisProperties = axisProperties;
     }
 }

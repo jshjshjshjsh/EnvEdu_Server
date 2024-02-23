@@ -23,9 +23,11 @@ public class DataLiteracyDatasetService {
     }
 
     @Transactional
-    public void dataSetUpload(DataLiteracyDatasetDto customDataDto){
-        UUID uuid = dataLiteracyService.uploadCustomData(customDataDto, null);
-        DataLiteracyDataset dataLiteracyDataset = new DataLiteracyDataset(customDataDto.getTitle(), customDataDto.getContent(), uuid);
+    public void dataSetUpload(DataLiteracyDatasetDto dto){
+        UUID uuid = dataLiteracyService.uploadCustomData(dto, null);
+        DataLiteracyDataset dataLiteracyDataset = new DataLiteracyDataset(dto.getTitle(), dto.getContent(), uuid, dto.getGradeLabel(), dto.getSubjectLabel(), dto.getDataTypeLabel());
+        dataLiteracyDataset.updateLabelToEnum();
+
         dataLiteracyDatasetRepository.save(dataLiteracyDataset);
     }
 

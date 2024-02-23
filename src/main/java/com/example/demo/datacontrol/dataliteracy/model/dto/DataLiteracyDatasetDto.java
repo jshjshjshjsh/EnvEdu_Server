@@ -7,4 +7,7 @@ public class DataLiteracyDatasetDto extends CustomDataDto{
 
     private String title;
     private String content;
+    private String gradeLabel;
+    private String subjectLabel;
+    private String dataTypeLabel;
 }

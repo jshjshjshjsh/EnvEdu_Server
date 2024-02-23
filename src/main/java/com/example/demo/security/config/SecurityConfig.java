@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**",
                                 "/datafolder/**","/mydata/**","/dataupload/**", "/student/join/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
+                        //.mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/manager/**","/dataset/manage/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().denyAll()

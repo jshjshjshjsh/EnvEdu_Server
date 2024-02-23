@@ -30,8 +30,8 @@ public class DataLiteracyDatasetController {
 
     @PostMapping("/dataset/manage/upload")
     public ResponseEntity<?> uploadDataset(@RequestBody DataLiteracyDatasetDto dataLiteracyDatasetDto){
-            dataLiteracyDatasetService.dataSetUpload(dataLiteracyDatasetDto);
-            return new ResponseEntity<>(HttpStatus.OK);
+        dataLiteracyDatasetService.dataSetUpload(dataLiteracyDatasetDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/dataset/list")
