@@ -32,11 +32,28 @@ public class ClassroomService {
 
     private final ClassroomClassRepository classroomClassRepository;
     private final ClassroomClassCriteriaQuery classroomClassCriteriaQuery;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final CustomDataChartService customDataChartService;
     private final DataLiteracyService dataLiteracyService;
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<ClassroomClass> getMyRelatedClassroom(String username){
+        User user = userRepository.findByUsername(username).get();
+
+        if (user instanceof Student)
+            user = userService.findEducatorByStudent((Student) user).getEducator();
+
+        List<ClassroomClass> classroomClasses = classroomClassRepository.findAllByOwner(user);
+        for (ClassroomClass classroom : classroomClasses) {
+            classroom.updateLabels();
+        }
+
+        return classroomClasses;
+    }
+
+
+    @Transactional(readOnly = true)
     public ClassroomClass getClassroomById(Long id){
         Optional<ClassroomClass> findClassroom = classroomClassRepository.findById(id);
         if (findClassroom.isPresent()) {
