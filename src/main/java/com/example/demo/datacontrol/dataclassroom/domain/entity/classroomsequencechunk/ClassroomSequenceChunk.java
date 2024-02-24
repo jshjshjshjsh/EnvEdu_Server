@@ -31,6 +31,8 @@ public class ClassroomSequenceChunk {
     @Enumerated(EnumType.STRING)
     private ClassroomSequenceType classroomSequenceType;
     private Boolean studentVisibleStatus;
+    private Boolean canSubmit;
+    private Boolean canShare;
 
     // H1, H2, 토론, 질문, 차트
     private String title;

@@ -37,6 +37,17 @@ public class ClassroomService {
     private final DataLiteracyService dataLiteracyService;
 
     @Transactional
+    public ClassroomClass getClassroomById(Long id){
+        Optional<ClassroomClass> findClassroom = classroomClassRepository.findById(id);
+        if (findClassroom.isPresent()) {
+            findClassroom.get().updateLabels();
+            return findClassroom.get();
+        }
+
+        return null;
+    }
+
+    @Transactional
     public void generateClassroom(String username, ClassroomSequenceRequestDto dto){
         Optional<User> user = userRepository.findByUsername(username);
         if (user.get() instanceof Student)
