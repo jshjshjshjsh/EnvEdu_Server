@@ -32,6 +32,11 @@ public class ClassroomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/dataLiteracy/classroom")
+    public ResponseEntity<?> getClassroomById(@RequestParam(required = false) Long id){
+        return new ResponseEntity<>(classroomService.getClassroomById(id), HttpStatus.OK);
+    }
+
     @GetMapping("/dataLiteracy/classroom/list")
     public ResponseEntity<?> getAllClassroomTest(@RequestParam(required = false) String grade, @RequestParam(required = false) String subject,
                                                  @RequestParam(required = false) String dataType){
