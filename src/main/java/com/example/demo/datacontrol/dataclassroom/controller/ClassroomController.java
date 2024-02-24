@@ -32,6 +32,13 @@ public class ClassroomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/dataLiteracy/classroom/mine")
+    public ResponseEntity<?> getClassroomByMine(HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(classroomService.getMyRelatedClassroom(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(classroomService.getMyRelatedClassroom("Student1"), HttpStatus.OK);
+    }
+
     @GetMapping("/dataLiteracy/classroom")
     public ResponseEntity<?> getClassroomById(@RequestParam(required = false) Long id){
         return new ResponseEntity<>(classroomService.getClassroomById(id), HttpStatus.OK);
