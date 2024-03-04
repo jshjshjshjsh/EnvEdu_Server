@@ -21,7 +21,9 @@ import java.util.UUID;
 public class CustomData extends Data implements Cloneable {
     @Id @GeneratedValue
     private Long id;
+    @Lob
     private String properties;
+    @Lob
     private String data;
     private String axisTypes;
     @ManyToOne(fetch = FetchType.LAZY)
