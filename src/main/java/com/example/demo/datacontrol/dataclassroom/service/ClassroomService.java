@@ -76,6 +76,7 @@ public class ClassroomService {
         // 밑에서 classroomChapter, classroomSequence 소속 시켜야 함
 
         ClassroomChapter classroomChapter = dto.getClassroomChapter();
+        classroomChapter.updateClassroomClass(classroomClass);
         classroomChapter.updateOwner(user.get());
         classroomClass.updateClassroomChapter(classroomChapter);
 
