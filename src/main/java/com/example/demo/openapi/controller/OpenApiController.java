@@ -31,6 +31,7 @@ public class OpenApiController {
     private String serviceKeyAirStation;
     private final OpenApiService openApiService;
 
+    // 측정소 목록 가져오기
     @GetMapping("/air-quality/station")
     public ResponseEntity<?> getAirQualityStation(@RequestParam(name = "addr", defaultValue = "부산") String addr,
                                                   @RequestParam(name = "stationName", defaultValue = "") String stationName) throws UnsupportedEncodingException, JsonProcessingException {
@@ -43,6 +44,7 @@ public class OpenApiController {
         return new ResponseEntity<>(airQualityStationDTOS, HttpStatus.OK);
     }
 
+    // 특정 측정소 자료 (일간, 1달, 3달) 또는 전체 측정소 자료 (일간, 1달, 3달)
     @GetMapping("/air-quality")
     public ResponseEntity<?>  getAirQuality(@RequestParam(name="location", defaultValue = "부산") String location,
                                             @RequestParam(name = "stationName", defaultValue = "") String stationName,

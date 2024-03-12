@@ -50,6 +50,10 @@ public class CustomDataChart {
         this.username = owner.getUsername();
     }
 
+    public void updateUuid(UUID uuid){
+        this.uuid = uuid;
+    }
+
     public void updateClassroomIds(Long classId, Long chapterId, Long sequenceId) {
         this.classId = classId;
         this.chapterId = chapterId;

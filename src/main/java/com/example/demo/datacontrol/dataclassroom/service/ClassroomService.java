@@ -13,6 +13,7 @@ import com.example.demo.datacontrol.dataclassroom.repository.ClassroomClassCrite
 import com.example.demo.datacontrol.dataclassroom.repository.ClassroomClassRepository;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
+import com.example.demo.datacontrol.dataliteracy.repository.CustomDataRepository;
 import com.example.demo.datacontrol.dataliteracy.service.DataLiteracyService;
 import com.example.demo.user.model.entity.Educator;
 import com.example.demo.user.model.entity.Student;
@@ -69,6 +70,7 @@ public class ClassroomService {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.get() instanceof Student)
             return;
+        List<CustomDataDto> customDataForChartList = new ArrayList<>();
 
         ClassroomClass classroomClass = dto.getClassroomClass();
         classroomClass.updateLabelToEnum();
@@ -97,8 +99,14 @@ public class ClassroomService {
 
                 // Chart 저장 부분
                 if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.CHART)) {
+                    UUID target_uuid = chunk.getUuid();
+                    if (chunk.getData() != null && chunk.getProperties() != null) {
+                        customDataForChartList.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false));
+                        target_uuid = UUID.fromString("00000000-0000-0000-0000-000000000111");
+                    }
+
                     customDataCharts.add(new CustomDataChart(chunk.getTitle(), chunk.getLegendPosition(), chunk.getLabelPosition(),
-                            user.get(), username, null, null, null, chunk.getChartType(), chunk.getUuid(), true,
+                            user.get(), username, null, null, null, chunk.getChartType(), target_uuid, true,
                             chunk.getAxisProperties()));
                 }
                 if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.MATRIX)) {
@@ -112,10 +120,17 @@ public class ClassroomService {
             // Chart 저장
             index = 0;
             for (int i = 0; i < save.getClassroomChapters().get(0).getClassroomSequences().size(); i++) {
-                if (save.getClassroomChapters().get(0).getClassroomSequences().get(i).equals(classroomSequenceMap.get(index)))
+                if (save.getClassroomChapters().get(0).getClassroomSequences().get(i).equals(classroomSequenceMap.get(index))){
                     c.updateClassroomIds(save.getId(), save.getClassroomChapters().get(0).getId(), save.getClassroomChapters().get(0).getClassroomSequences().get(i).getId());
+                    if (c.getUuid().equals(UUID.fromString("00000000-0000-0000-0000-000000000111"))){
+                        customDataForChartList.get(index).updateClassroomIds(save.getId(), save.getClassroomChapters().get(0).getId(), save.getClassroomChapters().get(0).getClassroomSequences().get(i).getId());
+
+                        c.updateUuid(dataLiteracyService.uploadCustomData(customDataForChartList.get(index), username));
+                    }
+                }
                 index += 1;
             }
+            // todo : 버그 있는데 차트 2개 입력해도 1개 저장됨
             customDataChartService.createCustomDataChart(c, username);
         }
         for (CustomDataDto c : customDatas) {
