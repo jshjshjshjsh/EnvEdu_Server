@@ -42,7 +42,9 @@ public class ClassroomSequenceChunk {
     private String url;
 
     // 표
+    @Lob
     private String properties;
+    @Lob
     private String data;
 
     // 차트
