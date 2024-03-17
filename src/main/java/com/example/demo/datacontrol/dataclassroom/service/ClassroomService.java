@@ -104,7 +104,6 @@ public class ClassroomService {
                         customDataForChartList.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false));
                         target_uuid = UUID.fromString("00000000-0000-0000-0000-000000000111");
                     }
-
                     customDataCharts.add(new CustomDataChart(chunk.getTitle(), chunk.getLegendPosition(), chunk.getLabelPosition(),
                             user.get(), username, null, null, null, chunk.getChartType(), target_uuid, true,
                             chunk.getAxisProperties()));
@@ -128,10 +127,17 @@ public class ClassroomService {
                         c.updateUuid(dataLiteracyService.uploadCustomData(customDataForChartList.get(index), username));
                     }
                 }
+                // todo : 버그 있는데 차트 2개 입력해도 1개 저장됨
+                CustomDataChart customDataChartSaved = customDataChartService.createCustomDataChart(c, username);
+                for (ClassroomSequenceChunk chunk : save.getClassroomChapters().get(0).getClassroomSequences().get(i).getSequenceChunks()) {
+                    if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.CHART)) {
+                        chunk.updateCustomDataChart(customDataChartSaved);
+                    }
+                }
+
                 index += 1;
             }
-            // todo : 버그 있는데 차트 2개 입력해도 1개 저장됨
-            customDataChartService.createCustomDataChart(c, username);
+
         }
         for (CustomDataDto c : customDatas) {
             // CustomData 저장
