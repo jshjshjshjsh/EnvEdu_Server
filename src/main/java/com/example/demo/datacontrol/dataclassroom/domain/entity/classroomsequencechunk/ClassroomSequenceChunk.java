@@ -42,9 +42,7 @@ public class ClassroomSequenceChunk {
     private String url;
 
     // 표
-    @Transient
     private String properties;
-    @Transient
     private String data;
 
     // 차트
@@ -67,6 +65,11 @@ public class ClassroomSequenceChunk {
 
     public void updateCustomDataChart(CustomDataChart customDataChart) {
         this.customDataChart = customDataChart;
+    }
+
+    public void deletePropertiesAndData(){
+        this.properties = null;
+        this.data = null;
     }
 
     public ClassroomSequenceChunk(ClassroomSequence classroomSequence, ClassroomSequenceType classroomSequenceType, Boolean studentVisibleStatus, String title, String content, String url, String properties, String data) {
