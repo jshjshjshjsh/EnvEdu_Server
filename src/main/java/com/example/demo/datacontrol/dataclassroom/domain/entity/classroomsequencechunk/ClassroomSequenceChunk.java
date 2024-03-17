@@ -42,7 +42,9 @@ public class ClassroomSequenceChunk {
     private String url;
 
     // 표
+    @Transient
     private String properties;
+    @Transient
     private String data;
 
     // 차트
