@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,12 +22,15 @@ public class SurveyData {
     private SurveyEntity surveyEntity;
     @ManyToOne
     private SurveyAttribute surveyAttribute;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID dataUUID;
 
-    public SurveyData(String value, String sender, LocalDateTime sendTime, SurveyEntity surveyEntity, SurveyAttribute surveyAttribute) {
+    public SurveyData(String value, String sender, LocalDateTime sendTime, SurveyEntity surveyEntity, SurveyAttribute surveyAttribute, UUID dataUUID) {
         this.value = value;
         this.sender = sender;
         this.sendTime = sendTime;
         this.surveyEntity = surveyEntity;
         this.surveyAttribute = surveyAttribute;
+        this.dataUUID = dataUUID;
     }
 }
