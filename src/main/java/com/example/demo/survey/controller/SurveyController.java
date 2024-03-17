@@ -51,11 +51,17 @@ public class SurveyController {
     }
 
     /** INFO : 설문 응답 시 상품권 이미지 반환 */
-    @PostMapping("/survey/answer")
-    public ResponseEntity<?> answerSurvey(@RequestBody SurveyAnswerRequestDto surveyRequestDto, HttpServletRequest request){
-        //Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        //return new ResponseEntity<>(surveyService.answerSurvey(surveyRequestDto, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
-        return new ResponseEntity<>(surveyService.answerSurvey(surveyRequestDto, "Student1"), HttpStatus.OK);
+    @PostMapping("/survey/answer/{inviteCode}")
+    public ResponseEntity<?> answerSurvey(@PathVariable String inviteCode, @RequestBody SurveyAnswerRequestDto surveyRequestDto, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(surveyService.answerSurvey(inviteCode, surveyRequestDto, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(surveyService.answerSurvey(inviteCode, surveyRequestDto, "Student1"), HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/survey/answer/list/{inviteCode}")
+    public ResponseEntity<?> surveyAnswerList(@PathVariable String inviteCode){
+
+        return new ResponseEntity<>(surveyService.getSurveyAnswers(inviteCode), HttpStatus.OK);
     }
 
     @PostMapping("/admin/survey/create")

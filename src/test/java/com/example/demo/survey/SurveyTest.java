@@ -78,7 +78,7 @@ public class SurveyTest {
             for (Map.Entry<Long, String> entry : requestData.entrySet()) {
 
                 Optional<SurveyAttribute> findSurveyAttribute = surveyAttributeRepository.findById(entry.getKey());
-                surveyData.add(new SurveyData(entry.getValue(), surveyRequestDto.getSender(), now, surveyEntity, findSurveyAttribute.get()));
+                surveyData.add(new SurveyData(entry.getValue(), surveyRequestDto.getSender(), now, surveyEntity, findSurveyAttribute.get(), null));
             }
         }
         surveyDataRepository.saveAll(surveyData);

@@ -3,9 +3,7 @@ package com.example.demo.survey.service;
 import com.example.demo.admin.model.Admin;
 import com.example.demo.admin.repository.AdminRepository;
 import com.example.demo.aws.service.AwsService;
-import com.example.demo.survey.domain.dto.SurveyCreateRequestDto;
-import com.example.demo.survey.domain.dto.SurveyAnswerRequestDto;
-import com.example.demo.survey.domain.dto.SurveyResponseDto;
+import com.example.demo.survey.domain.dto.*;
 import com.example.demo.survey.domain.entity.SurveyAttribute;
 import com.example.demo.survey.domain.entity.SurveyData;
 import com.example.demo.survey.domain.entity.SurveyEntity;
@@ -34,6 +32,32 @@ public class SurveyService {
     private final SurveyRewardRepository surveyRewardRepository;
     private final SurveyDataRepository surveyDataRepository;
     private final AwsService awsService;
+
+    @Transactional(readOnly = true)
+    public List<SurveyAnswerResponseDto> getSurveyAnswers(String inviteCode){
+        List<SurveyAnswerResponseDto> result = new ArrayList<>();
+        Optional<SurveyEntity> surveyEntity = surveyEntityRepository.findByInviteCode(inviteCode);
+        List<SurveyData> findSurveyData = surveyDataRepository.findAllBySurveyEntity(surveyEntity.get());
+
+        UUID before = null;
+        SurveyAnswerResponseDto item = null;
+
+        for (SurveyData sd : findSurveyData) {
+
+            if (!sd.getDataUUID().equals(before)){
+                item = new SurveyAnswerResponseDto(sd.getSender(), sd.getSendTime());
+                item.getAnswerList().add(new SurveySingleAnswerResponseDto(sd.getSurveyAttribute().getId(), sd.getValue()));
+                before = sd.getDataUUID();
+                result.add(item);
+                continue;
+            }
+
+            item.getAnswerList().add(new SurveySingleAnswerResponseDto(sd.getSurveyAttribute().getId(), sd.getValue()));
+            before = sd.getDataUUID();
+        }
+
+        return result;
+    }
 
     @Transactional
     public String getSurveyRewardAWSImage(String inviteCode, String receiver){
@@ -86,26 +110,31 @@ public class SurveyService {
     }
 
     @Transactional
-    public String answerSurvey(SurveyAnswerRequestDto surveyRequestDto, String username){
+    public String answerSurvey(String inviteCode, SurveyAnswerRequestDto surveyRequestDto, String username){
         //Optional<User> user = userRepository.findByUsername(username);
 
         // 답변 저장 로직
         LocalDateTime now = LocalDateTime.now();
         List<SurveyData> surveyData = new ArrayList<>();
 
-        Optional<SurveyEntity> findSurveyEntity = surveyEntityRepository.findByInviteCode(surveyRequestDto.getInviteCode());
-
+        Optional<SurveyEntity> findSurveyEntity = surveyEntityRepository.findByInviteCode(inviteCode);
+        UUID uuid = UUID.randomUUID();
         for (Map<Long, String> requestData : surveyRequestDto.getAnswer()) {
             for (Map.Entry<Long, String> entry : requestData.entrySet()) {
 
                 surveyData.add(new SurveyData(entry.getValue(), surveyRequestDto.getSender(), now,
-                        findSurveyEntity.get(), findSurveyEntity.get().getSurveyAttributeById(entry.getKey())));
+                        findSurveyEntity.get(), findSurveyEntity.get().getSurveyAttributeById(entry.getKey()), uuid));
             }
         }
         surveyDataRepository.saveAll(surveyData);
 
         // 보상 반환 로직
-        return this.getSurveyRewardAWSImage(findSurveyEntity.get().getInviteCode(), surveyRequestDto.getSender());
+        try{
+            return this.getSurveyRewardAWSImage(findSurveyEntity.get().getInviteCode(), surveyRequestDto.getSender());
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Transactional
