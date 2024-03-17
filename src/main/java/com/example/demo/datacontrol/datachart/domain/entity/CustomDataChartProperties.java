@@ -2,6 +2,7 @@ package com.example.demo.datacontrol.datachart.domain.entity;
 
 import com.example.demo.datacontrol.datachart.domain.types.Axis;
 import com.example.demo.datacontrol.datachart.domain.types.AxisType;
+import com.example.demo.datacontrol.datachart.domain.types.ChartType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
@@ -20,6 +21,8 @@ public class CustomDataChartProperties {
     private Float minimumValue;
     private Float maximumValue;
     private Float stepSize;
+    @Enumerated(EnumType.STRING)
+    private ChartType chartType;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private CustomDataChart customDataChart;

@@ -27,7 +27,7 @@ public class CustomDataChartService {
     private final CustomDataRepository customDataRepository;
 
     @Transactional
-    public void createCustomDataChart(CustomDataChart customDataChart, String username){
+    public CustomDataChart createCustomDataChart(CustomDataChart customDataChart, String username){
         Optional<User> user = userRepository.findByUsername(username);
 
         Optional<CustomDataChart> findCustomDataChart = customDataChartRepository.findByClassIdAndChapterIdAndSequenceIdAndOwnerAndTitle(
@@ -45,6 +45,7 @@ public class CustomDataChartService {
         }
 
         customDataChartRepository.save(customDataChart);
+        return customDataChart;
     }
 
     @Transactional(readOnly = true)

@@ -44,7 +44,7 @@ public class CustomDataDto {
         List<String> resultList = new ArrayList<>();
 
         // Remove the outer brackets and split by ', ' to get individual elements
-        String[] elements = input.substring(1, input.length() - 1).split(", ");
+        String[] elements = input.substring(1, input.length() - 1).replaceAll(",", ", ").split(", ");
 
         for (String element : elements) {
             // Remove any leading or trailing whitespace
@@ -59,12 +59,12 @@ public class CustomDataDto {
         List<List<String>> resultList = new ArrayList<>();
 
         // Remove the outer brackets and split by "], [" to get individual lists
-        String[] lists = input.substring(2, input.length() - 2).split("\\], \\[");
+        String[] lists = input.substring(2, input.length() - 2).split("\\], \\[|\\],\\[");
 
         for (String list : lists) {
             List<String> innerList = new ArrayList<>();
             // Split each inner list by ", " to get individual elements
-            String[] elements = list.split(", ");
+            String[] elements = list.replaceAll(",", ", ").split(", ");
             for (String element : elements) {
                 // Remove any leading or trailing whitespace and brackets
                 element = element.trim().replaceAll("[\\[\\]]", "");
