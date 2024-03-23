@@ -9,13 +9,10 @@ import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomClass;
 import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomSequence;
 import com.example.demo.datacontrol.dataclassroom.domain.entity.classroomsequencechunk.ClassroomSequenceChunk;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSequenceType;
-import com.example.demo.datacontrol.dataclassroom.repository.ClassroomClassCriteriaQuery;
+import com.example.demo.datacontrol.dataclassroom.repository.ClassroomObjectCriteriaQuery;
 import com.example.demo.datacontrol.dataclassroom.repository.ClassroomClassRepository;
 import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
-import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
-import com.example.demo.datacontrol.dataliteracy.repository.CustomDataRepository;
 import com.example.demo.datacontrol.dataliteracy.service.DataLiteracyService;
-import com.example.demo.user.model.entity.Educator;
 import com.example.demo.user.model.entity.Student;
 import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.UserRepository;
@@ -32,7 +29,7 @@ import java.util.*;
 public class ClassroomService {
 
     private final ClassroomClassRepository classroomClassRepository;
-    private final ClassroomClassCriteriaQuery classroomClassCriteriaQuery;
+    private final ClassroomObjectCriteriaQuery classroomClassCriteriaQuery;
     private final UserService userService;
     private final UserRepository userRepository;
     private final CustomDataChartService customDataChartService;
@@ -161,7 +158,11 @@ public class ClassroomService {
     public List<ClassroomClass> findAllClassroomByGradeSubjectDataType(String grade, String subject,
                                                                        String dataType) {
 
-        List<ClassroomClass> allByGradeAndSubjectAndDataType = classroomClassCriteriaQuery.getClassroomClasses(grade, subject, dataType, ClassroomClass.class);
+        List<ClassroomClass> allByGradeAndSubjectAndDataType = classroomClassCriteriaQuery.getObjectByGradeAndSubjectAndDataType(grade, subject, dataType, ClassroomClass.class);
+
+        for (ClassroomClass classroom : allByGradeAndSubjectAndDataType) {
+            classroom.updateLabels();
+        }
         return allByGradeAndSubjectAndDataType;
     }
 }

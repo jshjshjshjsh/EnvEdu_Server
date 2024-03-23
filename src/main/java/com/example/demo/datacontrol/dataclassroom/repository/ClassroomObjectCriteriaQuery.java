@@ -4,12 +4,6 @@ import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomClass;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomDataType;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomStudentGrade;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSubjectType;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.jpa.HibernateEntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClassroomClassCriteriaQuery<T> {
+public class ClassroomObjectCriteriaQuery<T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public List<T> getClassroomClasses(String grade,
-                                                    String subject,
-                                                    String dataType, Class<T> entityType) {
+    public List<T> getObjectByGradeAndSubjectAndDataType(String grade,
+                                                         String subject,
+                                                         String dataType, Class<T> entityType) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
@@ -55,14 +49,6 @@ public class ClassroomClassCriteriaQuery<T> {
         query.select(root).where(predicates.toArray(new Predicate[]{}));
 
         List<T> result = entityManager.createQuery(query).getResultList();
-        if (ClassroomClass.class.equals(entityType)){
-            for (Object item : result) {
-                if (item instanceof ClassroomClass) {
-                    ClassroomClass classroom = (ClassroomClass) item;
-                    classroom.updateLabels();
-                }
-            }
-        }
 
         return result;
     }
