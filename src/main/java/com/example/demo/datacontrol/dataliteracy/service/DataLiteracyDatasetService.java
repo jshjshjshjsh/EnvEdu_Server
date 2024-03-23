@@ -1,6 +1,6 @@
 package com.example.demo.datacontrol.dataliteracy.service;
 
-import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
+import com.example.demo.datacontrol.dataclassroom.repository.ClassroomObjectCriteriaQuery;
 import com.example.demo.datacontrol.dataliteracy.model.dto.DataLiteracyDatasetDto;
 import com.example.demo.datacontrol.dataliteracy.model.entity.DataLiteracyDataset;
 import com.example.demo.datacontrol.dataliteracy.repository.DataLiteracyDatasetRepository;
@@ -16,6 +16,7 @@ import java.util.UUID;
 public class DataLiteracyDatasetService {
     private final DataLiteracyService dataLiteracyService;
     private final DataLiteracyDatasetRepository dataLiteracyDatasetRepository;
+    private final ClassroomObjectCriteriaQuery classroomClassCriteriaQuery;
 
     @Transactional
     public void deleteDataset(Long id){
@@ -32,7 +33,10 @@ public class DataLiteracyDatasetService {
     }
 
     @Transactional(readOnly = true)
-    public List<DataLiteracyDataset> getDatasetList(){
-        return dataLiteracyDatasetRepository.findAll();
+    public List<DataLiteracyDataset> getDatasetList(String grade, String subject, String dataType){
+        List<DataLiteracyDataset> findDataSet = classroomClassCriteriaQuery.getObjectByGradeAndSubjectAndDataType(grade, subject, dataType, DataLiteracyDataset.class);
+        for (DataLiteracyDataset dataset: findDataSet)
+            dataset.updateEnumToLabel();
+        return findDataSet;
     }
 }
