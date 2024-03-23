@@ -161,7 +161,7 @@ public class ClassroomService {
     public List<ClassroomClass> findAllClassroomByGradeSubjectDataType(String grade, String subject,
                                                                        String dataType) {
 
-        List<ClassroomClass> allByGradeAndSubjectAndDataType = classroomClassCriteriaQuery.getClassroomClasses(grade, subject, dataType);
+        List<ClassroomClass> allByGradeAndSubjectAndDataType = classroomClassCriteriaQuery.getClassroomClasses(grade, subject, dataType, ClassroomClass.class);
         return allByGradeAndSubjectAndDataType;
     }
 }

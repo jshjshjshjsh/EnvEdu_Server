@@ -23,20 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClassroomClassCriteriaQuery {
+public class ClassroomClassCriteriaQuery<T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public List<ClassroomClass> getClassroomClasses(String grade,
+    public List<T> getClassroomClasses(String grade,
                                                     String subject,
-                                                    String dataType) {
+                                                    String dataType, Class<T> entityType) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<ClassroomClass> query = builder.createQuery(ClassroomClass.class);
-        Root<ClassroomClass> root = query.from(ClassroomClass.class);
+        CriteriaQuery<T> query = builder.createQuery(entityType);
+        Root<T> root = query.from(entityType);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -54,9 +54,14 @@ public class ClassroomClassCriteriaQuery {
 
         query.select(root).where(predicates.toArray(new Predicate[]{}));
 
-        List<ClassroomClass> result = entityManager.createQuery(query).getResultList();
-        for (ClassroomClass classroom : result) {
-            classroom.updateLabels();
+        List<T> result = entityManager.createQuery(query).getResultList();
+        if (ClassroomClass.class.equals(entityType)){
+            for (Object item : result) {
+                if (item instanceof ClassroomClass) {
+                    ClassroomClass classroom = (ClassroomClass) item;
+                    classroom.updateLabels();
+                }
+            }
         }
 
         return result;
