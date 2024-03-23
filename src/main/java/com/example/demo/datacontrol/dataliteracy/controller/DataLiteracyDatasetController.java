@@ -35,7 +35,8 @@ public class DataLiteracyDatasetController {
     }
 
     @GetMapping("/dataset/list")
-    public ResponseEntity<?> getDatasetList(){
-        return new ResponseEntity<>(dataLiteracyDatasetService.getDatasetList(), HttpStatus.OK);
+    public ResponseEntity<?> getDatasetList(@RequestParam(required = false) String grade, @RequestParam(required = false) String subject,
+                                            @RequestParam(required = false) String dataType){
+        return new ResponseEntity<>(dataLiteracyDatasetService.getDatasetList(grade, subject, dataType), HttpStatus.OK);
     }
 }

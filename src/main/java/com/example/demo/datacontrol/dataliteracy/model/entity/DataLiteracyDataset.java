@@ -47,6 +47,18 @@ public class DataLiteracyDataset {
         this.dataTypeLabel = dataTypeLabel;
     }
 
+    public void updateEnumToLabel(){
+
+        if(grade != null)
+            gradeLabel = grade.label;
+        if(subject != null)
+            subjectLabel = subject.label;
+        if(dataType != null)
+            dataTypeLabel = dataType.label;
+
+
+    }
+
     public void updateLabelToEnum(){
         if(gradeLabel != null)
             grade = ClassroomStudentGrade.getByLabel(gradeLabel);

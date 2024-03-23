@@ -4,12 +4,6 @@ import com.example.demo.datacontrol.dataclassroom.domain.entity.ClassroomClass;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomDataType;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomStudentGrade;
 import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomSubjectType;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.jpa.HibernateEntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,20 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ClassroomClassCriteriaQuery {
+public class ClassroomObjectCriteriaQuery<T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public List<ClassroomClass> getClassroomClasses(String grade,
-                                                    String subject,
-                                                    String dataType) {
+    public List<T> getObjectByGradeAndSubjectAndDataType(String grade,
+                                                         String subject,
+                                                         String dataType, Class<T> entityType) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<ClassroomClass> query = builder.createQuery(ClassroomClass.class);
-        Root<ClassroomClass> root = query.from(ClassroomClass.class);
+        CriteriaQuery<T> query = builder.createQuery(entityType);
+        Root<T> root = query.from(entityType);
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -54,10 +48,7 @@ public class ClassroomClassCriteriaQuery {
 
         query.select(root).where(predicates.toArray(new Predicate[]{}));
 
-        List<ClassroomClass> result = entityManager.createQuery(query).getResultList();
-        for (ClassroomClass classroom : result) {
-            classroom.updateLabels();
-        }
+        List<T> result = entityManager.createQuery(query).getResultList();
 
         return result;
     }
