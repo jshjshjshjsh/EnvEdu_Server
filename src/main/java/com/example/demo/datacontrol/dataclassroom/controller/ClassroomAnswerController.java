@@ -21,7 +21,7 @@ public class ClassroomAnswerController {
 
     @GetMapping("/dataLiteracy/classroom/answer/share")
     public ResponseEntity<?> findSharedTextData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId,
-                                                   @RequestParam ClassroomAnswerDataType answerType, HttpServletRequest request){
+                                                   @RequestParam(required = false) ClassroomAnswerDataType answerType, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         return new ResponseEntity<>(classroomAnswerService.findSharedTextData(userInfo.get(JwtUtil.claimUsername).toString(), classId, chapterId, sequenceId, answerType), HttpStatus.OK);
         //return new ResponseEntity<>(classroomAnswerService.findSharedTextData("Student1", classId, chapterId, sequenceId, answerType), HttpStatus.OK);
@@ -29,7 +29,7 @@ public class ClassroomAnswerController {
 
     @GetMapping("/dataLiteracy/classroom/answer/submit")
     public ResponseEntity<?> findSubmittedTextData(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId,
-                                                   @RequestParam ClassroomAnswerDataType answerType, HttpServletRequest request){
+                                                   @RequestParam(required = false) ClassroomAnswerDataType answerType, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         return new ResponseEntity<>(classroomAnswerService.findSubmittedTextData(userInfo.get(JwtUtil.claimUsername).toString(), classId, chapterId, sequenceId, answerType), HttpStatus.OK);
         //return new ResponseEntity<>(classroomAnswerService.findSubmittedTextData("Educator1", classId, chapterId, sequenceId, answerType), HttpStatus.OK);
