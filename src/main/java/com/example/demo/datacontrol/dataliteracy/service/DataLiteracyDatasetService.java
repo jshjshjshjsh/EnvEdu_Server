@@ -34,6 +34,8 @@ public class DataLiteracyDatasetService {
 
     @Transactional(readOnly = true)
     public List<DataLiteracyDataset> getDatasetList(String grade, String subject, String dataType){
+        if (dataType != null && dataType.isEmpty())
+            dataType = null;
         List<DataLiteracyDataset> findDataSet = classroomClassCriteriaQuery.getObjectByGradeAndSubjectAndDataType(grade, subject, dataType, DataLiteracyDataset.class);
         for (DataLiteracyDataset dataset: findDataSet)
             dataset.updateEnumToLabel();
