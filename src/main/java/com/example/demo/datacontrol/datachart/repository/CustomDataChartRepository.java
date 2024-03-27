@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CustomDataChartRepository extends JpaRepository<CustomDataChart, Long> {
+    Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanSubmit(Long classId, Long chapterId, Long sequenceId, User owner, Boolean canSubmit);
+    Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanShare(Long classId, Long chapterId, Long sequenceId, User owner, Boolean canShare);
     Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
     List<CustomDataChart> findAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
     Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwnerAndTitle(Long classId, Long chapterId, Long sequenceId, User owner, String title);

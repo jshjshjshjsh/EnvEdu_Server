@@ -103,7 +103,7 @@ public class ClassroomService {
                     }
                     customDataCharts.add(new CustomDataChart(chunk.getTitle(), chunk.getLegendPosition(), chunk.getLabelPosition(),
                             user.get(), username, null, null, null, chunk.getChartType(), target_uuid, true,
-                            chunk.getAxisProperties()));
+                            chunk.getAxisProperties(), chunk.getCanShare(), chunk.getCanSubmit()));
                     chunk.deletePropertiesAndData();
                 }
                 if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.MATRIX)) {
