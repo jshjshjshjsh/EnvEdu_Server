@@ -90,6 +90,22 @@ public class DataLiteracyController {
         return new ResponseEntity<>(code, HttpStatus.OK);
     }
 
+    @GetMapping("/dataLiteracy/customData/list/shared")
+    public ResponseEntity<?> getSharedCustomDataList(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getSharedCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.getSharedCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/dataLiteracy/customData/list/submit")
+    public ResponseEntity<?> getSubmittedCustomDataList(@RequestParam Long classId, @RequestParam Long chapterId, @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(dataLiteracyService.getSubmittedCustomData(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(dataLiteracyService.getSubmittedCustomData(classId, chapterId, sequenceId, "Student1"), HttpStatus.OK);
+
+    }
+
     @GetMapping("/dataLiteracy/customData/list")
     public ResponseEntity<?> getCustomDataList(HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();

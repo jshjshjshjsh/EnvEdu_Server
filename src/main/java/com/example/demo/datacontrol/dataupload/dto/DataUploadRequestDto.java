@@ -20,4 +20,6 @@ public class DataUploadRequestDto {
     private UUID uuid;
     private LocalDateTime saveDate;
     private User owner;
+    private Boolean canShared;
+    private Boolean canSubmit;
 }

@@ -35,6 +35,8 @@ public class CustomData extends Data implements Cloneable {
     private Long chapterId;
     private Long sequenceId;
     private Boolean isSubmit = false;
+    private Boolean canSubmit = false;
+    private Boolean canShared = false;
 
     @Override
     public CustomData clone() {
@@ -55,7 +57,7 @@ public class CustomData extends Data implements Cloneable {
         this.username = owner.getUsername();
     }
     public CustomData(String properties, String data, String axisTypes, String memo, UUID uuid, LocalDateTime saveDate, User owner,
-                      Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
+                      Long classId, Long chapterId, Long sequenceId, Boolean isSubmit, Boolean canShared, Boolean canSubmit) {
         this.properties = properties;
         this.data = data;
         this.axisTypes = axisTypes;
@@ -64,6 +66,8 @@ public class CustomData extends Data implements Cloneable {
         this.chapterId = chapterId;
         this.sequenceId = sequenceId;
         this.isSubmit = isSubmit;
+        this.canShared = canShared;
+        this.canSubmit = canSubmit;
         super.updateBasicAttribute(uuid, saveDate, memo, DataEnumTypes.CUSTOM);
     }
 }
