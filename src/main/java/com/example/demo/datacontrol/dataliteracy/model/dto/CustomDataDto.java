@@ -29,6 +29,8 @@ public class CustomDataDto {
     private Long chapterId;
     private Long sequenceId;
     private Boolean isSubmit;
+    private Boolean canShared = false;
+    private Boolean canSubmit = false;
 
     public void updateClassroomIds(Long classId, Long chapterId, Long sequenceId) {
         this.classId = classId;
@@ -126,14 +128,16 @@ public class CustomDataDto {
             }
             record = record.substring(0, record.length() - 2);
 
-            customData.add(new CustomData(properties, record, axisTypes, memo, uuid, now, owner, classId, chapterId, sequenceId, isSubmit));
+            customData.add(new CustomData(properties, record, axisTypes, memo, uuid, now, owner, classId, chapterId, sequenceId, isSubmit, canShared, canSubmit));
         }
 
 
         return customData;
     }
 
-    public CustomDataDto(List<String> properties, List<List<String>> data, List<String> axisTypes, UUID uuid, LocalDateTime saveDate, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit) {
+    public CustomDataDto(List<String> properties, List<List<String>> data, List<String> axisTypes, UUID uuid, LocalDateTime saveDate, String memo, User owner, Long classId, Long chapterId, Long sequenceId, Boolean isSubmit,
+                         Boolean canShared,
+                         Boolean canSubmit) {
         this.properties = properties;
         this.data = data;
         this.axisTypes = axisTypes;
@@ -145,5 +149,7 @@ public class CustomDataDto {
         this.chapterId = chapterId;
         this.sequenceId = sequenceId;
         this.isSubmit = isSubmit;
+        this.canShared = canShared;
+        this.canSubmit = canSubmit;
     }
 }

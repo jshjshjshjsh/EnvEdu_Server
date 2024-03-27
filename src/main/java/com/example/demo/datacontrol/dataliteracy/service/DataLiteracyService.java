@@ -34,6 +34,29 @@ public class DataLiteracyService {
     private final DataChunkService dataChunkService;
     private final DataFolderRepository dataFolderRepository;
 
+    @Transactional(readOnly = true)
+    public List<CustomData> getSharedCustomData(Long classId, Long chapterId, Long sequenceId, String username) {
+        List<Student_Educator> students = userService.findStudentsByStudentOrEducator(username);
+        List<CustomData> result = new ArrayList<>();
+
+        for (Student_Educator s : students) {
+            Optional<List<CustomData>> findCustomData = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanShared(classId, chapterId, sequenceId, s.getStudent(), true);
+            result.addAll(findCustomData.get());
+        }
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomData> getSubmittedCustomData(Long classId, Long chapterId, Long sequenceId, String username) {
+        List<Student_Educator> students = userService.findStudentsByStudentOrEducator(username);
+        List<CustomData> result = new ArrayList<>();
+
+        for (Student_Educator s : students) {
+            Optional<List<CustomData>> findCustomData = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanSubmit(classId, chapterId, sequenceId, s.getStudent(), true);
+            result.addAll(findCustomData.get());
+        }
+        return result;
+    }
 
     @Transactional
     public void updateSequenceDataSubmit(CustomDataDto customDataDto, String username){
@@ -68,7 +91,7 @@ public class DataLiteracyService {
 
         List<CustomData> result = new ArrayList<>();
         for (Student_Educator s_e: students){
-            Optional<List<CustomData>> find = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndIsSubmit(
+            Optional<List<CustomData>> find = customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanSubmit(
                     classId, chapterId, sequenceId, s_e.getStudent(), true);
             result.addAll(find.get());
         }
@@ -149,7 +172,7 @@ public class DataLiteracyService {
             LocalDateTime now = LocalDateTime.now();
 
             for (int i = 0; i < chunks.length; i++) {
-                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), axisTypes, findCustomData.get().getMemo(), uuid, now, user.get(),null,null,null, false));
+                customDataList.add(new CustomData(properties, chunks[i].replaceAll("\\[|\\]", ""), axisTypes, findCustomData.get().getMemo(), uuid, now, user.get(),null,null,null, false, false, false));
             }
 
             customDataRepository.saveAll(customDataList);

@@ -98,7 +98,7 @@ public class ClassroomService {
                 if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.CHART)) {
                     UUID target_uuid = chunk.getUuid();
                     if (chunk.getData() != null && chunk.getProperties() != null) {
-                        customDataForChartList.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false));
+                        customDataForChartList.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false, chunk.getCanShare(), chunk.getCanSubmit()));
                         target_uuid = UUID.fromString("00000000-0000-0000-0000-000000000111");
                     }
                     customDataCharts.add(new CustomDataChart(chunk.getTitle(), chunk.getLegendPosition(), chunk.getLabelPosition(),
@@ -107,7 +107,7 @@ public class ClassroomService {
                     chunk.deletePropertiesAndData();
                 }
                 if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.MATRIX)) {
-                    customDatas.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false));
+                    customDatas.add(new CustomDataDto(CustomDataDto.parseStringToProperties(chunk.getProperties()), CustomDataDto.parseStringToData(chunk.getData()), null, null, LocalDateTime.now(), null, user.get(), null, null, null, false, chunk.getCanShare(), chunk.getCanSubmit()));
 
                 }
             }

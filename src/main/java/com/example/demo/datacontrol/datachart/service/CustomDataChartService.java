@@ -53,7 +53,7 @@ public class CustomDataChartService {
 
         // 여기서부터 만약 Properties랑 Data가 있다면 자동 저장
         if (customDataChart.getProperties() != null && customDataChart.getData() != null){
-            CustomDataDto c = new CustomDataDto(CustomDataDto.parseStringToProperties(customDataChart.getProperties()), CustomDataDto.parseStringToData(customDataChart.getData()), null, null, LocalDateTime.now(), null, user.get(), customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), customDataChart.getCanSubmit());
+            CustomDataDto c = new CustomDataDto(CustomDataDto.parseStringToProperties(customDataChart.getProperties()), CustomDataDto.parseStringToData(customDataChart.getData()), null, null, LocalDateTime.now(), null, user.get(), customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), customDataChart.getCanSubmit(), customDataChart.getCanShare(), customDataChart.getCanSubmit());
 
             UUID uuid = dataLiteracyService.uploadCustomData(c, username);
             savedCustomDataChart.updateUuid(uuid);
