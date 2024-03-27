@@ -34,6 +34,8 @@ public class CustomDataChart {
     private Long classId;
     private Long chapterId;
     private Long sequenceId;
+    private Boolean canShare = false;
+    private Boolean canSubmit = false;
     @Enumerated(EnumType.STRING)
     private ChartType chartType;
     @Column(columnDefinition = "BINARY(16)")
@@ -41,6 +43,10 @@ public class CustomDataChart {
     private Boolean forClass;
     @OneToMany(mappedBy = "customDataChart", cascade = CascadeType.ALL)
     private List<CustomDataChartProperties> axisProperties = new ArrayList<>();
+    @Transient
+    private String properties;
+    @Transient
+    private String data;
 
     public void updateOwner(User owner){
         this.owner = owner;
@@ -60,7 +66,12 @@ public class CustomDataChart {
         this.sequenceId = sequenceId;
     }
 
-    public CustomDataChart(String title, ChartLegendPosition legendPosition, ChartLabelPosition labelPosition, User owner, String username, Long classId, Long chapterId, Long sequenceId, ChartType chartType, UUID uuid, Boolean forClass, List<CustomDataChartProperties> axisProperties) {
+    public void updateShareAndSubmit(Boolean canShare, Boolean canSubmit){
+        this.canShare = canShare;
+        this.canSubmit = canSubmit;
+    }
+
+    public CustomDataChart(String title, ChartLegendPosition legendPosition, ChartLabelPosition labelPosition, User owner, String username, Long classId, Long chapterId, Long sequenceId, ChartType chartType, UUID uuid, Boolean forClass, List<CustomDataChartProperties> axisProperties, Boolean canShare, Boolean canSubmit) {
         this.title = title;
         this.legendPosition = legendPosition;
         this.labelPosition = labelPosition;
@@ -73,5 +84,7 @@ public class CustomDataChart {
         this.uuid = uuid;
         this.forClass = forClass;
         this.axisProperties = axisProperties;
+        this.canShare = canShare;
+        this.canSubmit = canSubmit;
     }
 }

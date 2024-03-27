@@ -3,8 +3,10 @@ package com.example.demo.datacontrol.datachart.service;
 import com.example.demo.datacontrol.datachart.domain.entity.CustomDataChart;
 import com.example.demo.datacontrol.datachart.domain.entity.CustomDataChartProperties;
 import com.example.demo.datacontrol.datachart.repository.CustomDataChartRepository;
+import com.example.demo.datacontrol.dataliteracy.model.dto.CustomDataDto;
 import com.example.demo.datacontrol.dataliteracy.model.entity.CustomData;
 import com.example.demo.datacontrol.dataliteracy.repository.CustomDataRepository;
+import com.example.demo.datacontrol.dataliteracy.service.DataLiteracyService;
 import com.example.demo.user.model.entity.Student_Educator;
 import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.UserRepository;
@@ -13,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class CustomDataChartService {
     private final UserRepository userRepository;
     private final CustomDataChartRepository customDataChartRepository;
     private final CustomDataRepository customDataRepository;
+    private final DataLiteracyService dataLiteracyService;
 
     @Transactional
     public CustomDataChart createCustomDataChart(CustomDataChart customDataChart, String username){
@@ -44,8 +49,31 @@ public class CustomDataChartService {
             properties.updateCustomDataChart(customDataChart);
         }
 
-        customDataChartRepository.save(customDataChart);
+        CustomDataChart savedCustomDataChart = customDataChartRepository.save(customDataChart);
+
+        // 여기서부터 만약 Properties랑 Data가 있다면 자동 저장
+        if (customDataChart.getProperties() != null && customDataChart.getData() != null){
+            CustomDataDto c = new CustomDataDto(CustomDataDto.parseStringToProperties(customDataChart.getProperties()), CustomDataDto.parseStringToData(customDataChart.getData()), null, null, LocalDateTime.now(), null, user.get(), customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), customDataChart.getCanSubmit());
+
+            UUID uuid = dataLiteracyService.uploadCustomData(c, username);
+            savedCustomDataChart.updateUuid(uuid);
+        }
+
         return customDataChart;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomDataChart> getSubmittedRelateCustomDataChart(Long classId, Long chapterId, Long sequenceId, String username){
+        List<Student_Educator> students = userService.findStudentsByStudentOrEducator(username);
+
+        List<CustomDataChart> result = new ArrayList<>();
+        for (Student_Educator s_e: students){
+            Optional<CustomDataChart> find = customDataChartRepository.findByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanSubmit(
+                    classId, chapterId, sequenceId, s_e.getStudent(), true);
+            find.ifPresent(result::add);
+        }
+
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -54,8 +82,8 @@ public class CustomDataChartService {
 
         List<CustomDataChart> result = new ArrayList<>();
         for (Student_Educator s_e: students){
-            Optional<CustomDataChart> find = customDataChartRepository.findByClassIdAndChapterIdAndSequenceIdAndOwner(
-                    classId, chapterId, sequenceId, s_e.getStudent());
+            Optional<CustomDataChart> find = customDataChartRepository.findByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanShare(
+                    classId, chapterId, sequenceId, s_e.getStudent(), true);
             find.ifPresent(result::add);
         }
 

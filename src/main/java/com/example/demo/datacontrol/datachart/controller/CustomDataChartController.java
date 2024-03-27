@@ -45,6 +45,14 @@ public class CustomDataChartController {
     }
 
 
+    @GetMapping("/dataLiteracy/chart/students/properties/submit")
+    public ResponseEntity<?> getSubmittedRelatedCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
+                                                       @RequestParam Long sequenceId, HttpServletRequest request){
+        Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        return new ResponseEntity<>(customDataChartService.getSubmittedRelateCustomDataChart(classId, chapterId, sequenceId, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        //return new ResponseEntity<>(customDataChartService.getSubmittedRelateCustomDataChart(classId, chapterId, sequenceId, "Educator1"), HttpStatus.OK);
+    }
+
     @GetMapping("/dataLiteracy/chart/students/properties")
     public ResponseEntity<?> getRelatedCustomDataChart(@RequestParam Long classId, @RequestParam Long chapterId,
                                                        @RequestParam Long sequenceId, HttpServletRequest request){
