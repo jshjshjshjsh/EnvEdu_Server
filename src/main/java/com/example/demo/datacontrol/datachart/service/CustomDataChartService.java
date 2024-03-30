@@ -36,30 +36,37 @@ public class CustomDataChartService {
         Optional<User> user = userRepository.findByUsername(username);
 
         Optional<CustomDataChart> findCustomDataChart = customDataChartRepository.findByClassIdAndChapterIdAndSequenceIdAndOwnerAndTitle(
-            customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), user.get(),customDataChart.getTitle());
+                customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), user.get(),customDataChart.getTitle());
 
-        findCustomDataChart.ifPresent(dataChart -> customDataChartRepository.deleteById(dataChart.getId()));
+        if (findCustomDataChart.isPresent()) {
+            // 만약 엔티티가 이미 있는 경우 업데이트
+            CustomDataChart existingCustomDataChart = findCustomDataChart.get();
+            // 커스텀 데이터 차트에 오너 업데이트
+            existingCustomDataChart.updateOwner(user.get());
+            List<CustomData> customDataList = customDataRepository.findCustomDataByDataUUID(customDataChart.getUuid()).get();
+            for (CustomData customData : customDataList) {
+                customData.updateIsSubmit(true);
+            }
+            for (CustomDataChartProperties properties : customDataChart.getAxisProperties()) {
+                properties.updateCustomDataChart(existingCustomDataChart);
+            }
+            // 업데이트 된 엔티티 생성
+            return customDataChartRepository.save(existingCustomDataChart);
+        } else {
+            // 엔티티가 없다면 새 엔티티 생성
+            customDataChart.updateOwner(user.get());
+            CustomDataChart savedCustomDataChart = customDataChartRepository.save(customDataChart);
 
-        customDataChart.updateOwner(user.get());
-        List<CustomData> customDataList = customDataRepository.findCustomDataByDataUUID(customDataChart.getUuid()).get();
-        for (CustomData customData : customDataList) {
-            customData.updateIsSubmit(true);
+            // 여기서부터 만약 Properties랑 Data가 있다면 자동 저장
+            if (customDataChart.getProperties() != null && customDataChart.getData() != null){
+                CustomDataDto c = new CustomDataDto(CustomDataDto.parseStringToProperties(customDataChart.getProperties()), CustomDataDto.parseStringToData(customDataChart.getData()), null, null, LocalDateTime.now(), null, user.get(), customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), customDataChart.getCanSubmit(), customDataChart.getCanShare(), customDataChart.getCanSubmit());
+
+                UUID uuid = dataLiteracyService.uploadCustomData(c, username);
+                savedCustomDataChart.updateUuid(uuid);
+            }
+
+            return savedCustomDataChart;
         }
-        for (CustomDataChartProperties properties : customDataChart.getAxisProperties()) {
-            properties.updateCustomDataChart(customDataChart);
-        }
-
-        CustomDataChart savedCustomDataChart = customDataChartRepository.save(customDataChart);
-
-        // 여기서부터 만약 Properties랑 Data가 있다면 자동 저장
-        if (customDataChart.getProperties() != null && customDataChart.getData() != null){
-            CustomDataDto c = new CustomDataDto(CustomDataDto.parseStringToProperties(customDataChart.getProperties()), CustomDataDto.parseStringToData(customDataChart.getData()), null, null, LocalDateTime.now(), null, user.get(), customDataChart.getClassId(), customDataChart.getChapterId(), customDataChart.getSequenceId(), customDataChart.getCanSubmit(), customDataChart.getCanShare(), customDataChart.getCanSubmit());
-
-            UUID uuid = dataLiteracyService.uploadCustomData(c, username);
-            savedCustomDataChart.updateUuid(uuid);
-        }
-
-        return customDataChart;
     }
 
     @Transactional(readOnly = true)
