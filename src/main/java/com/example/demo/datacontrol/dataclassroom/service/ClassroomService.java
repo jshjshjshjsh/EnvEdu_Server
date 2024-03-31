@@ -126,7 +126,7 @@ public class ClassroomService {
                     }
                 }
                 // todo : 버그 있는데 차트 2개 입력해도 1개 저장됨
-                CustomDataChart customDataChartSaved = customDataChartService.createCustomDataChart(c, username);
+                CustomDataChart customDataChartSaved = customDataChartService.createCustomDataChart(c, username, false);
                 for (ClassroomSequenceChunk chunk : save.getClassroomChapters().get(0).getClassroomSequences().get(i).getSequenceChunks()) {
                     if (chunk.getClassroomSequenceType().equals(ClassroomSequenceType.CHART)) {
                         chunk.updateCustomDataChart(customDataChartSaved);

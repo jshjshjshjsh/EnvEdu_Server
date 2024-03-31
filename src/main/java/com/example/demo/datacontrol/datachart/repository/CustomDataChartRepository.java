@@ -12,5 +12,4 @@ public interface CustomDataChartRepository extends JpaRepository<CustomDataChart
     Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwnerAndCanShare(Long classId, Long chapterId, Long sequenceId, User owner, Boolean canShare);
     Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
     List<CustomDataChart> findAllByClassIdAndChapterIdAndSequenceIdAndOwner(Long classId, Long chapterId, Long sequenceId, User owner);
-    Optional<CustomDataChart> findByClassIdAndChapterIdAndSequenceIdAndOwnerAndTitle(Long classId, Long chapterId, Long sequenceId, User owner, String title);
 }

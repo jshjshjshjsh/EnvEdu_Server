@@ -30,7 +30,7 @@ public class CustomDataChartController {
 
     @PostMapping("/test/dataLiteracy/chart/properties/{username}")
     public ResponseEntity<?> createCustomDataChart(@RequestBody CustomDataChart customDataChart, @PathVariable String username, HttpServletRequest request){
-        customDataChartService.createCustomDataChart(customDataChart, username);
+        customDataChartService.createCustomDataChart(customDataChart, username, true);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -38,8 +38,8 @@ public class CustomDataChartController {
     @PostMapping("/dataLiteracy/chart/properties")
     public ResponseEntity<?> createCustomDataChart(@RequestBody CustomDataChart customDataChart, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        customDataChartService.createCustomDataChart(customDataChart, userInfo.get(JwtUtil.claimUsername).toString());
-        //customDataChartService.createCustomDataChart(customDataChart, "Student1");
+        customDataChartService.createCustomDataChart(customDataChart, userInfo.get(JwtUtil.claimUsername).toString(), true);
+        //customDataChartService.createCustomDataChart(customDataChart, "Student1", true);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
