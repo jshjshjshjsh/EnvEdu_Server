@@ -37,10 +37,10 @@ public class SecurityConfig {
                 .logout().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
-                                "/air-quality/**","/ocean-quality/**","/survey/**").permitAll()
-                        .mvcMatchers("/educating/**","/dataLiteracy/**","/classroom/**","/dataset/list").permitAll()
+                                "/air-quality/**","/ocean-quality/**","/survey/**", "/dataset/list", "/dataset/**",
+                                "/educating/**","/dataLiteracy/**").permitAll()
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**",
-                                "/datafolder/**","/mydata/**","/dataupload/**", "/student/join/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
+                                "/datafolder/**","/mydata/**","/dataupload/**", "/student/join/**","/classroom/**").hasAnyRole("STUDENT","EDUCATOR","MANAGER","ADMIN")
                         .mvcMatchers("/educator/**").hasAnyRole("EDUCATOR","MANAGER","ADMIN")
                         //.mvcMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/manager/**","/dataset/manage/**").hasAnyRole("MANAGER","ADMIN")
