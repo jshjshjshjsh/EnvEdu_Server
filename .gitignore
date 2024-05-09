@@ -3,6 +3,7 @@
 
 ### properties ###
 *.properties
+*.yml
 
 
 ### STS ###
