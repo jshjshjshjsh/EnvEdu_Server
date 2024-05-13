@@ -55,6 +55,9 @@ fi
 touch $LOG_FILE
 chmod 664 $LOG_FILE
 
+ls -l $JAR_NAME  # 파일 권한 확인
+chmod 644 $JAR_NAME  # 읽기와 실행 권한 부여
+
 # JAR 파일 배포
 echo "> 배포 시작: $JAR_PATH"
 nohup java -jar $JAR_PATH > $LOG_FILE 2>&1 &
