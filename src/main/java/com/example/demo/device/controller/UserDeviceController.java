@@ -5,6 +5,7 @@ import com.example.demo.device.dto.request.DeviceUpdateDTO;
 import com.example.demo.device.service.UserDeviceService;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class UserDeviceController {
     private final UserDeviceService userDeviceService;
 
@@ -49,6 +51,7 @@ public class UserDeviceController {
     @GetMapping("/seed/device")
     private ResponseEntity<?> getMyDevices(HttpServletRequest request) {
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+        log.info("seed/device의 userInfo null여부 : " + userInfo.isEmpty());
         return new ResponseEntity<>(userDeviceService.getDeviceList(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
     }
 
