@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,15 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class SeedController {
     private final SeedService seedService;
 
     @GetMapping("/seed/mine/chunk")
     private ResponseEntity<?> getMySeedChunked(@RequestParam UUID dataUUID, HttpServletRequest request){
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
+
+        log.info("1");
 
         return new ResponseEntity<>(seedService.findMySeedChunked(dataUUID, userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
     }
@@ -41,6 +45,9 @@ public class SeedController {
     @GetMapping("/seed/fetch")
     private ResponseDTO<List<Seed>> fetchData(@RequestParam Map<String,String> mp)
     {
+
+        log.info("2");
+
         String username = mp.get("username");
         String start = mp.get("startDate");
         String end = mp.get("endDate");
@@ -62,6 +69,9 @@ public class SeedController {
     @PostMapping("/seed/save/single")
     private ResponseEntity<?> saveSingleSeed(@RequestBody Seed seed, HttpServletRequest request){
 
+        log.info("3");
+
+
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
 
         seedService.saveSingleData(seed, userInfo.get(JwtUtil.claimUsername).toString(), "");
@@ -71,6 +81,9 @@ public class SeedController {
 
     @DeleteMapping("/seed/delete")
     public ResponseEntity<?> deleteSingle(@RequestBody List<DeleteSeedDto> deleteSeedDto) throws NoSuchFieldException, IllegalAccessException {
+
+        log.info("4");
+
         seedService.updateSingleSeed(deleteSeedDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -83,6 +96,9 @@ public class SeedController {
      */
     @PostMapping("/seed/save/continuous")
     private ResponseDTO<Object> saveData(@RequestBody DataSaveDTO data){
+
+        log.info("5");
+
         List<Seed> list = new ArrayList<>();
         data.getData().forEach((elem)->{
             ObjectMapper objectMapper = new ObjectMapper();

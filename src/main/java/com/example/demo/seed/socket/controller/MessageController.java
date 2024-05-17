@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,11 +28,21 @@ public class MessageController {
      */
     @MessageMapping("/device")
     private void fromESP2Client(@Payload Seed seed) {
-        log.info("seed.getMac = " + seed.getMac() + ", seed.getCo2 = " + seed.getCo2() + ", seed.getHum = " + seed.getHum() + ", seed.getDust = " + seed.getDust());
-        //String username = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap().get(JwtUtil.claimUsername).toString();
-        //seed.updateUsername(username);
 
-        //seed.setDateString(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString());
+        log.info("device 전달 완료");
+//        log.info("seed.getMac = " + seed.getMac() + ", seed.getCo2 = " + seed.getCo2() + ", seed.getHum = " + seed.getHum() + ", seed.getDust = " + seed.getDust());
+//        String username = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap().get(JwtUtil.claimUsername).toString();
+//        seed.updateUsername(username);
+
+        log.info("device 현재 시간 : " +LocalDateTime.now(ZoneId.of("Asia/Seoul")) );
+        log.info("seed.getMac : " +seed.getMac() );
+        log.info("seed : " +seed );
+
+        //TODO 1: 가져온 mac 주소로 db에서 정보 긁어오기
+
+
+//        seed.setDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         template.convertAndSend("/topic/user/" + seed.getMac(),seed);
     }
+
 }

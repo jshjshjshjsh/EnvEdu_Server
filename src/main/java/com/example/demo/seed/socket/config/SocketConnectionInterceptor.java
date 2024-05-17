@@ -26,12 +26,14 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         try {
             String refreshToken = URLDecoder.decode(Objects.requireNonNull(request.getHeaders().get("cookie")).get(0), StandardCharsets.UTF_8);
+            log.info("소켓 사용하기 전에 인증 : " + refreshToken);
+
             JWT.require(JwtUtil.getAlgorithm()).build().verify(refreshToken.replace(JwtRefreshToken.tokenName + "=" + JwtUtil.tokenType, ""));
         } catch (NullPointerException e) {
-            log.warn("required header missing");
+            log.info("required header missing");
             return false;
         } catch (JWTVerificationException e) {
-            log.warn("invalid token");
+            log.info("invalid token");
             return false;
         }
         log.info("connection established");

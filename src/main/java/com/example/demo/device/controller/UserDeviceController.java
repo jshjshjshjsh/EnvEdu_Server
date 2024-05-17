@@ -50,6 +50,8 @@ public class UserDeviceController {
      */
     @GetMapping("/seed/device")
     private ResponseEntity<?> getMyDevices(HttpServletRequest request) {
+        log.info("seed/device 접근");
+
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
         log.info("seed/device의 userInfo null여부 : " + userInfo.isEmpty());
         return new ResponseEntity<>(userDeviceService.getDeviceList(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);

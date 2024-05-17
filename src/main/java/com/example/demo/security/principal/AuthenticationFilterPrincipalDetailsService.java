@@ -25,7 +25,6 @@ public class AuthenticationFilterPrincipalDetailsService implements PrincipalDet
         log.info("optUser? : " + optUser);
         log.info("checkUser? : " + checkUser);
 
-        log.info("유저 이름으로 못찾음 : " + optUser.map(User::getUsername).orElse("null상태임"));
         return optUser.map(AuthenticationFilterPrincipalDetails::new).orElseThrow(()-> new UsernameNotFoundException("username not found"));
     }
 }

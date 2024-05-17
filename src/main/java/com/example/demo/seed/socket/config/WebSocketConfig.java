@@ -36,10 +36,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //아두이노 기기와 연결되는 endpoint
-        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new DeviceSocketInterceptor(userDeviceRepository)).withSockJS();
-
-        //프론트와 연결되는 endpoint
-        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor()).withSockJS();
+//        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new DeviceSocketInterceptor(userDeviceRepository)).withSockJS();
+//
+//        //프론트와 연결되는 endpoint
+//        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor()).withSockJS();
+        registry.addEndpoint("/client/socket")
+                .setAllowedOrigins("http://localhost:3000") // 여기에 필요한 출처를 명시적으로 추가
+                .withSockJS();
     }
 
     @Override

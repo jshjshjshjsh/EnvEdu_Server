@@ -8,6 +8,7 @@ import com.example.demo.security.principal.AuthenticationFilterPrincipalDetails;
 import com.example.demo.user.dto.request.LoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * /login url로 request를 보냈을 때 거치는 필터
  */
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -34,10 +36,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper om = new ObjectMapper();
         LoginDTO loginDTO = null;
 
+        log.info("로그인 인증 시작");
+
         try {
             loginDTO = om.readValue(request.getInputStream(), LoginDTO.class);
+            log.info("로그인 인증 시작" + loginDTO.getUsername());
+
+
         }
         catch (Exception e) {
+            log.info("로그인 거절");
+
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
 
