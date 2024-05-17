@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public interface SeedRepository extends JpaRepository<Seed, Long> {
     List<Seed> findAllByDataUUIDAndUsername(UUID dataUUID, String username);
+
+    List<Seed> findByMac(String mac);
     List<Seed> findAllByMeasuredDateBetweenAndMacIn(LocalDateTime start, LocalDateTime end, List<String> MAC);
     List<Seed> findAllByMeasuredDateBetween(LocalDateTime start, LocalDateTime end);
     Optional<Seed> findById(long id);
