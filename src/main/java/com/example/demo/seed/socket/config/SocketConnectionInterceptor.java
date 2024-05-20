@@ -36,7 +36,7 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
             log.info("invalid token");
             return false;
         }
-        log.info("connection established");
+        log.info("connection established    ");
         return true;
     }
 

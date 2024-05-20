@@ -3,6 +3,7 @@ package com.example.demo.seed.model;
 import com.example.demo.datacontrol.datachunk.model.parent.Data;
 import com.example.demo.seed.dto.DeleteSeedDto;
 import com.example.demo.seed.misc.Misc;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Seed extends Data {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

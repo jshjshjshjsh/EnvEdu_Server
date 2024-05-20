@@ -4,18 +4,14 @@ import com.example.demo.device.repository.UserDeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
 @Slf4j
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final UserDeviceRepository userDeviceRepository;
 
     /**
@@ -23,20 +19,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      * 이전에는 이 부분에서 기기의 MAC을 이용해 접근 허용 제어
      * 지금은 해당 기능을 각 endpoint의 interceptor에서 수행
      */
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                return message;
-            }
-        });
-    }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(new ChannelInterceptor() {
+//            @Override
+//            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//                return message;
+//            }
+//        });
+//    }
 
+    // Stomp 사용해서 아두이노 기기와 연결해주는 메서드
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //아두이노 기기와 연결되는 endpoint
-//        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new DeviceSocketInterceptor(userDeviceRepository)).withSockJS();
+        registry.addEndpoint("/device").setAllowedOriginPatterns("*").addInterceptors(new DeviceSocketInterceptor(userDeviceRepository)).withSockJS();
 //
 //        //프론트와 연결되는 endpoint
 //        registry.addEndpoint("/client/socket").setAllowedOriginPatterns("*").addInterceptors(new SocketConnectionInterceptor()).withSockJS();

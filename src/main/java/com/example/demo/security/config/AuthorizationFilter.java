@@ -30,6 +30,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         Cookie[] cookies = request.getCookies();
+        String ArduinoDeviceAuthentication = request.getHeaders("ArduinoHeader").toString();
+
+        log.info("들어오는 path : " + request.getRequestURI());
+        log.info("아두이노 디바이스 인증 : " + ArduinoDeviceAuthentication);
 
         if(cookies == null) {
             chain.doFilter(request, response);

@@ -40,6 +40,9 @@ public class DeviceSocketInterceptor implements HandshakeInterceptor {
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+    log.info("핸드셰이크 끝나고" + request.getHeaders().toString());
+    log.info("경로" + request.getURI());
+
 
     }
 }
