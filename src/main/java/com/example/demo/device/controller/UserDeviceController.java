@@ -2,6 +2,7 @@ package com.example.demo.device.controller;
 
 import com.example.demo.device.dto.request.AddMACDTO;
 import com.example.demo.device.dto.request.DeviceUpdateDTO;
+import com.example.demo.device.dto.response.RelatedUserDeviceListDTO;
 import com.example.demo.device.service.UserDeviceService;
 import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +54,11 @@ public class UserDeviceController {
         log.info("seed/device 접근");
 
         Map<String, Object> userInfo = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap();
-        log.info("seed/device의 userInfo null여부 : " + userInfo.isEmpty());
-        return new ResponseEntity<>(userDeviceService.getDeviceList(userInfo.get(JwtUtil.claimUsername).toString()), HttpStatus.OK);
+        log.info("seed/device의 userInfo null여부 : " + userInfo.toString());
+        RelatedUserDeviceListDTO check = userDeviceService.getDeviceList(userInfo.get(JwtUtil.claimUsername).toString());
+        log.info("RelatedUserDeviceListDTO : " + check.toString());
+
+        return new ResponseEntity<>(check, HttpStatus.OK);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

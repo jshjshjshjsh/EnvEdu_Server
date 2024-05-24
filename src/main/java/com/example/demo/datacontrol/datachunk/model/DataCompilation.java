@@ -34,4 +34,14 @@ public class DataCompilation {
         this.dataSize = dataSize;
         this.memo = memo;
     }
+
+    @Override
+    public String toString() {
+        return "DataCompilation{" +"id=" + id +
+                "owner=" + owner +
+                "saveDate=" + saveDate +
+                ", dataLabel='" + dataLabel + '\'' +
+                ", memo='" + memo + '\'' +
+                '}';
+    }
 }

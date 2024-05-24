@@ -77,12 +77,20 @@ public class UserDeviceService {
         userDeviceRepository.deleteByMac(mac);
     }
 
+
+    /*
+    * 해당 메서드는 현재 접속한 사용자(강사)와 강사에 소속된 학생들의 디바이스의 리스트를 리턴해주는 메서드입니다
+    * 작성자 : 김선규
+    * */
     @Transactional(readOnly = true)
     public RelatedUserDeviceListDTO getDeviceList(String username) {
         User user = userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
+
+        // 유저 자신도 해당 관련된 디바이스의 사용자라고 추가해 준다.
         List<User> allRelatedUsers = new ArrayList<>();
         allRelatedUsers.add(user);
 
+        // 유저 자신의 학생들의 디바이스도 추가해 준다.
         if(user instanceof Educator) {
             List<Student_Educator> relatedUsers = student_educatorRepository.findAllByEducator((Educator) user);
             for (Student_Educator student_educator : relatedUsers) {
@@ -90,6 +98,7 @@ public class UserDeviceService {
             }
         }
 
+        // 추가해준 관련된 사람들을 바탕으로 관련된 디바이스의 내용을 가져온다.
         List<UserDevice> allDevices = userDeviceRepository.findAllByUserIn(allRelatedUsers);
         return new RelatedUserDeviceListDTO(allDevices);
     }

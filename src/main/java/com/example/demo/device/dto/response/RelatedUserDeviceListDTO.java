@@ -20,6 +20,7 @@ public class RelatedUserDeviceListDTO {
                 continue;
             }
             map.get(device.getUser().getUsername()).add(new RelatedUserDeviceElem(device.getName(), device.getMac()));
+
         }
 
         List<RelatedUserDeviceElemWithUsername> list = new ArrayList<>();
@@ -29,7 +30,20 @@ public class RelatedUserDeviceListDTO {
         }
 
         this.relatedUserDeviceList = list;
+
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("RelatedUserDeviceListDTO{\n");
+        for (RelatedUserDeviceElemWithUsername elem : relatedUserDeviceList) {
+            sb.append("  ").append(elem.toString());
+        }
+        sb.append('}');
+        return sb.toString();
+    }
+
 
     @Getter
     private static class RelatedUserDeviceElem {
@@ -39,6 +53,12 @@ public class RelatedUserDeviceListDTO {
         private RelatedUserDeviceElem(String deviceName, String mac) {
             this.deviceName = deviceName;
             this.mac = mac;
+        }
+
+        @Override
+        public String toString() {
+            return  "deviceName : " + deviceName + "   " +
+                    "mac : " + mac ;
         }
     }
 
@@ -51,5 +71,20 @@ public class RelatedUserDeviceListDTO {
             this.username = username;
             this.elements = map.get(username);
         }
+
+        @Override
+        public String toString(){
+            StringBuilder sb = new StringBuilder();
+            sb.append("RelatedUserDeviceElemWithUsername{");
+            sb.append("  username='").append(username).append("', ");
+            sb.append("  elements=[");
+            for (RelatedUserDeviceElem elem : elements) {
+                sb.append(" ").append(elem).append(",");
+            }
+            sb.append("  ]");
+            sb.append("}\n");
+            return sb.toString();
+        }
     }
+
 }

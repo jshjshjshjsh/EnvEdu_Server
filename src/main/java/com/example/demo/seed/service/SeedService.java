@@ -8,6 +8,7 @@ import com.example.demo.seed.repository.SeedRepository;
 import com.example.demo.user.model.entity.User;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SeedService {
     private final SeedRepository seedRepository;
     private final UserRepository userRepository;
@@ -104,6 +106,9 @@ public class SeedService {
         if (list.isEmpty())
             return;
         Optional<User> user = userRepository.findByUsername(list.get(0).getUsername());
+
+        log.info("userName : " + user.toString());
+
         UUID uuid = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         for(Seed seed : list){

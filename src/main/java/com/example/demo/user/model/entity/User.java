@@ -129,4 +129,12 @@ public abstract class User {
     {
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "DataCompilation{" +"owner_id=" + id +
+                "username=" + username +
+                "role=" + role +
+                '}';
+    }
 }
