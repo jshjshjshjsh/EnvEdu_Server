@@ -8,7 +8,6 @@ import com.example.demo.seed.model.Seed;
 import com.example.demo.seed.service.SeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -104,7 +103,9 @@ public class SeedController {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 Seed seed = objectMapper.readValue(elem, Seed.class);
-                seed.setDate(LocalDateTime.parse(seed.getDateString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                String dateTimeString =seed.getDateString();
+//                OffsetDateTime odt = OffsetDateTime.parse(dateTimeString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                seed.setDate(LocalDateTime.parse(dateTimeString));
                 list.add(seed);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
