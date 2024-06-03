@@ -71,8 +71,12 @@ public class Seed extends Data {
 
     private LocalDateTime measuredDate;
 
+    // DB에 저장될 필요가 없는 임시적인 변수들
     @Transient
     private String dateString;
+
+    @Transient
+    private String sessionid;
 
     @Nullable
     @Column(length = 50)

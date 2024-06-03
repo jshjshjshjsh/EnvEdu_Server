@@ -13,10 +13,13 @@ import com.example.demo.user.model.enumerate.State;
 import com.example.demo.user.repository.Student_EducatorRepository;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 @Service
@@ -78,10 +81,11 @@ public class UserDeviceService {
     }
 
 
-    /*
-    * 해당 메서드는 현재 접속한 사용자(강사)와 강사에 소속된 학생들의 디바이스의 리스트를 리턴해주는 메서드입니다
-    * 작성자 : 김선규
-    * */
+    /**
+     * 해당 메서드는 현재 접속한 사용자(강사)와 강사에 소속된 학생들의 디바이스의 리스트를 리턴해주는 메서드입니다
+     * @param username
+     * @author 김선규
+     */
     @Transactional(readOnly = true)
     public RelatedUserDeviceListDTO getDeviceList(String username) {
         User user = userRepository.findByUsernameAndState(username, State.ACTIVE).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
@@ -102,4 +106,57 @@ public class UserDeviceService {
         List<UserDevice> allDevices = userDeviceRepository.findAllByUserIn(allRelatedUsers);
         return new RelatedUserDeviceListDTO(allDevices);
     }
+
+
+    /**
+     * 해당 메서드는 디바이스가 커넥션 성공했을때 현재 실시간으로 연결되있는 부분을 저장해주는 메서드 입니다.
+     * @param MAC
+     * @author 김선규
+     */
+    @Transactional
+    public boolean authenticateAndRegisterDevice(String MAC) {
+        boolean exists = userDeviceRepository.existsByMac(MAC);
+        if (exists) {
+            Optional<UserDevice> userDevice = userDeviceRepository.findByMac(MAC);
+            AtomicBoolean shouldSave = new AtomicBoolean(false);  // 저장 여부 결정을 위한 AtomicBoolean
+
+            userDevice.ifPresent(device -> {
+                if (!device.isDeviceOn()) {  // deviceOn이 false일 경우에만
+                    device.setDeviceOn(true);  // deviceOn을 true로 설정
+                    shouldSave.set(true);  // 저장해야 함을 표시
+                }
+            });
+
+            if (shouldSave.get()) {
+                userDevice.ifPresent(userDeviceRepository::save);  // 변경된 객체를 저장
+                return true;
+            } else {
+                return false;  // 이미 deviceOn이 true인 경우, 변경 없이 false 반환
+            }
+        }
+        return false;  // MAC 주소가 존재하지 않는 경우
+    }
+
+    /**
+     * 해당 메서드는 디바이스의 연결이 해제 되었을때 해제됨을 저장하는 메서드입니다.
+     * @param MAC
+     * @author 김선규
+     */
+    @Transactional
+    public boolean setDeviceOff(String MAC) {
+        Optional<UserDevice> userDeviceOptional = userDeviceRepository.findByMac(MAC);
+
+        // userDevice가 존재하면, deviceOn을 false로 설정하고 저장
+        if (userDeviceOptional.isPresent()) {
+            UserDevice userDevice = userDeviceOptional.get();
+            userDevice.setDeviceOn(false);
+            userDeviceRepository.save(userDevice);
+            return true;
+        }
+
+        // Optional이 비어있는 경우, 적절한 처리를 할 수 있도록 false 반환하거나 예외를 발생시킬 수 있습니다.
+        return false;
+    }
+
+
 }

@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
+@Setter
 public class UserDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +32,20 @@ public class UserDevice {
     @UpdateTimestamp
     private Timestamp updatedDate;
 
+    @Column(nullable = false)
+    private boolean deviceOn;
+
     public UserDevice() {}
 
     @Builder(access = AccessLevel.PRIVATE)
-    private UserDevice(long id, String mac, String name, User user, Timestamp createdDate, Timestamp updatedDate) {
+    private UserDevice(long id, String mac, String name, User user, Timestamp createdDate, Timestamp updatedDate, boolean deviceOn) {
         this.id = id;
         this.mac = mac;
         this.name = name;
         this.user = user;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.deviceOn = deviceOn;
     }
 
     public static UserDevice of(String mac) {
@@ -56,4 +61,6 @@ public class UserDevice {
     public void updateName(String name) {
         this.name = name;
     }
+
+    public void setDeviceOn(boolean b) {this.deviceOn = b; }
 }

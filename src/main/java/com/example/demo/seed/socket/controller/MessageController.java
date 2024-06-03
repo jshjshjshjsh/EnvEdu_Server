@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,6 @@ import java.util.Optional;
 public class MessageController {
     private final SimpMessagingTemplate template;
 
-    private final SeedRepository seedRepository;
     /**
      * 기기에서 전송하는 메세지를 받는 controller
      * 기기에서 전송하는 데이터에는 날짜 정보가 없음 -> 여기서 날짜 정보를 추가해 프론트로 전송
@@ -39,23 +39,11 @@ public class MessageController {
 //        String username = JwtUtil.getJwtRefreshTokenFromCookieAndParse(request.getCookies()).get(JwtUtil.claimName).asMap().get(JwtUtil.claimUsername).toString();
 //        seed.updateUsername(username);
 
-        log.info("seed.getMac : " +seed.getMac() );
-
-//        List<Seed> optionalSeed = seedRepository.findByMac(seed.getMac());
-//        if (!optionalSeed.isEmpty()) {
-//            log.info("Seed Succecssful ");
-//        } else {
-//            // Seed 객체를 찾지 못한 경우에 대한 처리
-//            throw new RuntimeException("Seed not found with mac: " + seed.getMac());
-//        }
         log.info("device 현재 시간 : " +LocalDateTime.now(ZoneId.of("Asia/Seoul")) );
         log.info("seed.getMac : " +seed.getMac() );
         log.info("seed : " +seed );
 
-        //TODO 1: 가져온 mac 주소로 db에서 정보 긁어오기
 
-
-//        seed.setDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         template.convertAndSend("/topic/user/" + seed.getMac(), seed);
     }
 
