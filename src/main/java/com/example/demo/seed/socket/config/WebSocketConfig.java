@@ -28,11 +28,11 @@ import org.springframework.web.socket.config.annotation.*;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //아두이노 기기와 연결되는 endpoint
-        registry.addEndpoint("/device")
-                .setAllowedOriginPatterns("*")
-                .addInterceptors(new DeviceSocketInterceptor(userDeviceService))
-                .withSockJS()
-                .setHeartbeatTime(5000L);
+//        registry.addEndpoint("/device")
+//                .setAllowedOriginPatterns("*")
+//                .addInterceptors(new DeviceSocketInterceptor(userDeviceService))
+//                .withSockJS()
+//                .setHeartbeatTime(5000L);
 
 //        registry.addEndpoint("/client/socket")
 //                .setAllowedOriginPatterns("*")
