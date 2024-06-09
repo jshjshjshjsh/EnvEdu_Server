@@ -1,5 +1,6 @@
 package com.example.demo.security.config;
 
+import com.example.demo.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 import static com.example.demo.security.config.AuthenticationFilterApply.authenticationFilterApply;
 
@@ -20,11 +27,13 @@ public class SecurityConfig {
     {
         return new BCryptPasswordEncoder();
     }
-    private final CorsConfig corsConfig;
+//    private final CorsConfig corsConfig;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                .addFilter(corsConfig.corsFilter())
+                .cors().configurationSource(corsConfigurationSource());
+
+        http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
@@ -48,5 +57,20 @@ public class SecurityConfig {
                         .anyRequest().denyAll()
                 );
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("https://new.greenseed.or.kr"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 허용할 HTTP 메소드
+        configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
+        configuration.setAllowCredentials(true); // 자격증명 허용
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type",JwtUtil.headerString)); // 클라이언트가 접근 가능하도록 노출할 헤더
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 설정 적용
+        return source;
     }
 }
