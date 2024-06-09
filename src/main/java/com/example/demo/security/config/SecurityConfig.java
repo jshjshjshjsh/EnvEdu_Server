@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .and()
                 .logout().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
+                        .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/ws/**","/client/socket/**","/test/**",
                                 "/air-quality/**","/ocean-quality/**","/survey/**" ).permitAll()
                         .mvcMatchers("/educating/**","/dataLiteracy/**","/classroom/**","/dataset/list").permitAll()
                         .mvcMatchers("/seed/**","/air-quality/mine", "/ocean-quality/mine","/user/**",

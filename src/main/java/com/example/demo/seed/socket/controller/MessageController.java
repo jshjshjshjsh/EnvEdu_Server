@@ -47,4 +47,14 @@ public class MessageController {
         template.convertAndSend("/topic/user/" + seed.getMac(), seed);
     }
 
+    @MessageMapping("/switch")
+    private void fromEClassClient(@Payload String SwitchMessage) {
+
+        log.info("device 전달 완료 : " + SwitchMessage);
+
+
+
+        template.convertAndSend("/topic/switchPage/" + "newPage");
+    }
+
 }
