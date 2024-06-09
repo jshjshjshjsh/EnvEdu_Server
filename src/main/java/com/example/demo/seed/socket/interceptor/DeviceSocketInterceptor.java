@@ -29,11 +29,12 @@ public class DeviceSocketInterceptor implements HandshakeInterceptor {
             String MAC = Objects.requireNonNull(request.getHeaders().get("mac")).toString();
             MAC = MAC.replace("[", "");
             MAC = MAC.replace("]", "");
-            if(userDeviceService.authenticateAndRegisterDevice(MAC)) {
-                log.info("device connection established from " + MAC);
+            if(!MAC.isEmpty()) {
+                userDeviceService.authenticateAndRegisterDevice(MAC);
+                log.info("맥 번호 " + MAC);
                 return true;
             }else{
-                log.info("device connection attempt from disallowed address " + MAC);
+                log.info("맥 번호 없음 " + MAC);
                 return false;
             }
 
