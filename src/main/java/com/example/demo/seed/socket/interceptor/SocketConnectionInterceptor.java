@@ -46,7 +46,7 @@ public class SocketConnectionInterceptor implements HandshakeInterceptor {
 
             if(userDevice.isDeviceOn()){
                 log.info("디바이스 연결 있음");
-                return false;
+                return true;
             }else{
                 log.info("디바이스 연결 없음");
                 return false;

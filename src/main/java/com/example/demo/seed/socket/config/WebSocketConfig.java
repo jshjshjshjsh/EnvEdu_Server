@@ -34,11 +34,11 @@ import org.springframework.web.socket.config.annotation.*;
                 .withSockJS()
                 .setHeartbeatTime(5000L);
 
-        registry.addEndpoint("/client/socket")
-                .setAllowedOriginPatterns("*")
-                .addInterceptors(new SocketConnectionInterceptor(userDeviceRepository))
-                .withSockJS()
-                .setDisconnectDelay(5000L);
+//        registry.addEndpoint("/client/socket")
+//                .setAllowedOriginPatterns("*")
+//                .addInterceptors(new SocketConnectionInterceptor(userDeviceRepository))
+//                .withSockJS()
+//                .setDisconnectDelay(5000L);
 
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
