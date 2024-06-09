@@ -32,9 +32,11 @@ public class DeviceSocketInterceptor implements HandshakeInterceptor {
             if(userDeviceService.authenticateAndRegisterDevice(MAC)) {
                 log.info("device connection established from " + MAC);
                 return true;
+            }else{
+                log.info("device connection attempt from disallowed address " + MAC);
+                return false;
             }
-            log.info("device connection attempt from disallowed address " + MAC);
-            return false;
+
         } catch (NullPointerException e) {
             log.info("required header missing");
             return false;
