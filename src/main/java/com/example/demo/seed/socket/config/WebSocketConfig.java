@@ -35,12 +35,12 @@ import org.springframework.web.socket.config.annotation.*;
                 .setHeartbeatTime(5000L);
 
         registry.addEndpoint("/client/socket")
-                .setAllowedOrigins("http://localhost:3000")
+                .setAllowedOriginPatterns("*")
                 .addInterceptors(new SocketConnectionInterceptor(userDeviceRepository))
                 .withSockJS()
                 .setDisconnectDelay(5000L);
 
-        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
 }
