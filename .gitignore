@@ -2,8 +2,8 @@
 !.mvn/wrapper/maven-wrapper.jar
 
 ### properties ###
-*.properties
-*.yml
+application.properties
+application.yml
 
 
 ### STS ###
