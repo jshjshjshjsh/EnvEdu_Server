@@ -42,7 +42,13 @@
 
         - name: Prepare Environment
           run: |
-
+            if [ -d "EnvEdu_Server" ]; then
+              echo "Directory EnvEdu_Server exists. Removing..."
+              rm -rf EnvEdu_Server
+            fi
+            echo "Creating directory $PROJECT_NAME..."
+            pwd
+            ls
             sudo mkdir -p EnvEdu_Server
 
         - name: Make application.yml
