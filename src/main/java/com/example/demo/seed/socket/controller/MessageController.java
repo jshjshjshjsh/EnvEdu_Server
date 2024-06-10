@@ -1,26 +1,17 @@
 package com.example.demo.seed.socket.controller;
 
-import com.example.demo.jwt.util.JwtUtil;
 import com.example.demo.seed.model.Seed;
-import com.example.demo.seed.repository.SeedRepository;
-import com.example.demo.user.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,12 +40,20 @@ public class MessageController {
     }
 
     @MessageMapping("/switch")
-    private void fromEClassClient(@Payload String switchMessage, SimpMessagingTemplate template) {
-        log.info("device 전달 완료 : " + switchMessage);
+    private void fromEClassClient(@Payload String switchMessage) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String pageValue = null;
+        try {
+            JsonNode rootNode = objectMapper.readTree(switchMessage);
+            pageValue = rootNode.path("page").asText(); // "newPage" 값을 가져옵니다.
+            log.info("device 전달 완료 : " + pageValue);
+        } catch (JsonProcessingException e) {
+            log.error("JSON 파싱 오류", e);
+        }
 
-        JSONObject json = new JSONObject();
-        json.put("page", "newPage");
-        template.convertAndSend("/topic/switchPage", json.toString());
+
+        assert pageValue != null;
+        template.convertAndSend("/topic/switchPage", pageValue);
 
     }
 
