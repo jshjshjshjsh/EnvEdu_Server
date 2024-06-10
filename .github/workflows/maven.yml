@@ -63,4 +63,4 @@
             aws s3 cp $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/  
 
         - name: Code Deploy
-          run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME.zip
+          run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --file-exists-behavior OVERWRITE --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME.zip
