@@ -40,7 +40,7 @@ import org.springframework.web.socket.config.annotation.*;
 //                .withSockJS()
 //                .setDisconnectDelay(5000L);
 
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+//        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
 }
