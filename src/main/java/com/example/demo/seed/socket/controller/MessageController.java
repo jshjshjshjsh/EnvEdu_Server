@@ -6,6 +6,7 @@ import com.example.demo.seed.repository.SeedRepository;
 import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 
@@ -51,8 +52,10 @@ public class MessageController {
     private void fromEClassClient(@Payload String switchMessage, SimpMessagingTemplate template) {
         log.info("device 전달 완료 : " + switchMessage);
 
-        // 여기에서 "newPage" 대신 실제 전송하고자 하는 메시지 내용을 명시적으로 지정해야 합니다.
-        template.convertAndSend("/topic/switchPage/newPage", "\"newPage\"");
+        JSONObject json = new JSONObject();
+        json.put("page", "newPage");
+        template.convertAndSend("/topic/switchPage/newPage", json.toString());
+
     }
 
 
