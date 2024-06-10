@@ -40,15 +40,15 @@
             java-version: '11'
             distribution: 'adopt'
 
-        - name: Build with Maven
-          run: mvn clean package -DskipTests
-          env:
-            MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
-
         - name: Make application.yml
           run: |
             mkdir -p src/main/resources
             echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+
+        - name: Build with Maven
+          run: mvn clean package -DskipTests
+          env:
+            MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
 
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
