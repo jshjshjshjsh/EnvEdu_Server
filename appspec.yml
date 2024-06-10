@@ -12,9 +12,6 @@ permissions:
     group: ubuntu
 
 hooks:
-  BeforeInstall:
-    - location: scripts/cleanup.sh
-      runas: ubuntu
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 100

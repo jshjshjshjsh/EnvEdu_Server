@@ -59,7 +59,7 @@
 
         - name: Archive and upload to S3
           run: |
-            zip -j $PROJECT_NAME.zip target/*.jar
+            zip -r $PROJECT_NAME.zip target/*.jar appspec.yml scripts
             aws s3 cp $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/  
 
         - name: Code Deploy
