@@ -50,7 +50,7 @@
             sudo mkdir -p ${{ env.PROJECT_NAME }}/src/main/resources
 
             # Create or overwrite application.yml with the secret content
-            echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
+            sudo echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
         
 
         - name: Build with Maven
