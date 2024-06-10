@@ -3,11 +3,14 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/EnvEdu_Server
+
 permissions:
   - object: /home/ubuntu/EnvEdu_Server
+    pattern: "**"
     owner: ubuntu
     group: ubuntu
-    mode: 755
+    mode: "0755"
+
 hooks:
   AfterInstall:
     - location: scripts/deploy.sh
