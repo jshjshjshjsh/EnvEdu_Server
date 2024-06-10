@@ -5,16 +5,16 @@ files:
     destination: /home/ubuntu/EnvEdu_Server
 
 permissions:
-  - object: /home/ubuntu/EnvEdu_Server
+  - object: /home/ubuntu
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-    mode: "0755"
 
 hooks:
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 100
+      runas: ubuntu
 
 
 
