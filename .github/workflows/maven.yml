@@ -40,20 +40,25 @@
             java-version: '11'
             distribution: 'adopt'
 
+        - name: Prepare Environment
+          run: |
+            sudo mkdir -p EnvEdu_Server
+
+        - name: Make application.yml
+          run: |
+            # Ensure the directory exists
+            sudo mkdir -p ${{ env.PROJECT_NAME }}/src/main/resources
+
+            # Create or overwrite application.yml with the secret content
+            echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
+        
+
         - name: Build with Maven
           run: |
             cd $PROJECT_NAME
             mvn clean package -DskipTests
           env:
             MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
-
-        - name: Make application.yml
-          run: |
-            # Ensure the directory exists
-            mkdir -p ${{ env.PROJECT_NAME }}/src/main/resources
-
-            # Create or overwrite application.yml with the secret content
-            echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
 
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
