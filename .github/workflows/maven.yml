@@ -40,24 +40,15 @@
             java-version: '11'
             distribution: 'adopt'
 
-        - name: Prepare Environment
-          run: |
-            sudo mkdir -p EnvEdu_Server
-
         - name: Build with Maven
-          run: |
-            cd $PROJECT_NAME
-            mvn clean package -DskipTests
+          run: mvn clean package -DskipTests
           env:
             MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
 
         - name: Make application.yml
           run: |
-            # Ensure the directory exists
-            sudo mkdir -p ${{ env.PROJECT_NAME }}/src/main/resources
-
-            # Create or overwrite application.yml with the secret content
-            sudo echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
+            mkdir -p src/main/resources
+            echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
 
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
@@ -68,7 +59,7 @@
 
         - name: Archive and upload to S3
           run: |
-            zip -j $PROJECT_NAME.zip $PROJECT_NAME/target/*.jar
+            zip -j $PROJECT_NAME.zip target/*.jar
             aws s3 cp $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/  
 
         - name: Code Deploy
