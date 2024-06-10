@@ -48,13 +48,12 @@ public class MessageController {
     }
 
     @MessageMapping("/switch")
-    private void fromEClassClient(@Payload String SwitchMessage) {
+    private void fromEClassClient(@Payload String switchMessage, SimpMessagingTemplate template) {
+        log.info("device 전달 완료 : " + switchMessage);
 
-        log.info("device 전달 완료 : " + SwitchMessage);
-
-
-
-        template.convertAndSend("/topic/switchPage/" + "newPage");
+        // 여기에서 "newPage" 대신 실제 전송하고자 하는 메시지 내용을 명시적으로 지정해야 합니다.
+        template.convertAndSend("/topic/switchPage", switchMessage);
     }
+
 
 }
