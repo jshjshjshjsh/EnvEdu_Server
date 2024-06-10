@@ -54,7 +54,7 @@ public class MessageController {
 
         JSONObject json = new JSONObject();
         json.put("page", "newPage");
-        template.convertAndSend("/topic/switchPage/newPage", json.toString());
+        template.convertAndSend("/topic/switchPage", json.toString());
 
     }
 
