@@ -49,9 +49,14 @@
             echo "Creating directory $PROJECT_NAME..."
             mkdir $PROJECT_NAME
 
-        - name: make application.yml
+        - name: Make application.yml
           run: |
-            echo "${{ secrets.APPLICATION_YML }}" > $PROJECT_NAME/src/main/resources/application.yml
+            # Ensure the directory exists
+            mkdir -p ${{ env.PROJECT_NAME }}/src/main/resources
+
+            # Create or overwrite application.yml with the secret content
+            echo "${{ secrets.APPLICATION_YML }}" > ${{ env.PROJECT_NAME }}/src/main/resources/application.yml
+        
 
         - name: Build with Maven
           run: |
