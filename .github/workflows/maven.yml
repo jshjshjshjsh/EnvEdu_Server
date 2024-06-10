@@ -40,12 +40,23 @@
             java-version: '11'
             distribution: 'adopt'
 
+        - name: Prepare Environment
+          run: |
+            if [ -d "$PROJECT_NAME" ]; then
+              echo "Directory $PROJECT_NAME exists. Removing..."
+              rm -rf $PROJECT_NAME
+            fi
+            echo "Creating directory $PROJECT_NAME..."
+            mkdir $PROJECT_NAME
+
         - name: make application.yml
           run: |
-            echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+            echo "${{ secrets.APPLICATION_YML }}" > $PROJECT_NAME/src/main/resources/application.yml
 
         - name: Build with Maven
-          run: mvn clean package -DskipTests
+          run: |
+            cd $PROJECT_NAME
+            mvn clean package -DskipTests
           env:
             MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
 
@@ -58,9 +69,8 @@
 
         - name: Archive and upload to S3
           run: |
-            zip -j $PROJECT_NAME.zip target/*.jar
+            zip -j $PROJECT_NAME.zip $PROJECT_NAME/target/*.jar
             aws s3 cp $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/  
 
         - name: Code Deploy
           run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME.zip
-
