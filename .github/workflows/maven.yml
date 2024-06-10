@@ -42,12 +42,8 @@
 
         - name: Prepare Environment
           run: |
-            if [ -d "$PROJECT_NAME" ]; then
-              echo "Directory $PROJECT_NAME exists. Removing..."
-              rm -rf $PROJECT_NAME
-            fi
-            echo "Creating directory $PROJECT_NAME..."
-            sudo mkdir -p $PROJECT_NAME
+
+            sudo mkdir -p EnvEdu_Server
 
         - name: Make application.yml
           run: |
