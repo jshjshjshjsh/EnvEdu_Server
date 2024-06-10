@@ -42,11 +42,6 @@
 
         - name: Prepare Environment
           run: |
-            if [ -d "$PROJECT_NAME" ]; then
-              echo "Directory $PROJECT_NAME exists. Removing..."
-              rm -rf $PROJECT_NAME
-            fi
-            echo "Creating directory $PROJECT_NAME..."
             mkdir $PROJECT_NAME
 
         - name: Make application.yml
