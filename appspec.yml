@@ -3,31 +3,15 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/EnvEdu_Server
-    overwrite: true
-
 permissions:
   - object: /home/ubuntu/EnvEdu_Server
-    pattern: "**"
     owner: ubuntu
     group: ubuntu
     mode: 755
-
 hooks:
-  ApplicationStop:
-    - location: scripts/stop_server.sh
-      timeout: 60
-  BeforeInstall:
-    - location: scripts/cleanup.sh
-      timeout: 60
   AfterInstall:
-    - location: scripts/install_dependencies.sh
-      timeout: 60
-  ApplicationStart:
-    - location: scripts/start_server.sh
-      timeout: 60
-  ValidateService:
-    - location: scripts/validate_server.sh
-      timeout: 60
+    - location: scripts/deploy.sh
+      timeout: 100
 
 
 
