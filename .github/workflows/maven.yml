@@ -25,7 +25,7 @@
     PROJECT_NAME: EnvEdu_Server
     BUCKET_NAME: env-edu-server-s3
     CODE_DEPLOY_APP_NAME: EnvEduServer_CodeDeploy
-    DEPLOYMENT_GROUP_NAME: EnvEduServer_CodeDeploy
+    DEPLOYMENT_GROUP_NAME: EnvEduServer_CodeDeploy2
 
   jobs:
     build-and-deploy:
