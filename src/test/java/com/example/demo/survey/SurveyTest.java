@@ -1,14 +1,14 @@
 package com.example.demo.survey;
 
-import com.example.demo.admin.model.Admin;
-import com.example.demo.admin.repository.AdminRepository;
-import com.example.demo.survey.domain.dto.SurveyAnswerRequestDto;
-import com.example.demo.survey.domain.entity.SurveyAttribute;
-import com.example.demo.survey.domain.entity.SurveyData;
-import com.example.demo.survey.domain.entity.SurveyEntity;
-import com.example.demo.survey.repository.SurveyAttributeRepository;
-import com.example.demo.survey.repository.SurveyDataRepository;
-import com.example.demo.survey.repository.SurveyEntityRepository;
+import com.example.demo.jpa.admin.model.Admin;
+import com.example.demo.jpa.admin.repository.AdminRepository;
+import com.example.demo.jpa.survey.domain.dto.SurveyAnswerRequestDto;
+import com.example.demo.jpa.survey.domain.entity.SurveyAttribute;
+import com.example.demo.jpa.survey.domain.entity.SurveyData;
+import com.example.demo.jpa.survey.domain.entity.SurveyEntity;
+import com.example.demo.jpa.survey.repository.SurveyAttributeRepository;
+import com.example.demo.jpa.survey.repository.SurveyDataRepository;
+import com.example.demo.jpa.survey.repository.SurveyEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

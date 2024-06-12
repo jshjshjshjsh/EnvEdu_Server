@@ -1,7 +1,6 @@
 package com.example.demo.classroom;
 
-import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomDataType;
-import com.example.demo.datacontrol.dataclassroom.domain.types.ClassroomStudentGrade;
+import com.example.demo.jpa.datacontrol.dataclassroom.domain.types.ClassroomStudentGrade;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

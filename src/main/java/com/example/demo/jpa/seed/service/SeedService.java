@@ -1,0 +1,135 @@
+package com.example.demo.jpa.seed.service;
+
+import com.example.demo.jpa.datacontrol.datachunk.model.parent.DataEnumTypes;
+import com.example.demo.jpa.datacontrol.datachunk.service.DataChunkService;
+import com.example.demo.jpa.user.model.entity.User;
+import com.example.demo.jpa.user.repository.UserRepository;
+import com.example.demo.jpa.seed.dto.DeleteSeedDto;
+import com.example.demo.jpa.seed.model.Seed;
+import com.example.demo.jpa.seed.repository.SeedRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class SeedService {
+    private final SeedRepository seedRepository;
+    private final UserRepository userRepository;
+    private final DataChunkService dataChunkService;
+
+    public List<Seed> refactorSeedData(List<Seed> seeds){
+        List<Seed> result = new ArrayList<>();
+
+        int passCnt = 0;
+        int passBase = 0;
+
+        for (Seed seed : seeds) {
+            if (passBase == passCnt){
+                result.add(seed);
+                passBase = 3;
+                if (seed.getPeriod() != null)
+                    passBase = seed.getPeriod();
+                passCnt = 0;
+            }
+            passCnt ++;
+        }
+
+
+        return result;
+    }
+
+    /*
+    * Seed Data를 3초에서 1초 간격으로 늘림
+    * */
+    public List<Seed> extendSeedData(List<Seed> seeds){
+        List<Seed> result = new ArrayList<>();
+
+        for (Seed seed : seeds) {
+            for (int j = 0; j < 3; j++) {
+                result.add(seed);
+            }
+        }
+
+        return result;
+    }
+
+    @Transactional
+    public void updateSingleSeed(List<DeleteSeedDto> deleteSeedDtos) throws NoSuchFieldException, IllegalAccessException {
+        for (DeleteSeedDto deleteSeedDto: deleteSeedDtos){
+            Optional<Seed> seed = seedRepository.findById(deleteSeedDto.getId());
+            if (seed.isPresent()){
+                if(seed.get().deleteSingleFactor(deleteSeedDto)){
+                    // todo -99999 이거 값 const 같은 걸로 확실히 정하기
+                    seedRepository.deleteById(seed.get().getId());
+                }
+
+            }
+
+        }
+    }
+
+    public List<Seed> findMySeedChunked(UUID dataUUID, String username){
+        return seedRepository.findAllByDataUUIDAndUsername(dataUUID, username);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Seed> getDataByDateAndUsername(LocalDateTime start, LocalDateTime end, String username)
+    {
+
+        if(username.equals(""))
+        {
+            return seedRepository.findAllByMeasuredDateBetween(start, end);
+        }
+        else
+        {
+
+            List<String> MacList = new ArrayList<>();
+            userRepository.findByUsername(username).orElseThrow(()-> {throw new IllegalArgumentException();}).getDevices().forEach(elem -> {
+                MacList.add(elem.getMac());
+            });
+            return seedRepository.findAllByMeasuredDateBetweenAndMacIn(start, end, MacList);
+        }
+    }
+
+    @Transactional
+    public void saveData(List<Seed> list, String memo)
+    {
+        if (list.isEmpty())
+            return;
+        Optional<User> user = userRepository.findByUsername(list.get(0).getUsername());
+
+        log.info("userName : " + user.toString());
+
+        UUID uuid = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+        for(Seed seed : list){
+            seed.updateBasicAttribute(uuid, now, memo, DataEnumTypes.SEED);
+        }
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), now, list.size(), memo);
+        seedRepository.saveAll(list);
+    }
+
+    @Transactional
+    public void saveSingleData(Seed seed, String username, String memo) {
+        Optional<User> user = userRepository.findByUsername(username);
+        UUID uuid = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+        user.ifPresent(value -> {
+            assert value.getMeasuredUnit() != null;
+            seed.updateUnit(value.getMeasuredUnit().getUnit());
+            seed.addUuid(uuid);
+            seed.addSaveDate(now);
+        });
+        seedRepository.save(seed);
+        dataChunkService.saveMyDataCompilation(uuid, DataEnumTypes.SEED.name(), user.get(), seed.getMeasuredDate(), 1, memo);
+    }
+}
