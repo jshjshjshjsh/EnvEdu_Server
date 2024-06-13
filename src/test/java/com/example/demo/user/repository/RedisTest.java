@@ -1,7 +1,7 @@
 package com.example.demo.user.repository;
 
-import com.example.demo.redis.entity.AuthNum;
-import com.example.demo.redis.repo.AuthNumRepository;
+import com.example.demo.jpa.redis.entity.AuthNum;
+import com.example.demo.jpa.redis.repo.AuthNumRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
