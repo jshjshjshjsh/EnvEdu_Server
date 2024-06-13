@@ -3,17 +3,18 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/EnvEdu_Server
+    runas: ubuntu
     overwrite: yes
 
 permissions:
-  - object: /home/ubuntu
+  - object: /home/ubuntu/EnvEdu_Server
     pattern: "**"
     owner: ubuntu
     group: ubuntu
+    mode: 755
 
 hooks:
-  AfterInstall:
-    - location: scripts/deploy.sh
-      timeout: 100
+  ApplicationStart:
+    - location: /scripts/deploy.sh
+      timeout: 90
       runas: ubuntu
-
