@@ -1,4 +1,4 @@
-  # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
 # This workflow uses actions that are not certified by GitHub.
@@ -6,61 +6,72 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-  name: Java CI/CD with Maven
+name: Java CI/CD with Maven
 
-  on:
-    workflow_dispatch:
-      inputs:
-        logLevel:
-          description: 'Log level'
-          required: true
-          default: 'warning'
-          type: choice
-          options:
-            - info
-            - warning
-            - debug
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 
-  env:
-    PROJECT_NAME: EnvEdu_Server
-    BUCKET_NAME: env-edu-server-s3
-    CODE_DEPLOY_APP_NAME: EnvEduServer_CodeDeploy
-    DEPLOYMENT_GROUP_NAME: EnvEduServer_CodeDeploy
 
-  jobs:
-    build-and-deploy:
-      runs-on: ubuntu-20.04
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+env:
+  PROJECT_NAME: EnvEdu_Server
+  BUCKET_NAME: env-edu-server-s3
+  CODE_DEPLOY_APP_NAME: EnvEduServer_CodeDeploy
+  DEPLOYMENT_GROUP_NAME: EnvEduServer_CodeDeploy
 
-        - name: Set up JDK 11
-          uses: actions/setup-java@v2
-          with:
-            java-version: '11'
-            distribution: 'adopt'
 
-        - name: Make application.yml
-          run: |
-            mkdir -p src/main/resources
-            echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - name: Build with Maven
-          run: mvn clean package -DskipTests
-          env:
-            MAVEN_OPTS: -Dorg.slf4j.simpleLogger.defaultLogLevel=${{ github.event.inputs.logLevel }}
+      - name: make application.yml
+        run: |
+          chmod 755 appspec.yml
+          cd src/main/resources
+          touch application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > application.yml
 
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-            aws-region: ap-northeast-2
+        shell: bash
 
-        - name: Archive and upload to S3
-          run: |
-            zip -r $PROJECT_NAME.zip target/*.jar appspec.yml scripts
-            aws s3 cp $PROJECT_NAME.zip s3://$BUCKET_NAME/$PROJECT_NAME/  
+      - name: archive project
+        run: |
+          cd ..
+          pwd
+          ls
+          tar cvfz $PROJECT_NAME.tar.gz $PROJECT_NAME
+          chmod 755 $PROJECT_NAME.tar.gz
 
-        - name: Code Deploy
-          run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --file-exists-behavior OVERWRITE --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$PROJECT_NAME.zip
+        #aws 접근 id, key
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-northeast-2
+
+        # s3에 압축한 jar파일 업로드
+      - name: Upload to S3
+        run: |
+          cd ..
+          aws s3 cp --region ap-northeast-2 $PROJECT_NAME.tar.gz s3://$BUCKET_NAME/$PROJECT_NAME/
+
+        # s3에 업로드한 파일 code Deploy에서 배포 요청
+        # key는 bucket 안의 디렉토리 이름/파일 이름
+      - name: Code Deploy
+        run: aws deploy create-deployment 
+          --application-name $CODE_DEPLOY_APP_NAME 
+          --deployment-config-name CodeDeployDefault.OneAtATime 
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME 
+          --s3-location bucket=$BUCKET_NAME,bundleType=tgz,key=$PROJECT_NAME/$PROJECT_NAME.tar.gz

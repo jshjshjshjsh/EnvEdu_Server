@@ -1,13 +1,12 @@
 package com.example.demo.user.controller;
 
-import com.example.demo.jpa.jwt.model.JwtRefreshToken;
-import com.example.demo.jpa.jwt.util.JwtUtil;
-import com.example.demo.jpa.user.controller.UserRegisterController;
-import com.example.demo.jpa.user.dto.request.RegisterDTO;
-import com.example.demo.jpa.user.model.entity.User;
-import com.example.demo.jpa.user.model.enumerate.Gender;
-import com.example.demo.jpa.user.model.enumerate.Role;
-import com.example.demo.jpa.user.service.UserService;
+import com.example.demo.jwt.model.JwtRefreshToken;
+import com.example.demo.jwt.util.JwtUtil;
+import com.example.demo.user.dto.request.RegisterDTO;
+import com.example.demo.user.model.entity.User;
+import com.example.demo.user.model.enumerate.Gender;
+import com.example.demo.user.model.enumerate.Role;
+import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

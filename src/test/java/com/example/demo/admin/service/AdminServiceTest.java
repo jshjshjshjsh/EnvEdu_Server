@@ -1,7 +1,6 @@
 package com.example.demo.admin.service;
 
-import com.example.demo.jpa.admin.DTO.AdminLoginDTO;
-import com.example.demo.jpa.admin.service.AdminService;
+import com.example.demo.admin.DTO.AdminLoginDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
