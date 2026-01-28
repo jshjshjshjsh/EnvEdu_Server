@@ -18,6 +18,3 @@ hooks:
     - location: /scripts/deploy.sh
       timeout: 90
       runas: ubuntu
-
-
-
