@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .and()
                 .logout().disable()
                 .authorizeHttpRequests(authorize -> authorize
+
                         .mvcMatchers("/login/**","/user","/auth","/register/**","/logout","/device/**","/client/socket/**","/test/**",
                                 "/air-quality/**","/ocean-quality/**","/survey/**", "/dataset/list", "/dataset/**",
                                 "/educating/**","/dataLiteracy/**").permitAll()
@@ -46,6 +47,9 @@ public class SecurityConfig {
                         .mvcMatchers("/manager/**","/dataset/manage/**").hasAnyRole("MANAGER","ADMIN")
                         .mvcMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().denyAll()
+
+
+                        //.anyRequest().permitAll()
                 );
         return http.build();
     }

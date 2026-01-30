@@ -26,7 +26,7 @@ public class CookieUtil {
     public static ResponseCookie generateCookieForRefreshToken(JwtRefreshToken refreshToken) {
         return ResponseCookie.from(JwtRefreshToken.tokenName, URLEncoder.encode(JwtUtil.convertJwtToString(refreshToken), StandardCharsets.UTF_8))
                 .domain(seedDomain)
-                .secure(true)
+                .secure(false)
                 .httpOnly(true)
                 .sameSite("Strict")
                 .path("/")
@@ -37,7 +37,7 @@ public class CookieUtil {
     public static ResponseCookie generateLogoutCookie() {
         return ResponseCookie.from(JwtRefreshToken.tokenName, "")
                 .domain(seedDomain)
-                .secure(true)
+                .secure(false)
                 .httpOnly(true)
                 .sameSite("Strict")
                 .path("/")

@@ -79,7 +79,7 @@ public abstract class User {
     private Timestamp updatedTime;
 
     @Nullable
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private MeasuredUnit measuredUnit;
 
     public void updateMeasuredUnit(MeasuredUnit updatedMeasuredUnit){

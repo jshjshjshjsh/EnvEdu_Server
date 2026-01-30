@@ -42,6 +42,10 @@ public class JwtUtil {
     }
 
     public static Map<String, Claim> getJwtRefreshTokenFromCookieAndParse(Cookie[] cookies) throws JWTVerificationException {
+        if (cookies == null) {
+            throw new NoJwtTokenContainedException();
+        }
+
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals(JwtRefreshToken.tokenName)) {
                 String token = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8).replace(JwtUtil.tokenType,"");
