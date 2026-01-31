@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +47,9 @@ public class SeedService {
     * Seed Data를 3초에서 1초 간격으로 늘림
     * */
     public List<Seed> extendSeedData(List<Seed> seeds){
+
+        // 리팩토링 전 비효율 코드
+        /*
         List<Seed> result = new ArrayList<>();
 
         for (Seed seed : seeds) {
@@ -56,8 +57,12 @@ public class SeedService {
                 result.add(seed);
             }
         }
+         */
 
-        return result;
+        // 리팩토링 후 최적화 코드
+        return seeds.stream()
+                .flatMap(seed -> Collections.nCopies(3, seed).stream())
+                .collect(Collectors.toList());
     }
 
     @Transactional
