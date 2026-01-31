@@ -1,6 +1,5 @@
 package com.example.demo.datacontrol.datafolder.repository;
 
-import com.example.demo.datacontrol.datafolder.dto.DataItems;
 import com.example.demo.datacontrol.datafolder.model.DataFolder;
 import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
 import org.junit.jupiter.api.DisplayName;
@@ -91,17 +90,15 @@ class DataFolder_DataCompilationRepositoryImplTest {
         em.clear();
 
         // when
-        List<DataItems> result = dataFolder_dataCompilationRepository.findByDataFolderId(dataFolder.getId());
+        List<DataFolder_DataCompilation> result = dataFolder_dataCompilationRepository.findByDataFolderId(dataFolder.getId());
 
         // then
         // 1. 개수 확인 (2개여야 함)
         assertThat(result).hasSize(2);
 
         // 2. 조회된 데이터들이 요청한 folderId를 가지고 있는지 확인
-        //assertThat(result).extracting("dataFolder.id")
-        //        .containsOnly(dataFolder.getId());
-        assertThat(result).extracting("id")
-                .containsExactlyInAnyOrder(comp1.getId(), comp2.getId());
+        assertThat(result).extracting("dataFolder.id")
+                .containsOnly(dataFolder.getId());
 
         // 3. 다른 폴더의 데이터는 포함되지 않았는지 확인 (선택 사항)
         assertThat(result).extracting("id")

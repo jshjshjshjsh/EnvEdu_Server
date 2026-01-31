@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -103,6 +104,7 @@ public class DataFolderService {
     }
 
     public DataFolder_DataCompilationDto findByDataFolderCompilationId(Long id){
+
         /*
         List<DataFolder_DataCompilation> datas = dataFolder_dataCompilationRepository.findByDataFolderId(id);
         for (DataFolder_DataCompilation item: datas){
@@ -110,16 +112,28 @@ public class DataFolderService {
         }
 
         return reassemble(datas);
+
          */
-        
-        // 1. JPQL로 이미 변환된 리스트를 가져옴
-        List<DataItems> dataItemsList = dataFolder_dataCompilationRepository.findByDataFolderId(id);
 
-        // 2. 껍데기 DTO에 담아서 반환
-        DataFolder_DataCompilationDto result = new DataFolder_DataCompilationDto();
-        result.getData().addAll(dataItemsList);
+        // 1. 엔티티 조회 (Batch Size 덕분에 여기서 N+1 안 터짐)
+        List<DataFolder_DataCompilation> datas = dataFolder_dataCompilationRepository.findByDataFolderId(id);
 
-        return result;
+        // 2. DTO 변환 (Java 메모리에서 수행 - DB 부하 없음)
+        List<DataItems> dataItemsList = datas.stream()
+                .map(entity -> new DataItems(
+                        entity.getSeed(),
+                        entity.getAirQuality(),
+                        entity.getOceanQuality(),
+                        entity.getCustomData(),
+                        entity.getSaveDate(),
+                        entity.getId()
+                ))
+                .collect(Collectors.toList());
+
+        DataFolder_DataCompilationDto dto = new DataFolder_DataCompilationDto();
+        dto.getData().addAll(dataItemsList);
+
+        return dto;
     }
 
     @Transactional

@@ -1,7 +1,5 @@
 package com.example.demo.datacontrol.datafolder.repository;
 
-import com.example.demo.datacontrol.datafolder.dto.DataFolder_DataCompilationDto;
-import com.example.demo.datacontrol.datafolder.dto.DataItems;
 import com.example.demo.datacontrol.datafolder.model.DataFolder_DataCompilation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,18 +21,9 @@ public class DataFolder_DataCompilationRepositoryImpl implements DataFolder_Data
     }
 
     @Override
-    public List<DataItems> findByDataFolderId(Long id) {
-        return em.createQuery(
-                        "SELECT new com.example.demo.datacontrol.datafolder.dto.DataItems(" +
-                                "s, a, o, c, t.saveDate, t.id) " +
-                                "FROM DataFolder_DataCompilation t " +
-                                "LEFT JOIN t.seed s " +
-                                "LEFT JOIN t.airQuality a " +
-                                "LEFT JOIN t.oceanQuality o " +
-                                "LEFT JOIN t.customData c " +
-                                "WHERE t.dataFolder.id = :id", DataItems.class)
-                .setParameter("id", id)
-                .getResultList();
+    public List<DataFolder_DataCompilation> findByDataFolderId(Long id) {
+        return em.createQuery("SELECT t FROM DataFolder_DataCompilation t WHERE t.dataFolder.id = :id", DataFolder_DataCompilation.class)
+                .setParameter("id", id).getResultList();
     }
 
     @Override
