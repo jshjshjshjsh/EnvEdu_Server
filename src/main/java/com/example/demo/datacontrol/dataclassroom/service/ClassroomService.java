@@ -42,7 +42,7 @@ public class ClassroomService {
         if (user instanceof Student)
             user = userService.findEducatorByStudent((Student) user).getEducator();
 
-        List<ClassroomClass> classroomClasses = classroomClassRepository.findAllByOwner(user);
+        List<ClassroomClass> classroomClasses = classroomClassRepository.findAllByOwnerOptimization(user);
         for (ClassroomClass classroom : classroomClasses) {
             classroom.updateLabels();
         }
