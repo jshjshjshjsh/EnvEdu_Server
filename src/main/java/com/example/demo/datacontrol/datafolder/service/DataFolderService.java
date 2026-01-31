@@ -103,12 +103,23 @@ public class DataFolderService {
     }
 
     public DataFolder_DataCompilationDto findByDataFolderCompilationId(Long id){
+        /*
         List<DataFolder_DataCompilation> datas = dataFolder_dataCompilationRepository.findByDataFolderId(id);
         for (DataFolder_DataCompilation item: datas){
             item.getDataFolder().deleteThisParentDataFolder();
         }
 
         return reassemble(datas);
+         */
+        
+        // 1. JPQL로 이미 변환된 리스트를 가져옴
+        List<DataItems> dataItemsList = dataFolder_dataCompilationRepository.findByDataFolderId(id);
+
+        // 2. 껍데기 DTO에 담아서 반환
+        DataFolder_DataCompilationDto result = new DataFolder_DataCompilationDto();
+        result.getData().addAll(dataItemsList);
+
+        return result;
     }
 
     @Transactional
