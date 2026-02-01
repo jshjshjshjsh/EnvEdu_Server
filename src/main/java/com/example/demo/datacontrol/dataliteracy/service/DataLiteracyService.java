@@ -101,60 +101,29 @@ public class DataLiteracyService {
 
 
     @Transactional
-    public void copyCustomData(CustomDataCopyRequest target, String educator){
+    public void copyCustomData(CustomDataCopyRequest target, String educatorUsername) {
+
         // todo: 여기서 제약사항 있어야 할 듯,
         //  이미 owner_id와 class_id 조건으로 데이터가 있으면 => 원래 있던 데이터 제거하고 다시 넣기
 
         // todo: 20231205 ==> DataFolder, DataCompilation 를 만들어서 소속 시켜줘야 함
         //  dataChunkService.saveMyDataCompilation(); 를 사용해서 DataFolder에 넣어줘야 함
         /* 데이터를 배포한 교사의 데이터로 저장 => 기준이 되는 데이터로 만들기 위함 */
-        Optional<User> findEducator = userRepository.findByUsername(educator);
-        target.getData().updateOwner(findEducator.get());
-        List<CustomData> data = target.getData().convertDtoToEntity();
-        customDataRepository.deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(target.getData().getClassId(), target.getData().getChapterId(),
-                target.getData().getSequenceId(), findEducator.get());
-        customDataRepository.saveAll(data);
 
+        CustomDataDto sourceData = target.getData();
 
-        /* 배포된 데이터를 학생들의 데이터로 저장 */
-        for (Student s: target.getUsers()){
-            Optional<User> user = userRepository.findByUsername(s.getUsername());
-            CustomDataDto customDataDto = target.getData();
-            customDataDto.updateOwner(user.get());
-            customDataRepository.deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(customDataDto.getClassId(), customDataDto.getChapterId(),
-                    customDataDto.getSequenceId(), customDataDto.getOwner());
+        // 1. 교사(원본) 데이터 재설정
+        User educator = userRepository.findByUsername(educatorUsername)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 교사입니다."));
+        overwriteCustomDataForUser(sourceData, educator);
+
+        // 2. 학생 데이터 배포
+        for (Student student : target.getUsers()) {
+            User studentUser = userRepository.findById(student.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학생입니다."));
+
+            overwriteCustomDataForUser(sourceData, studentUser);
         }
-
-        List<CustomData> result = target.getData().convertDtoToEntity();
-        int customDataSize = result.size();
-
-        for (int i = 0; i<target.getUsers().size()-1; i++){
-            for (int j = 0; j<customDataSize; j++) {
-                result.add(result.get(j).clone());
-            }
-        }
-
-        int studentCnt = 0;
-        UUID uuid = UUID.randomUUID();
-        for (int i = 0; i< result.size(); i++){
-            result.get(i).updateOwner(target.getUsers().get(studentCnt));
-            result.get(i).addUuid(uuid);
-
-
-
-            if ((i+1)%customDataSize == 0){
-                /* DataCompilation에 저장해서 MyData에서 조회되게 추가 */
-                /*
-                dataChunkService.saveMyDataCompilation(uuid, "CUSTOM", target.getUsers().get(studentCnt), result.get(i).getSaveDate(),
-                        target.getData().getData().size(), target.getData().getMemo());
-
-                 */
-
-                studentCnt += 1;
-                uuid = UUID.randomUUID();
-            }
-        }
-        customDataRepository.saveAll(result);
     }
 
     @Transactional
@@ -252,5 +221,28 @@ public class DataLiteracyService {
         }
         return customDataRepository.findAllByClassIdAndChapterIdAndSequenceIdAndOwner(classId, chapterId, sequenceId, educatorByStudent.getEducator()).orElse(null);
 
+    }
+
+    /**
+     * 특정 유저(User)에게 할당된 기존 데이터를 삭제하고,
+     * DTO의 내용을 기반으로 새로운 데이터를 생성하여 저장
+     */
+    private void overwriteCustomDataForUser(CustomDataDto dto, User targetUser) {
+        // 1. 기존 데이터 삭제 (해당 챕터/시퀀스에 대해)
+        customDataRepository.deleteAllByClassIdAndChapterIdAndSequenceIdAndOwner(
+                dto.getClassId(),
+                dto.getChapterId(),
+                dto.getSequenceId(),
+                targetUser
+        );
+
+        // 2. DTO에 대상 유저(Owner) 설정
+        dto.updateOwner(targetUser);
+
+        // 3. 엔티티 변환 (이 과정에서 새로운 UUID가 생성됨)
+        List<CustomData> newEntities = dto.convertDtoToEntity();
+
+        // 4. 저장
+        customDataRepository.saveAll(newEntities);
     }
 }
