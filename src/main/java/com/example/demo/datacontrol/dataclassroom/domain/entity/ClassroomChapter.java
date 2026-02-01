@@ -36,4 +36,9 @@ public class ClassroomChapter extends Classroom {
     public void updateClassroomSequence(List<ClassroomSequence> inputClassroomSequences) {
         classroomSequences.addAll(inputClassroomSequences);
     }
+
+    public void generateInit(ClassroomClass classroomClass, User user){
+        updateClassroomClass(classroomClass);
+        updateOwner(user);
+    }
 }

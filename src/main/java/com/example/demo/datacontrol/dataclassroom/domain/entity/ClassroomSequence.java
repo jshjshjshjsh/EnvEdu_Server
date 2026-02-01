@@ -22,9 +22,10 @@ public class ClassroomSequence extends Classroom {
     @JsonIgnore
     private ClassroomChapter classroomChapter;
 
-    public ClassroomSequence(String title, String subtitle, String description, User owner, ClassroomChapter classroomChapter) {
+    public ClassroomSequence(String title, String subtitle, String description, User owner, ClassroomChapter classroomChapter, List<ClassroomSequenceChunk> chunks) {
         super(title, subtitle, description, owner);
         this.classroomChapter = classroomChapter;
+        updateClassroomSequenceChunk(chunks);
     }
 
     public void updateClassroomSequenceChunk(List<ClassroomSequenceChunk> inputClassroomSequenceChunks) {

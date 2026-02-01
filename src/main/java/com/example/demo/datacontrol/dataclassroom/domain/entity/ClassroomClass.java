@@ -45,11 +45,13 @@ public class ClassroomClass extends Classroom{
         this.thumbnail = thumbnail;
     }
 
-    public void updateClassroomChapter(ClassroomChapter inputClassroomChapters){
+    public void addClassroomChapter(ClassroomChapter inputClassroomChapters){
         classroomChapters.add(inputClassroomChapters);
+        inputClassroomChapters.generateInit(this, getOwner());
+        inputClassroomChapters.updateClassroomClass(this);
     }
 
-    public void updateClassroomChapter(List<ClassroomChapter> inputClassroomChapters){
+    public void addClassroomChapter(List<ClassroomChapter> inputClassroomChapters){
         classroomChapters.addAll(inputClassroomChapters);
     }
 
@@ -69,5 +71,10 @@ public class ClassroomClass extends Classroom{
             subject = ClassroomSubjectType.getByLabel(subjectLabel);
         if(dataTypeLabel != null)
             dataType = ClassroomDataType.getByLabel(dataTypeLabel);
+    }
+
+    public void generateInit(User user){
+        updateLabelToEnum();
+        updateOwner(user);
     }
 }
