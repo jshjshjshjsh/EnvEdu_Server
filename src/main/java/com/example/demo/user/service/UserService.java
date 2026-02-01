@@ -59,23 +59,13 @@ public class UserService {
         Optional<User> findUser = userRepository.findByUsername(educator);
         Optional<InviteCode> findInviteCode = inviteCodeRepository.findByUser(findUser.get());
 
-        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Random random = new Random();
-        StringBuilder randomBuilder = new StringBuilder(6);
-
-        for (int i = 0; i < 6; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            char randomChar = characters.charAt(randomIndex);
-            randomBuilder.append(randomChar);
-        }
-        LocalDateTime now = LocalDateTime.now();
 
         if(findInviteCode.isPresent()){
-            findInviteCode.get().updateInviteCode(randomBuilder.toString(), now, now.plusHours(1L));
+            findInviteCode.get().updateInviteCode();
             return findInviteCode.get();
         }
         else{
-            InviteCode inviteCode = new InviteCode(findUser.get(), randomBuilder.toString(), now, now.plusHours(1L));
+            InviteCode inviteCode = InviteCode.generate(findUser.get());
             inviteCodeRepository.save(inviteCode);
             return inviteCode;
         }
