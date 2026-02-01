@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @Entity
@@ -32,5 +34,13 @@ public class AirQuality extends AirQualityParent {
     }
     public AirQuality(LocalDateTime dataTime, String stationName, String so2Value, String coValue, String o3Value, String no2Value, String pm10Value, String pm25Value) {
         super(dataTime, stationName, so2Value, coValue, o3Value, no2Value, pm10Value, pm25Value);
+    }
+
+    public static AirQuality from(List<String> data) {
+        return new AirQuality(
+                LocalDateTime.parse(data.get(0), DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                data.get(1), data.get(2), data.get(3),
+                data.get(4), data.get(5), data.get(6), data.get(7)
+        );
     }
 }

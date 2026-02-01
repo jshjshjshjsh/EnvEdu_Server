@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -118,6 +119,27 @@ public class Seed extends Data {
             }
         }
         return true;
+    }
+
+    public static Seed of(String username, List<String> data) {
+        return new Seed(
+                username,
+                data.get(0),
+                Float.parseFloat(data.get(1)),
+                Float.parseFloat(data.get(2)),
+                Float.parseFloat(data.get(3)),
+                Float.parseFloat(data.get(4)),
+                Float.parseFloat(data.get(5)),
+                Float.parseFloat(data.get(6)),
+                Float.parseFloat(data.get(7)),
+                Float.parseFloat(data.get(8)),
+                Float.parseFloat(data.get(9)),
+                Float.parseFloat(data.get(10)),
+                data.get(11),
+                data.get(12),
+                data.get(13),
+                Integer.parseInt(data.get(14))
+        );
     }
 
     @Override
